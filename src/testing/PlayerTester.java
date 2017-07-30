@@ -1,3 +1,5 @@
+package testing;
+import objects.Player;
 
 public class PlayerTester {
 	public static void main (String args[]) {
