@@ -1,4 +1,4 @@
-package ui;
+package objects;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
