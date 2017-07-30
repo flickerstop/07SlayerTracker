@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 
@@ -10,6 +9,9 @@ public class Player {
 	private int deathRunes;
 	private float avgCannonballPrice;
 	private CsvExport csv;
+	private int deathPrice = 258; // prices on 30/07/2017
+	private int chaosPrice = 101;
+	private int waterPrice = 5;
 	
 	/***
 	 * Constructor for player object
@@ -154,9 +156,25 @@ public class Player {
 		this.avgCannonballPrice = avgCannonballPrice;
 	}
 	
+	/***
+	 * Run when a task is finished
+	 * @param monsterName Name of monster killed
+	 * @param monsterCount Number of monsters killed
+	 * @param loot Price of loot from monster
+	 * @param ballsLeft Number of balls left
+	 */
 	public void finishCannonTask(String monsterName, int monsterCount, int loot, int ballsLeft) {
 		csv.saveCannonLog(monsterName, monsterCount, loot, avgCannonballPrice, ballsLeft, (cannonballs-ballsLeft));
 		cannonballs = ballsLeft;
+		save();
+	}
+	
+	public void finishBurstTask(String monsterName, int monsterCount, int loot, int deathLeft, int chaosLeft, int waterLeft) {
+		csv.saveBurstLog(monsterName, monsterCount, loot, deathLeft, chaosLeft, waterLeft, deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice);
+		
+		deathRunes = deathLeft;
+		chaosRunes = chaosLeft;
+		waterRunes = waterLeft;
 		save();
 	}
 	

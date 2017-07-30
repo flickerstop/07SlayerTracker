@@ -9,7 +9,7 @@ public class PlayerTester {
 		//out(test.getAvgCannonballPrice());
 		
 		out(test.getCannonballs());
-		test.finishCannonTask("test monster", 69, 100000, 40);
+		test.finishBurstTask("test monster", 69, 100000, 10, 10, 10);
 		out(test.getCannonballs());
 		test.save();
 	}
