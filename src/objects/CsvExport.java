@@ -20,10 +20,10 @@ public class CsvExport {
 	 * 
 	 * @param newOutputFile filename to export to (eg. "test.csv")
 	 */
-	public CsvExport(String newOutputFile) {
-		cannonFile = newOutputFile;
-		burstFile = newOutputFile;
-		cannonballFile = newOutputFile;
+	public CsvExport(String newOutputPath) {
+		cannonFile = newOutputPath + "\\" +cannonFile;
+		burstFile = newOutputPath + "\\" + burstFile;
+		cannonballFile = newOutputPath+ "\\" + cannonballFile;
 	}
 	
 	/***
