@@ -7,10 +7,13 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.text.NumberFormatter;
 
 import java.awt.Font;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+
 import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
@@ -19,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -48,14 +52,14 @@ public class monsterPanelDesigner {
 	public monsterPanelDesigner() {
 		initialize();
 	}
-	float scale = 1.0f;
-	private JTextField trip1TextField;
-	private JTextField trip2TextField;
-	private JTextField trip3TextField;
-	private JTextField trip4TextField;
-	private JTextField trip5TextField;
-	private JTextField trip6TextField;
-	private JTextField textField;
+	float scale = 2.0f;
+	private JFormattedTextField trip1TextField;
+	private JFormattedTextField trip2TextField;
+	private JFormattedTextField trip3TextField;
+	private JFormattedTextField trip4TextField;
+	private JFormattedTextField trip5TextField;
+	private JFormattedTextField trip6TextField;
+	private JFormattedTextField cannonballsLeftTextField;
 	
 	long currentTime = 0;
 	long timerStart = 0;
@@ -65,19 +69,23 @@ public class monsterPanelDesigner {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
-		
-		
-		
 		/////////////////////
 		// Variables
-		int width = scale(642); //TODO modify this when moved!
-		int height = scale(541); //TODO modify this when moved!
+		int width = scale(640); //TODO modify this when moved!
+		int height = scale(550); //TODO modify this when moved!
 		int panelWidth = width-18;
 		int panelHeight = height-40;
 		String monsterName = "Dust Devils";
 		int monsterCount = 100;
 		
+		NumberFormat format = NumberFormat.getInstance();
+	    NumberFormatter formatter = new NumberFormatter(format);
+	    formatter.setValueClass(Integer.class);
+	    formatter.setMinimum(0);
+	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setAllowsInvalid(false);
+	    // If you want the value to be committed on each keystroke instead of focus lost
+	    formatter.setCommitsOnValidEdit(true);
 
 		//////////////////////
 		// DONT NEED THIS
@@ -96,9 +104,9 @@ public class monsterPanelDesigner {
 		/////////////////////
 		// Label
 		JLabel monsterNameLabel = new JLabel(monsterCount + " " +monsterName);
-		monsterNameLabel.setFont(new Font("Tahoma", Font.BOLD, scale(12)));
+		monsterNameLabel.setFont(new Font("Tahoma", Font.BOLD, scale(20)));
 		monsterNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		int monsterLabelWidth = scale(150);
+		int monsterLabelWidth = panelWidth;
 		int monsterLabelHeight = scale(24);
 		monsterNameLabel.setBounds((width/2)-(monsterLabelWidth/2), scale(10), monsterLabelWidth, monsterLabelHeight);
 		panel.add(monsterNameLabel);
@@ -106,9 +114,46 @@ public class monsterPanelDesigner {
 		//////////////////
 		// Finish task button
 		JButton finishTaskButton = new JButton("Finish Task!");
+		finishTaskButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int profit = 0;
+				int cannonballLeft = -1;
+				
+				if(trip1TextField.getText().length() != 0) {
+					profit += Integer.parseInt(trip1TextField.getText().replaceAll(",", ""));
+				}
+				if(trip2TextField.getText().length() != 0) {
+					profit += Integer.parseInt(trip2TextField.getText().replaceAll(",", ""));
+				}
+				if(trip3TextField.getText().length() != 0) {
+					profit += Integer.parseInt(trip3TextField.getText().replaceAll(",", ""));
+				}
+				if(trip4TextField.getText().length() != 0) {
+					profit += Integer.parseInt(trip4TextField.getText().replaceAll(",", ""));
+				}
+				if(trip5TextField.getText().length() != 0) {
+					profit += Integer.parseInt(trip5TextField.getText().replaceAll(",", ""));
+				}
+				if(trip6TextField.getText().length() != 0) {
+					profit += Integer.parseInt(trip6TextField.getText().replaceAll(",", ""));
+				}
+				
+				if(cannonballsLeftTextField.getText().length() != 0) {
+					cannonballLeft = Integer.parseInt(cannonballsLeftTextField.getText().replaceAll(",", ""));
+				}else {
+					// If nothing was entered where cannonballs are left
+					cannonballsLeftTextField.setBackground(new Color(255, 0, 0));
+				}
+				
+				//System.out.println(profit);
+			}
+		});
+		finishTaskButton.setVerticalAlignment(SwingConstants.TOP);
 		finishTaskButton.setForeground(new Color(255, 255, 255));
 		finishTaskButton.setBackground(new Color(0, 153, 51));
-		finishTaskButton.setBounds(0, panelHeight-scale(32), panelWidth, scale(32));
+		finishTaskButton.setFont(new Font("Tahoma", Font.BOLD, scale(12)));
+		finishTaskButton.setBounds(0, panelHeight-scale(50), panelWidth, scale(50));
 		panel.add(finishTaskButton);
 		
 		//////////////////
@@ -140,8 +185,8 @@ public class monsterPanelDesigner {
 		trip1Label.setBounds(0, scale(30), tripPanelWidth/2, rowHeight);
 		tripsPanel.add(trip1Label);
 		
-		trip1TextField = new JTextField();
-		trip1TextField.setText("0");
+		trip1TextField = new JFormattedTextField(formatter);
+		trip1TextField.setText("");
 		trip1TextField.setFont(labelFont);
 		trip1TextField.setBounds(tripPanelWidth/2, scale(30), tripInputWidth, rowHeight);
 		tripsPanel.add(trip1TextField);
@@ -155,8 +200,8 @@ public class monsterPanelDesigner {
 		trip2Label.setBounds(0, scale(60), tripPanelWidth/2, rowHeight);
 		tripsPanel.add(trip2Label);
 		
-		trip2TextField = new JTextField();
-		trip2TextField.setText("0");
+		trip2TextField = new JFormattedTextField(formatter);
+		trip2TextField.setText("");
 		trip2TextField.setFont(labelFont);
 		trip2TextField.setColumns(10);
 		trip2TextField.setBounds(tripPanelWidth/2, scale(60), tripInputWidth, rowHeight);
@@ -169,8 +214,8 @@ public class monsterPanelDesigner {
 		trip3Label.setBounds(0, scale(90), tripPanelWidth/2, rowHeight);
 		tripsPanel.add(trip3Label);
 		
-		trip3TextField = new JTextField();
-		trip3TextField.setText("0");
+		trip3TextField = new JFormattedTextField(formatter);
+		trip3TextField.setText("");
 		trip3TextField.setFont(labelFont);
 		trip3TextField.setColumns(10);
 		trip3TextField.setBounds(tripPanelWidth/2, scale(90), tripInputWidth, rowHeight);
@@ -183,8 +228,8 @@ public class monsterPanelDesigner {
 		trip4Label.setBounds(0, scale(120), tripPanelWidth/2, rowHeight);
 		tripsPanel.add(trip4Label);
 		
-		trip4TextField = new JTextField();
-		trip4TextField.setText("0");
+		trip4TextField = new JFormattedTextField(formatter);
+		trip4TextField.setText("");
 		trip4TextField.setFont(labelFont);
 		trip4TextField.setColumns(10);
 		trip4TextField.setBounds(tripPanelWidth/2, scale(120), tripInputWidth, rowHeight);
@@ -197,8 +242,8 @@ public class monsterPanelDesigner {
 		trip5Label.setBounds(0, scale(150), tripPanelWidth/2, rowHeight);
 		tripsPanel.add(trip5Label);
 		
-		trip5TextField = new JTextField();
-		trip5TextField.setText("0");
+		trip5TextField = new JFormattedTextField(formatter);
+		trip5TextField.setText("");
 		trip5TextField.setFont(labelFont);
 		trip5TextField.setColumns(10);
 		trip5TextField.setBounds(tripPanelWidth/2, scale(150), tripInputWidth, rowHeight);
@@ -211,8 +256,8 @@ public class monsterPanelDesigner {
 		trip6Label.setBounds(0, scale(180), tripPanelWidth/2, rowHeight);
 		tripsPanel.add(trip6Label);
 		
-		trip6TextField = new JTextField();
-		trip6TextField.setText("0");
+		trip6TextField = new JFormattedTextField(formatter);
+		trip6TextField.setText("");
 		trip6TextField.setFont(labelFont);
 		trip6TextField.setColumns(10);
 		trip6TextField.setBounds(tripPanelWidth/2, scale(180), tripInputWidth, rowHeight);
@@ -239,21 +284,24 @@ public class monsterPanelDesigner {
 		//////////////
 		// Cannonball Label
 		
+		
+		
 		JLabel cannonballsLeftLabel = new JLabel("Cannonballs Left");
 		cannonballsLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		cannonballsLeftLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
 		cannonballsLeftLabel.setBounds(0, (infoPanelHeight/2)-(rowHeight/2)-scale(45), infoPanelWidth/2, rowHeight);
 		otherInfoPanel.add(cannonballsLeftLabel);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
-		textField.setBounds(infoPanelWidth/2, (infoPanelHeight/2)-(rowHeight/2)-scale(45), (infoPanelWidth/2)-scale(15), rowHeight);
-		otherInfoPanel.add(textField);
-		textField.setColumns(10);
+		cannonballsLeftTextField = new JFormattedTextField(formatter);
+		cannonballsLeftTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+		cannonballsLeftTextField.setBounds(infoPanelWidth/2, (infoPanelHeight/2)-(rowHeight/2)-scale(45), (infoPanelWidth/2)-scale(15), rowHeight);
+		otherInfoPanel.add(cannonballsLeftTextField);
+		cannonballsLeftTextField.setColumns(10);
 		
 		//////////////
 		// Timer
 		JButton startTimerButton = new JButton("Start Timer");
+		startTimerButton.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
 		startTimerButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -264,6 +312,7 @@ public class monsterPanelDesigner {
 		otherInfoPanel.add(startTimerButton);
 		
 		JButton stopTimerButton = new JButton("Stop Timer");
+		stopTimerButton.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
 		stopTimerButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -276,9 +325,9 @@ public class monsterPanelDesigner {
 		timerTextField = new JTextField();
 		timerTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		timerTextField.setText("00:00:00");
-		timerTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		timerTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
 		timerTextField.setEditable(false);
-		timerTextField.setBounds(infoPanelWidth/4, (infoPanelHeight/2)-(rowHeight/2)+rowHeight, (infoPanelWidth/2)-scale(10), rowHeight);
+		timerTextField.setBounds(infoPanelWidth/4, (infoPanelHeight/2)-(rowHeight/2)+rowHeight, (infoPanelWidth/2), rowHeight);
 		otherInfoPanel.add(timerTextField);
 		timerTextField.setColumns(10);
 		

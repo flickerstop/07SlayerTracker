@@ -179,7 +179,7 @@ public class CsvExport {
 	 * @param price Price paid for balls
 	 */
 	public void updateCannonballLog(int amount, int price) {
-		String output = price+","+amount+","+amount/price;
+		String output = price*amount+","+amount+","+price;
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(cannonballFile, true)); 
 			out.println(output);

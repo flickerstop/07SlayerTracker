@@ -4,15 +4,15 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 
 public class Player {
-	private int cannonballs;
-	private int waterRunes;
-	private int chaosRunes;
-	private int deathRunes;
-	private float avgCannonballPrice;
-	private CsvExport csv;
-	private int deathPrice = 258; // prices on 30/07/2017
-	private int chaosPrice = 101;
-	private int waterPrice = 5;
+	private static int cannonballs;
+	private static int waterRunes;
+	private static int chaosRunes;
+	private static int deathRunes;
+	private static float avgCannonballPrice;
+	private static CsvExport csv;
+	private static int deathPrice = 258; // prices on 30/07/2017
+	private static int chaosPrice = 101;
+	private static int waterPrice = 5;
 	
 	/***
 	 * Constructor for player object
