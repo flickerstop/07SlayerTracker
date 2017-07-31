@@ -41,6 +41,9 @@ public class SlayerTrackerUI {
 	int cannonballs = 0;
 	private JFormattedTextField amountOfCannonballsBought;
 	private JFormattedTextField pricePaidForCannonballs;
+	JTextPane deathRuneTextPane;
+	JTextPane chaosRuneTextPane;
+	JTextPane waterRuneTextPane;
 	private JPanel mainPanel;
 	private JSpinner monsterCountSpinner;
 	Player player = new Player();
@@ -77,8 +80,8 @@ public class SlayerTrackerUI {
 		
 		player.load();
 		
-		int width = scale(640); //TODO modify this when moved!
-		int height = scale(550); //TODO modify this when moved!
+		int width = scale(640);
+		int height = scale(550);
 		int panelWidth = width-18;
 		int panelHeight = height-40;
 		
@@ -137,6 +140,7 @@ public class SlayerTrackerUI {
 	        public void componentShown ( ComponentEvent e )
 	        {
 	            updateCannonballs();
+	            updateRunes();
 	            monsterCountSpinner.setValue(0);
 	        }
 
@@ -151,8 +155,13 @@ public class SlayerTrackerUI {
 		frmJrsSlayerTracker.getContentPane().add(addCannonballsPanel);
 		addCannonballsPanel.setLayout(null);
 
+		JPanel addRunesPanel = new JPanel();
+		addRunesPanel.setBounds(0, 0, panelWidth, panelHeight);
+		frmJrsSlayerTracker.getContentPane().add(addRunesPanel);
+		addRunesPanel.setLayout(null);
 		
 		addCannonballsPanel.setVisible(false);
+		addRunesPanel.setVisible(false);
 //////////////////////////////////////
 // ROW 1
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -497,6 +506,8 @@ public class SlayerTrackerUI {
 		monsterCountLabel.setBounds((panelWidth/2)-scale(150/2), scale(40), scale(150), scale(25));
 		mainPanel.add(monsterCountLabel);
 		
+		
+		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Cannonball jpane
 		
@@ -549,10 +560,115 @@ public class SlayerTrackerUI {
 		cancelBuyingCannonBalls.setBackground(new Color(255, 0, 0));
 		cancelBuyingCannonBalls.setBounds((panelWidth/2)-scale(115), scale(225), scale(230), scale(25));
 		addCannonballsPanel.add(cancelBuyingCannonBalls);
+		
+		
+		////////////////////////////////////////////////////
+		// Rune lables
+		deathRuneTextPane = new JTextPane();
+		deathRuneTextPane.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		deathRuneTextPane.setBounds(scale(15), scale(5), scale(150), scale(25));
+		deathRuneTextPane.setEditable(false);
+		deathRuneTextPane.setText("Death Runes: ");
+		mainPanel.add(deathRuneTextPane);
+		
+		chaosRuneTextPane = new JTextPane();
+		chaosRuneTextPane.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		chaosRuneTextPane.setEditable(false);
+		chaosRuneTextPane.setBounds(scale(15), scale(30), scale(150), scale(25));
+		chaosRuneTextPane.setText("Chaos Runes: ");
+		mainPanel.add(chaosRuneTextPane);
+		
+		waterRuneTextPane = new JTextPane();
+		waterRuneTextPane.setEditable(false);
+		waterRuneTextPane.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		waterRuneTextPane.setBounds(scale(15), scale(55), scale(150), scale(25));
+		waterRuneTextPane.setText("Water Runes: ");
+		mainPanel.add(waterRuneTextPane);
+		
+		updateRunes();
+		
+		
+		JButton changeRunesButton = new JButton("Change Runes");
+		changeRunesButton.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+		changeRunesButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				addRunesPanel.setVisible(true);
+				mainPanel.setVisible(false);
+			}
+		});
+		changeRunesButton.setBounds(scale(15), scale(80), scale(150), scale(25));
+		mainPanel.add(changeRunesButton);
+		
+		//////////////////////////////////////////////////////
+		// Change Runes Panel
+		
+		JLabel addDeathRunesLabel = new JLabel("Amount of Death Runes");
+		addDeathRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		addDeathRunesLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addDeathRunesLabel.setBounds((panelWidth/2)-scale(50), scale(100), scale(150), scale(25));
+		addRunesPanel.add(addDeathRunesLabel);
+		
+		JFormattedTextField addDeathRunesTextField = new JFormattedTextField(formatter);
+		addDeathRunesTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addDeathRunesTextField.setBounds((panelWidth/2)-scale(50), scale(125), scale(150), scale(25));
+		addRunesPanel.add(addDeathRunesTextField);
+		addDeathRunesTextField.setColumns(10);
+		
+		JLabel addChaosRunesLabel = new JLabel("Amount of Chaos Runes");
+		addChaosRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		addChaosRunesLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addChaosRunesLabel.setBounds((panelWidth/2)-scale(50), scale(150), scale(150), scale(25));
+		addRunesPanel.add(addChaosRunesLabel);
+		
+		JFormattedTextField addChaosRunesTextField = new JFormattedTextField(formatter);
+		addChaosRunesTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addChaosRunesTextField.setBounds((panelWidth/2)-scale(50), scale(175), scale(150), scale(25));
+		addRunesPanel.add(addChaosRunesTextField);
+		addChaosRunesTextField.setColumns(10);
+		
+		JLabel addWaterRunesLabel = new JLabel("Amount of Water Runes");
+		addWaterRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		addWaterRunesLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addWaterRunesLabel.setBounds((panelWidth/2)-scale(50), scale(200), scale(150), scale(25));
+		addRunesPanel.add(addWaterRunesLabel);
+		
+		JFormattedTextField addWaterRunesTextField = new JFormattedTextField(formatter);
+		addWaterRunesTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addWaterRunesTextField.setBounds((panelWidth/2)-scale(50), scale(225), scale(150), scale(25));
+		addRunesPanel.add(addWaterRunesTextField);
+		addWaterRunesTextField.setColumns(10);
+		
+		JButton acceptChangeRunesButton = new JButton("Change Runes");
+		acceptChangeRunesButton.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		acceptChangeRunesButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(addDeathRunesTextField.getText().length() > 0 &&
+						addChaosRunesTextField.getText().length() > 0 &&
+						addWaterRunesTextField.getText().length() > 0) {
+					player.setDeathRunes(Integer.parseInt(addDeathRunesTextField.getText()));
+					player.setChaosRunes(Integer.parseInt(addChaosRunesTextField.getText()));
+					player.setWaterRunes(Integer.parseInt(addWaterRunesTextField.getText()));
+					updateRunes();
+					mainPanel.setVisible(true);
+					addRunesPanel.setVisible(false);
+				}
+			}
+		});
+		acceptChangeRunesButton.setBounds((panelWidth/2)-scale(50), scale(250), scale(150), scale(25));
+		addRunesPanel.add(acceptChangeRunesButton);
+		//////////////////////////////////////////////////////
 	}
 	public void updateCannonballs() {
 		txtpnCannonballs.setText("Cannonballs: "+player.getCannonballs());
 		//System.out.println(cannonballs);
+	}
+	
+	public void updateRunes() {
+		deathRuneTextPane.setText("Death Runes: "+player.getDeathRunes());
+		chaosRuneTextPane.setText("Chaos Runes: "+player.getChaosRunes());
+		waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
 	}
 	
 	public int scale(int numberToScale) {
