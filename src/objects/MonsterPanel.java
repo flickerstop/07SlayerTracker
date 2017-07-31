@@ -38,6 +38,7 @@ public class MonsterPanel{
 	long timerStart = 0;
 	long timerStop = 0;
 	private JTextField timerTextField;
+	private Player player;
 	
 	public MonsterPanel() {
 		name = "";
@@ -46,14 +47,15 @@ public class MonsterPanel{
 		scale = 1.0f;
 	}
 	
-	public MonsterPanel(String monsterName, ImageIcon icon, int count, float scale) {
+	public MonsterPanel(String monsterName, ImageIcon icon, int count, float scale,Player player) {
+		this.player = player;
 		name = monsterName;
 		image = icon;
 		this.count = count;
 		this.scale = scale;
 	}
 	
-	public JPanel build() {
+	public JPanel build(JPanel mainPanel) {
 				
 		/////////////////////
 		// Variables
@@ -67,7 +69,7 @@ public class MonsterPanel{
 		formatter.setValueClass(Integer.class);
 		formatter.setMinimum(0);
 		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(false);
+		formatter.setAllowsInvalid(true);
 		// If you want the value to be committed on each keystroke instead of focus lost
 		formatter.setCommitsOnValidEdit(true);
 		
@@ -95,7 +97,10 @@ public class MonsterPanel{
 		public void mouseClicked(MouseEvent arg0) {
 			int profit = 0;
 			int cannonballLeft = -1;
+			long time = 0;
 			
+			////////////////
+			// Get loot
 			if(trip1TextField.getText().length() != 0) {
 				profit += Integer.parseInt(trip1TextField.getText().replaceAll(",", ""));
 			}
@@ -115,6 +120,8 @@ public class MonsterPanel{
 				profit += Integer.parseInt(trip6TextField.getText().replaceAll(",", ""));
 			}
 			
+			///////////////
+			// Get cannonballs left
 			if(cannonballsLeftTextField.getText().length() != 0) {
 				cannonballLeft = Integer.parseInt(cannonballsLeftTextField.getText().replaceAll(",", ""));
 			}else {
@@ -122,6 +129,28 @@ public class MonsterPanel{
 				cannonballsLeftTextField.setBackground(new Color(255, 0, 0));
 			}
 			
+			////////////
+			// Get timer
+			if(timerStop > 0) {
+				time = timerStop - timerStart;
+			}else if(timerStart > 0) {
+				time = System.currentTimeMillis() - timerStart;
+			}
+			//System.out.println(time);
+			// If valid end
+			if(profit != 0 && cannonballLeft != -1) {
+				if(time > 0) {
+					System.out.println("saving with time");
+					player.finishCannonTask(name, count, profit, cannonballLeft, time);
+					panel.setVisible(false);
+					mainPanel.setVisible(true);
+				}else {
+					System.out.println("saving without time");
+					player.finishCannonTask(name, count, profit, cannonballLeft);
+					panel.setVisible(false);
+					mainPanel.setVisible(true);
+				}
+			}
 			//System.out.println(profit);
 		}
 		});

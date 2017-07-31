@@ -8,6 +8,8 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -42,7 +44,7 @@ public class SlayerTrackerUI {
 	private JPanel mainPanel;
 	private JSpinner monsterCountSpinner;
 	Player player = new Player();
-	private float scale = 2.0f;
+	private float scale = 1.0f;
 	
 	JTextPane txtpnCannonballs = new JTextPane();
 	/**
@@ -110,6 +112,7 @@ public class SlayerTrackerUI {
 		        player.save();
 		    }
 		});
+		
 		/////////////////////////////
 		// Formatter
 		NumberFormat format = NumberFormat.getInstance();
@@ -128,6 +131,20 @@ public class SlayerTrackerUI {
 		mainPanel.setBounds(0, 0, panelWidth, panelHeight);
 		frmJrsSlayerTracker.getContentPane().add(mainPanel);
 		mainPanel.setLayout(null);
+		
+		mainPanel.addComponentListener ( new ComponentAdapter ()
+	    {
+	        public void componentShown ( ComponentEvent e )
+	        {
+	            updateCannonballs();
+	            monsterCountSpinner.setValue(0);
+	        }
+
+//	        public void componentHidden ( ComponentEvent e )
+//	        {
+//	            //System.out.println ( "Component hidden" );
+//	        }
+	    } );
 		
 		JPanel addCannonballsPanel = new JPanel();
 		addCannonballsPanel.setBounds(0, 0, panelWidth, panelHeight);
@@ -552,8 +569,8 @@ public class SlayerTrackerUI {
 		}else {
 			monsterCountSpinner.setBackground(new Color(240, 240, 240));
 			mainPanel.setVisible(false);
-			MonsterPanel monsterPanel = new MonsterPanel(monsterName, null, count, scale);
-			frmJrsSlayerTracker.getContentPane().add(monsterPanel.build());
+			MonsterPanel monsterPanel = new MonsterPanel(monsterName, null, count, scale,player);
+			frmJrsSlayerTracker.getContentPane().add(monsterPanel.build(mainPanel));
 		}
 	}
 }

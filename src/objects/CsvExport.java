@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 
 public class CsvExport {
 	
@@ -41,8 +42,25 @@ public class CsvExport {
 		int profit = lootAmount - priceOfBalls;
 		
 		Object[] toSave = {monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit};
-		if(validate(toSave) < 0) {
-			System.err.println("SOMETHING HAPPENED! ERROR CODE: "+  validate(toSave));
+		if(validate(toSave,true) < 0) {
+			System.err.println("SOMETHING HAPPENED! ERROR CODE: "+  validate(toSave,true));
+		}else {
+			save(toSave);
+		}
+	}
+	
+	public void saveCannonLog(String monsterName, int monsterCount, int lootAmount,float cannonballPrice,int cannonballsLeft, int cannonballsUsed, long time) {
+		
+		int priceOfBalls = cannonballsUsed*Math.round(cannonballPrice);
+		int profit = lootAmount - priceOfBalls;
+	    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(time),
+	            TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)),
+	            TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)));
+	    
+	    System.out.println(profit);
+		Object[] toSave = {monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,hms};
+		if(validate(toSave,true) < 0) {
+			System.err.println("SOMETHING HAPPENED! ERROR CODE: "+  validate(toSave,true));
 		}else {
 			save(toSave);
 		}
@@ -65,8 +83,8 @@ public class CsvExport {
 							watersUsed,
 							runeCost,
 							profit};
-		if(validate(toSave) < 0) {
-			System.err.println("SOMETHING HAPPENED! ERROR CODE: "+  validate(toSave));
+		if(validate(toSave,false) < 0) {
+			System.err.println("SOMETHING HAPPENED! ERROR CODE: "+  validate(toSave,false));
 		}else {
 			save(toSave);
 		}
@@ -78,7 +96,7 @@ public class CsvExport {
 	 * returned: -1 - Monster name not valid<br>
 	 * returned: -2 - Invalid monster count<br>
 	 * returned: -3 - Array improper length<br>
-	 * returned: -4 - FREE<br>
+	 * returned: -4 - Free<br>
 	 * returned: -5 - loot amount not valid<br>
 	 * returned: -6 - balls left not valid<br>
 	 * returned: -7 - balls used not valid<br>
@@ -93,10 +111,10 @@ public class CsvExport {
 	 * 
 	 * @return error code
 	 */
-	private int validate(Object[] test) {
+	private int validate(Object[] test,boolean isCannon) {
 		// check if name "[a-zA-Z]{2,} [a-zA-Z]{2,}|[a-zA-Z]{2,}"
 		//Check if it's cannon or burst
-		if(test.length == 7) {
+		if(isCannon) {
 
 			// Check if monster is correct
 			if(!test[0].toString().matches("^\\D* \\D*$|^\\D*$")) {
@@ -127,11 +145,7 @@ public class CsvExport {
 				return -9;
 			}
 			return 1;
-		}else if(test.length == 8){
-			//Check is proper length of 8
-			if(test.length != 8) {
-				return -4;
-			}
+		}else{
 			// Check if monster is correct
 			if(!test[0].toString().matches("^\\D* \\D*$|^\\D*$")) {
 				return -1;
@@ -167,8 +181,6 @@ public class CsvExport {
 			}
 			
 			return 2;
-		}else {
-			return -3;
 		}
 		
 	}
@@ -203,7 +215,7 @@ public class CsvExport {
 			line = br.readLine();
 		    while (line != null) {
 		        String[] temp = line.split(",");
-		        totalCost += Integer.parseInt(temp[0]);
+		        totalCost += Integer.parseInt(temp[2]);
 		        amountOfEntries++;
 		        line = br.readLine();
 		    }
@@ -221,39 +233,21 @@ public class CsvExport {
 	 * @param toSave Array containing data to save. Must be validated
 	 */
 	public void save(Object[] toSave){
-		//cannonball
+		
 		String output = "";
-		if(toSave.length == 7) {
-			output = toSave[0] + ","+
-					toSave[1] + ","+
-					toSave[2] + ","+
-					toSave[3] + ","+
-					toSave[4] + ","+
-					toSave[5] + ","+
-					toSave[6];
-			try {
-				PrintWriter out = new PrintWriter(new FileWriter(cannonFile, true)); 
-				out.println(output);
-				out.close();
-			}catch(Exception e) {
-				e.printStackTrace();
+		for(int i = 0; i <toSave.length;i++) {
+			//System.out.println(toSave[i]);
+			output += toSave[i];
+			if(i+1 < toSave.length) {
+				output += ",";
 			}
-		}else if(toSave.length == 8) {
-			output = toSave[0] + ","+
-					toSave[1] + ","+
-					toSave[2] + ","+
-					toSave[3] + ","+
-					toSave[4] + ","+
-					toSave[5] + ","+
-					toSave[6] + ","+
-					toSave[7];
-			try {
-				PrintWriter out = new PrintWriter(new FileWriter(burstFile, true)); 
-				out.println(output);
-				out.close();
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
+		}
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(cannonFile, true)); 
+			out.println(output);
+			out.close();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 	}

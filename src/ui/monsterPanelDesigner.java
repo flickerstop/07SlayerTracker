@@ -52,7 +52,7 @@ public class monsterPanelDesigner {
 	public monsterPanelDesigner() {
 		initialize();
 	}
-	float scale = 2.0f;
+	float scale = 1.0f;
 	private JFormattedTextField trip1TextField;
 	private JFormattedTextField trip2TextField;
 	private JFormattedTextField trip3TextField;

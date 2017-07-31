@@ -1,2 +1,2 @@
-monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit
-test monster,69,100000,40,960,23040,76960
+monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
+Black Dragons,157,700000,2000,3000,621000,79000,00:00:02

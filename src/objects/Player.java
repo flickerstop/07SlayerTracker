@@ -170,6 +170,23 @@ public class Player {
 		save();
 	}
 	
+	/***
+	 * Run when a task is finished
+	 * @param monsterName Name of monster killed
+	 * @param monsterCount Number of monsters killed
+	 * @param loot Price of loot from monster
+	 * @param ballsLeft Number of balls left
+	 * @param time Time in milliseconds the task took
+	 */
+	public void finishCannonTask(String monsterName, int monsterCount, int loot, int ballsLeft, long time) {
+		System.out.println(cannonballs);
+		System.out.println(ballsLeft);
+		System.out.println(avgCannonballPrice);
+		csv.saveCannonLog(monsterName, monsterCount, loot, avgCannonballPrice, ballsLeft, (cannonballs-ballsLeft),time);
+		cannonballs = ballsLeft;
+		save();
+	}
+	
 	public void finishBurstTask(String monsterName, int monsterCount, int loot, int deathLeft, int chaosLeft, int waterLeft) {
 		csv.saveBurstLog(monsterName, monsterCount, loot, deathLeft, chaosLeft, waterLeft, deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice);
 		
