@@ -1,0 +1,9 @@
+monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
+Kalphites,3,69,69,431,92665,-92596,0
+Dagannoths,1,10,10,490,105350,-105340,22845
+Trolls,3,1,1,499,107285,-107284,00:00:05
+Greater Demon,1,1,10000,500,102500,-102499,00:00:08
+monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit, time
+Dust Devils,2,1,100,100,100,36400,-36399,00:00:07
+name, count, loot, cannonballsUsed, deathsUsed, chaosUsed, waterUsed, priceOfBalls, priceOfRunes, profit, time
+Smoke Devils,1,1,10500,100,100,100,2152500,36400,-2188899,00:00:06

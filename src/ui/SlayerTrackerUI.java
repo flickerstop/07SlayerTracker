@@ -16,10 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
-import java.awt.SystemColor;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
@@ -27,7 +24,6 @@ import objects.MonsterPanel;
 import objects.Player;
 
 import javax.swing.JTextPane;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JSpinner;
@@ -37,7 +33,7 @@ import java.awt.Toolkit;
 
 public class SlayerTrackerUI {
 
-	private JFrame frmJrsSlayerTracker;
+	private JFrame mainFrame;
 	int cannonballs = 0;
 	private JFormattedTextField amountOfCannonballsBought;
 	private JFormattedTextField pricePaidForCannonballs;
@@ -58,7 +54,7 @@ public class SlayerTrackerUI {
 			public void run() {
 				try {
 					SlayerTrackerUI window = new SlayerTrackerUI();
-					window.frmJrsSlayerTracker.setVisible(true);
+					window.mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -101,14 +97,14 @@ public class SlayerTrackerUI {
 		int col4X = 15+(buttonWidth+buttonSpace)*3;
 		int col5X = 15+(buttonWidth+buttonSpace)*4;
 		
-		frmJrsSlayerTracker = new JFrame();
-		frmJrsSlayerTracker.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
-		frmJrsSlayerTracker.setTitle("Jr2254's Slayer Tracker\r\n");
-		frmJrsSlayerTracker.setBounds(100, 100, width, height);
-		frmJrsSlayerTracker.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmJrsSlayerTracker.getContentPane().setLayout(null);
+		mainFrame = new JFrame();
+		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
+		mainFrame.setTitle("Jr2254's Slayer Tracker\r\n");
+		mainFrame.setBounds(100, 100, width, height);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.getContentPane().setLayout(null);
 		
-		frmJrsSlayerTracker.addWindowListener(new WindowAdapter()
+		mainFrame.addWindowListener(new WindowAdapter()
 		{
 		    public void windowClosing(WindowEvent e)
 		    {
@@ -123,7 +119,7 @@ public class SlayerTrackerUI {
 		formatter.setValueClass(Integer.class);
 		formatter.setMinimum(0);
 		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(false);
+		formatter.setAllowsInvalid(true);
 		// If you want the value to be committed on each keystroke instead of focus lost
 		formatter.setCommitsOnValidEdit(true);
 
@@ -132,7 +128,7 @@ public class SlayerTrackerUI {
 
 		mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, panelWidth, panelHeight);
-		frmJrsSlayerTracker.getContentPane().add(mainPanel);
+		mainFrame.getContentPane().add(mainPanel);
 		mainPanel.setLayout(null);
 		
 		mainPanel.addComponentListener ( new ComponentAdapter ()
@@ -141,6 +137,7 @@ public class SlayerTrackerUI {
 	        {
 	            updateCannonballs();
 	            updateRunes();
+	            player.save();
 	            monsterCountSpinner.setValue(0);
 	        }
 
@@ -152,12 +149,12 @@ public class SlayerTrackerUI {
 		
 		JPanel addCannonballsPanel = new JPanel();
 		addCannonballsPanel.setBounds(0, 0, panelWidth, panelHeight);
-		frmJrsSlayerTracker.getContentPane().add(addCannonballsPanel);
+		mainFrame.getContentPane().add(addCannonballsPanel);
 		addCannonballsPanel.setLayout(null);
 
 		JPanel addRunesPanel = new JPanel();
 		addRunesPanel.setBounds(0, 0, panelWidth, panelHeight);
-		frmJrsSlayerTracker.getContentPane().add(addRunesPanel);
+		mainFrame.getContentPane().add(addRunesPanel);
 		addRunesPanel.setLayout(null);
 		
 		addCannonballsPanel.setVisible(false);
@@ -182,7 +179,7 @@ public class SlayerTrackerUI {
 		btnDustDevil.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				openMonsterPanel("Dust Devils");
+				openMonsterPanel("Dust Devils",false,true);
 			}
 		});
 		btnDustDevil.setBounds(col1X, row1Y, buttonWidth, buttonHeight);
@@ -203,7 +200,7 @@ public class SlayerTrackerUI {
 		btnSmokeDevil.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				openMonsterPanel("Smoke Devils");
+				openMonsterPanel("Smoke Devils",true,true);
 			}
 		});
 		mainPanel.add(btnSmokeDevil);
@@ -220,7 +217,7 @@ public class SlayerTrackerUI {
 			btnAbbySpec.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Aberrant Spectres");
+					openMonsterPanel("Aberrant Spectres",true,false);
 				}
 			});
 			btnAbbySpec.setIcon(imageIcon);
@@ -241,7 +238,7 @@ public class SlayerTrackerUI {
 			btnBlackDragon.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Black Dragons");
+					openMonsterPanel("Black Dragons",true,false);
 				}
 			});
 			btnBlackDragon.setIcon(imageIcon);
@@ -260,7 +257,7 @@ public class SlayerTrackerUI {
 			btnBloodveld.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Bloodvelds");
+					openMonsterPanel("Bloodvelds",true,false);
 				}
 			});
 			btnBloodveld.setIcon(imageIcon);
@@ -281,7 +278,7 @@ public class SlayerTrackerUI {
 			btnBlueDragon.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Blue Dragons");
+					openMonsterPanel("Blue Dragons",true,false);
 				}
 			});
 			btnBlueDragon.setIcon(imageIcon);
@@ -301,7 +298,7 @@ public class SlayerTrackerUI {
 			btnDagannoth.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Dagannoths");
+					openMonsterPanel("Dagannoths",true,false);
 				}
 			});
 			btnDagannoth.setIcon(imageIcon);
@@ -321,7 +318,7 @@ public class SlayerTrackerUI {
 			btnFireGiant.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Fire Giants");
+					openMonsterPanel("Fire Giants",true,false);
 				}
 			});
 			btnFireGiant.setIcon(imageIcon);
@@ -341,7 +338,7 @@ public class SlayerTrackerUI {
 			btnGargoyle.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Gargoyle");
+					openMonsterPanel("Gargoyle",false,false);
 				}
 			});
 			btnGargoyle.setIcon(imageIcon);
@@ -361,7 +358,7 @@ public class SlayerTrackerUI {
 			btnGreaterDemon.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Greater Demon");
+					openMonsterPanel("Greater Demon",true,false);
 				}
 			});
 			btnGreaterDemon.setIcon(imageIcon);
@@ -382,7 +379,7 @@ public class SlayerTrackerUI {
 			btnTrolls.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Trolls");
+					openMonsterPanel("Trolls",true,false);
 				}
 			});
 			btnTrolls.setIcon(imageIcon);
@@ -402,7 +399,7 @@ public class SlayerTrackerUI {
 			btnKalphite.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Kalphites");
+					openMonsterPanel("Kalphites",true,false);
 				}
 			});
 			btnKalphite.setIcon(imageIcon);
@@ -422,7 +419,7 @@ public class SlayerTrackerUI {
 			btnLizardman.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Lizardmen");
+					openMonsterPanel("Lizardmen",false,true);
 				}
 			});
 			btnLizardman.setIcon(imageIcon);
@@ -441,7 +438,7 @@ public class SlayerTrackerUI {
 			btnNechryael.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Nechryaels");
+					openMonsterPanel("Nechryaels",false,true);
 				}
 			});
 			btnNechryael.setIcon(imageIcon);
@@ -460,7 +457,7 @@ public class SlayerTrackerUI {
 			btnWyvern.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Wyverns");
+					openMonsterPanel("Wyverns",false,false);
 				}
 			});
 			btnWyvern.setIcon(imageIcon);
@@ -647,9 +644,9 @@ public class SlayerTrackerUI {
 				if(addDeathRunesTextField.getText().length() > 0 &&
 						addChaosRunesTextField.getText().length() > 0 &&
 						addWaterRunesTextField.getText().length() > 0) {
-					player.setDeathRunes(Integer.parseInt(addDeathRunesTextField.getText()));
-					player.setChaosRunes(Integer.parseInt(addChaosRunesTextField.getText()));
-					player.setWaterRunes(Integer.parseInt(addWaterRunesTextField.getText()));
+					player.setDeathRunes(Integer.parseInt(addDeathRunesTextField.getText().replaceAll(",", "")));
+					player.setChaosRunes(Integer.parseInt(addChaosRunesTextField.getText().replaceAll(",", "")));
+					player.setWaterRunes(Integer.parseInt(addWaterRunesTextField.getText().replaceAll(",", "")));
 					updateRunes();
 					mainPanel.setVisible(true);
 					addRunesPanel.setVisible(false);
@@ -678,15 +675,20 @@ public class SlayerTrackerUI {
 		return Math.round(numberToScale*scale);
 	}
 	
-	public void openMonsterPanel(String monsterName) {
+	public void openMonsterPanel(String monsterName, boolean isCannon, boolean isBurst) {
 		int count = (int) monsterCountSpinner.getValue();
 		if(count == 0) {
 			monsterCountSpinner.setBackground(new Color(255, 0, 0));
 		}else {
+			// This if fixes the issue of unlimited panes being created
+			if(mainFrame.getContentPane().getComponentCount() > 3) {
+				mainFrame.getContentPane().remove(mainFrame.getContentPane().getComponentCount()-1);
+			}
 			monsterCountSpinner.setBackground(new Color(240, 240, 240));
 			mainPanel.setVisible(false);
 			MonsterPanel monsterPanel = new MonsterPanel(monsterName, null, count, scale,player);
-			frmJrsSlayerTracker.getContentPane().add(monsterPanel.build(mainPanel));
+			mainFrame.getContentPane().add(monsterPanel.build(mainPanel,isCannon,isBurst));
 		}
+		//System.out.println(mainFrame.getContentPane().getComponentCount());
 	}
 }

@@ -26,6 +26,7 @@ public class Player {
 		chaosRunes = 0;
 		deathRunes = 0;
 		avgCannonballPrice = 0;
+		//csv = new CsvExport();
 		csv = new CsvExport(path);
 	}
 
@@ -44,8 +45,8 @@ public class Player {
 	 */
 	public void updateCannonbals(int amountToAdd, int price) {
 		csv.updateCannonballLog(amountToAdd, price);
-		this.cannonballs += amountToAdd;
-		this.avgCannonballPrice = csv.getAvgCannonballPrice();
+		Player.cannonballs += amountToAdd;
+		Player.avgCannonballPrice = csv.getAvgCannonballPrice();
 	}
 
 	/***
@@ -61,7 +62,7 @@ public class Player {
 	 * @param waterRunes amount of water runes
 	 */
 	public void setWaterRunes(int waterRunes) {
-		this.waterRunes = waterRunes;
+		Player.waterRunes = waterRunes;
 	}
 
 	/***
@@ -77,7 +78,7 @@ public class Player {
 	 * @param chaosRunes amount of chaos runes
 	 */
 	public void setChaosRunes(int chaosRunes) {
-		this.chaosRunes = chaosRunes;
+		Player.chaosRunes = chaosRunes;
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class Player {
 	 * @param deathRunes amount of death runes
 	 */
 	public void setDeathRunes(int deathRunes) {
-		this.deathRunes = deathRunes;
+		Player.deathRunes = deathRunes;
 	}
 	
 	/**
@@ -162,46 +163,53 @@ public class Player {
 	 * @param avgCannonballPrice average price of cannonballs
 	 */
 	public void setAvgCannonballPrice(float avgCannonballPrice) {
-		this.avgCannonballPrice = avgCannonballPrice;
+		Player.avgCannonballPrice = avgCannonballPrice;
 	}
 	
 	/***
-	 * Run when a task is finished
-	 * @param monsterName Name of monster killed
-	 * @param monsterCount Number of monsters killed
-	 * @param loot Price of loot from monster
-	 * @param ballsLeft Number of balls left
+	 * Save and finish the current task
+	 * @param data array of data to save, must follow specific sizes and guidelines
 	 */
-	public void finishCannonTask(String monsterName, int monsterCount, int loot, int ballsLeft) {
-		csv.saveCannonLog(monsterName, monsterCount, loot, avgCannonballPrice, ballsLeft, (cannonballs-ballsLeft));
-		cannonballs = ballsLeft;
-		save();
-	}
-	
-	/***
-	 * Run when a task is finished
-	 * @param monsterName Name of monster killed
-	 * @param monsterCount Number of monsters killed
-	 * @param loot Price of loot from monster
-	 * @param ballsLeft Number of balls left
-	 * @param time Time in milliseconds the task took
-	 */
-	public void finishCannonTask(String monsterName, int monsterCount, int loot, int ballsLeft, long time) {
-		System.out.println(cannonballs);
-		System.out.println(ballsLeft);
-		System.out.println(avgCannonballPrice);
-		csv.saveCannonLog(monsterName, monsterCount, loot, avgCannonballPrice, ballsLeft, (cannonballs-ballsLeft),time);
-		cannonballs = ballsLeft;
-		save();
-	}
-	
-	public void finishBurstTask(String monsterName, int monsterCount, int loot, int deathLeft, int chaosLeft, int waterLeft) {
-		csv.saveBurstLog(monsterName, monsterCount, loot, deathLeft, chaosLeft, waterLeft, deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice);
-		
-		deathRunes = deathLeft;
-		chaosRunes = chaosLeft;
-		waterRunes = waterLeft;
-		save();
+	public void finishTask(Object[] data) {
+		// 4 = task without cannon
+			// {name, count, profit,time}
+		// 5 = cannon 
+			// {name, count, profit, cannonballLeft, time}
+		// 7 = burst 
+			// {name, count, profit, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time}
+		// 8 = burst & cannon
+			// {name, count, profit, cannonballLeft, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time}
+		Object[] toSend = null;
+		if(data.length == 4) {
+			// without cannon/burst
+			Object[] temp = {data[0], data[1], data[2],data[3]};
+			toSend = temp;
+		}else if(data.length == 5) {
+			// cannon
+			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballs Used,time
+			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]),data[4]};
+			toSend = temp;
+			cannonballs = (int)data[3];
+		}else if(data.length == 7) {
+			// burst
+			// name, count, profit, deathLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterPrice,time
+			Object[] temp = {data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice,data[6]};
+			toSend = temp;
+			deathRunes = (int)data[3];
+			chaosRunes = (int)data[4];
+			waterRunes = (int)data[5];
+		}
+		else if(data.length == 8) {
+			// burst/cannon
+			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballs Used, deathsLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterprice,time
+			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice,data[7]};
+			toSend = temp;
+			deathRunes = (int)data[4];
+			chaosRunes = (int)data[5];
+			waterRunes = (int)data[6];
+			cannonballs = (int)data[3];
+		}
+		csv.saveLog(toSend);
 	}
 	
 }

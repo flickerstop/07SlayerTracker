@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,7 +21,7 @@ import javax.swing.text.NumberFormatter;
 public class MonsterPanel{
 
 	private String name;
-	private ImageIcon image;
+	//private ImageIcon image;
 	private int count;
 	private float scale;
 	
@@ -33,6 +32,9 @@ public class MonsterPanel{
 	private JFormattedTextField trip5TextField;
 	private JFormattedTextField trip6TextField;
 	private JFormattedTextField cannonballsLeftTextField;
+	private JFormattedTextField deathRunesLeftTextField;
+	private JFormattedTextField chaosRunesLeftTextField;
+	private JFormattedTextField waterRunesLeftTextField;
 	
 	long currentTime = 0;
 	long timerStart = 0;
@@ -42,7 +44,7 @@ public class MonsterPanel{
 	
 	public MonsterPanel() {
 		name = "";
-		image = new ImageIcon();
+		//image = new ImageIcon();
 		count = 0;
 		scale = 1.0f;
 	}
@@ -50,12 +52,12 @@ public class MonsterPanel{
 	public MonsterPanel(String monsterName, ImageIcon icon, int count, float scale,Player player) {
 		this.player = player;
 		name = monsterName;
-		image = icon;
+		//image = icon;
 		this.count = count;
 		this.scale = scale;
 	}
 	
-	public JPanel build(JPanel mainPanel) {
+	public JPanel build(JPanel mainPanel, boolean isCannon, boolean isBurst) {
 				
 		/////////////////////
 		// Variables
@@ -98,6 +100,9 @@ public class MonsterPanel{
 			int profit = 0;
 			int cannonballLeft = -1;
 			long time = 0;
+			int deathRunesLeft = -1;
+			int chaosRunesLeft = -1;
+			int waterRunesLeft = -1;
 			
 			////////////////
 			// Get loot
@@ -120,36 +125,73 @@ public class MonsterPanel{
 				profit += Integer.parseInt(trip6TextField.getText().replaceAll(",", ""));
 			}
 			
-			///////////////
-			// Get cannonballs left
-			if(cannonballsLeftTextField.getText().length() != 0) {
-				cannonballLeft = Integer.parseInt(cannonballsLeftTextField.getText().replaceAll(",", ""));
-			}else {
-				// If nothing was entered where cannonballs are left
-				cannonballsLeftTextField.setBackground(new Color(255, 0, 0));
-			}
 			
+			if(isCannon) {
+				///////////////
+				// Get cannonballs left
+				if(cannonballsLeftTextField.getText().length() != 0) {
+					cannonballLeft = Integer.parseInt(cannonballsLeftTextField.getText().replaceAll(",", ""));
+				}else {
+					// If nothing was entered where cannonballs are left
+					cannonballsLeftTextField.setBackground(new Color(255, 0, 0));
+				}
+			}
+			if(isBurst) {
+				///////////////
+				// Get cannonballs left
+				if(deathRunesLeftTextField.getText().length() != 0) {
+					deathRunesLeft = Integer.parseInt(deathRunesLeftTextField.getText().replaceAll(",", ""));
+				}else {
+					// If nothing was entered where cannonballs are left
+					deathRunesLeftTextField.setBackground(new Color(255, 0, 0));
+				}
+				if(chaosRunesLeftTextField.getText().length() != 0) {
+					chaosRunesLeft = Integer.parseInt(chaosRunesLeftTextField.getText().replaceAll(",", ""));
+				}else {
+					// If nothing was entered where cannonballs are left
+					chaosRunesLeftTextField.setBackground(new Color(255, 0, 0));
+				}
+				if(waterRunesLeftTextField.getText().length() != 0) {
+					waterRunesLeft = Integer.parseInt(waterRunesLeftTextField.getText().replaceAll(",", ""));
+				}else {
+					// If nothing was entered where cannonballs are left
+					waterRunesLeftTextField.setBackground(new Color(255, 0, 0));
+				}
+			}
 			////////////
 			// Get timer
 			if(timerStop > 0) {
 				time = timerStop - timerStart;
 			}else if(timerStart > 0) {
 				time = System.currentTimeMillis() - timerStart;
+			}else {
+				time = 0;
 			}
 			//System.out.println(time);
 			// If valid end
-			if(profit != 0 && cannonballLeft != -1) {
-				if(time > 0) {
-					System.out.println("saving with time");
-					player.finishCannonTask(name, count, profit, cannonballLeft, time);
-					panel.setVisible(false);
-					mainPanel.setVisible(true);
-				}else {
-					System.out.println("saving without time");
-					player.finishCannonTask(name, count, profit, cannonballLeft);
-					panel.setVisible(false);
-					mainPanel.setVisible(true);
+			/////////////////////////////
+			// 3 = task without cannon
+			// 5 = cannon 
+			// 7 = burst 
+			// 8 = cannon/burst
+			
+			// player.finishCannonTask(name, count, profit, cannonballLeft);
+			if(profit != 0) {
+				if(isCannon && !isBurst) {
+					Object[] toSend = {name, count, profit, cannonballLeft, time};
+					player.finishTask(toSend);
+				}else if(!isCannon && isBurst) {
+					Object[] toSend = {name,count, profit, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time};
+					player.finishTask(toSend);
+				}else if(!isCannon && !isBurst) {
+					Object[] toSend = {name, count, profit,time};
+					player.finishTask(toSend);
+				}else if(isCannon && isBurst) {
+					Object[] toSend = {name,count, profit, cannonballLeft, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time};
+					player.finishTask(toSend);
 				}
+				panel.setVisible(false);
+				mainPanel.setVisible(true);
 			}
 			//System.out.println(profit);
 		}
@@ -286,23 +328,59 @@ public class MonsterPanel{
 		otherInfoLabel.setBounds(0, 0, infoPanelWidth, rowHeight);
 		otherInfoPanel.add(otherInfoLabel);
 		
-		//////////////
-		// Cannonball Label
+		if(isCannon) {
+			//////////////
+			// Cannonball Label
+			JLabel cannonballsLeftLabel = new JLabel("Cannonballs Left");
+			cannonballsLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			cannonballsLeftLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			cannonballsLeftLabel.setBounds(0, scale(30), infoPanelWidth/2, rowHeight);
+			otherInfoPanel.add(cannonballsLeftLabel);
+			
+			cannonballsLeftTextField = new JFormattedTextField(formatter);
+			cannonballsLeftTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			cannonballsLeftTextField.setBounds(infoPanelWidth/2, scale(30), (infoPanelWidth/2)-scale(15), rowHeight);
+			otherInfoPanel.add(cannonballsLeftTextField);
+			cannonballsLeftTextField.setColumns(10);
 		
-		
-		
-		JLabel cannonballsLeftLabel = new JLabel("Cannonballs Left");
-		cannonballsLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		cannonballsLeftLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
-		cannonballsLeftLabel.setBounds(0, (infoPanelHeight/2)-(rowHeight/2)-scale(45), infoPanelWidth/2, rowHeight);
-		otherInfoPanel.add(cannonballsLeftLabel);
-		
-		cannonballsLeftTextField = new JFormattedTextField(formatter);
-		cannonballsLeftTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
-		cannonballsLeftTextField.setBounds(infoPanelWidth/2, (infoPanelHeight/2)-(rowHeight/2)-scale(45), (infoPanelWidth/2)-scale(15), rowHeight);
-		otherInfoPanel.add(cannonballsLeftTextField);
-		cannonballsLeftTextField.setColumns(10);
-		
+		}
+		if(isBurst) {
+			JLabel deathRunesLeftLabel = new JLabel("Death Runes Left");
+			deathRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			deathRunesLeftLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			deathRunesLeftLabel.setBounds(0, scale(30)+rowHeight, infoPanelWidth/2, rowHeight);
+			otherInfoPanel.add(deathRunesLeftLabel);
+			
+			deathRunesLeftTextField = new JFormattedTextField(formatter);
+			deathRunesLeftTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			deathRunesLeftTextField.setBounds(infoPanelWidth/2, scale(30)+rowHeight, (infoPanelWidth/2)-scale(15), rowHeight);
+			otherInfoPanel.add(deathRunesLeftTextField);
+			deathRunesLeftTextField.setColumns(10);
+			
+			JLabel chaosRunesLeftLabel = new JLabel("Chaos Runes Left");
+			chaosRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			chaosRunesLeftLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			chaosRunesLeftLabel.setBounds(0, scale(30)+rowHeight*2, infoPanelWidth/2, rowHeight);
+			otherInfoPanel.add(chaosRunesLeftLabel);
+			
+			chaosRunesLeftTextField = new JFormattedTextField(formatter);
+			chaosRunesLeftTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			chaosRunesLeftTextField.setBounds(infoPanelWidth/2, scale(30)+rowHeight*2, (infoPanelWidth/2)-scale(15), rowHeight);
+			otherInfoPanel.add(chaosRunesLeftTextField);
+			chaosRunesLeftTextField.setColumns(10);
+			
+			JLabel waterRunesLeftLabel = new JLabel("Water Runes Left");
+			waterRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			waterRunesLeftLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			waterRunesLeftLabel.setBounds(0, scale(30)+rowHeight*3, infoPanelWidth/2, rowHeight);
+			otherInfoPanel.add(waterRunesLeftLabel);
+			
+			waterRunesLeftTextField = new JFormattedTextField(formatter);
+			waterRunesLeftTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+			waterRunesLeftTextField.setBounds(infoPanelWidth/2, scale(30)+rowHeight*3, (infoPanelWidth/2)-scale(15), rowHeight);
+			otherInfoPanel.add(waterRunesLeftTextField);
+			waterRunesLeftTextField.setColumns(10);
+		}
 		//////////////
 		// Timer
 		JButton startTimerButton = new JButton("Start Timer");
@@ -313,7 +391,8 @@ public class MonsterPanel{
 			startTimer();
 		}
 		});
-		startTimerButton.setBounds(scale(10), (infoPanelHeight/2)-(rowHeight/2), (infoPanelWidth/2)-scale(10), rowHeight);
+		
+		startTimerButton.setBounds(scale(10), (infoPanelHeight)-(rowHeight*2+scale(5)), (infoPanelWidth/2)-scale(10), rowHeight);
 		otherInfoPanel.add(startTimerButton);
 		
 		JButton stopTimerButton = new JButton("Stop Timer");
@@ -324,7 +403,7 @@ public class MonsterPanel{
 			stopTimer();
 		}
 		});
-		stopTimerButton.setBounds(infoPanelWidth/2, (infoPanelHeight/2)-(rowHeight/2), (infoPanelWidth/2)-scale(10), rowHeight);
+		stopTimerButton.setBounds(infoPanelWidth/2, (infoPanelHeight)-(rowHeight*2+scale(5)), (infoPanelWidth/2)-scale(10), rowHeight);
 		otherInfoPanel.add(stopTimerButton);
 		
 		timerTextField = new JTextField();
@@ -332,7 +411,7 @@ public class MonsterPanel{
 		timerTextField.setText("00:00:00");
 		timerTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
 		timerTextField.setEditable(false);
-		timerTextField.setBounds(infoPanelWidth/4, (infoPanelHeight/2)-(rowHeight/2)+rowHeight, (infoPanelWidth/2), rowHeight);
+		timerTextField.setBounds(infoPanelWidth/4, (infoPanelHeight)-(rowHeight+scale(5)), (infoPanelWidth/2), rowHeight);
 		otherInfoPanel.add(timerTextField);
 		timerTextField.setColumns(10);
 		
@@ -351,6 +430,29 @@ public class MonsterPanel{
 		}
 		
 		});
+		
+		/////////////////////////////////////////////////////////
+		// home button
+		JButton homeButton = new JButton("H");
+		homeButton.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+		homeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				panel.setVisible(false);
+				mainPanel.setVisible(true);
+			}
+		});
+		
+		homeButton.setBounds(scale(2), scale(2), scale(20), scale(20));
+		panel.add(homeButton);
+		
+		
+		
+		
+		
+		
+		
+		
 		timer.start();
 		return panel;
 	}
