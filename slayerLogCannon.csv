@@ -1,3 +1,6 @@
-monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
-Black Dragons,157,700000,2000,3000,621000,79000,00:00:02
-Wyverns,2,10,10,1990,411930,-411920
+Trolls,100,10000,100,9900,1980000,-1970000,00:00:01
+Bloodvelds,90,90000,90,10,2000,88000,00:00:00
+Aberrant Spectres,1,8388,90,0,0,8388,00:00:00
+Aberrant Spectres,1,19445,90,0,0,19445,00:00:00
+Aberrant Spectres,100,263397,90,0,0,263397,00:00:00
+Aberrant Spectres,100,111054664,90,0,0,111054664,00:00:00

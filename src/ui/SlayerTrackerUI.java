@@ -1,6 +1,7 @@
 package ui;
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.awt.Insets;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
+import objects.LogPanel;
 import objects.MonsterPanel;
 import objects.Player;
 
@@ -43,7 +45,12 @@ public class SlayerTrackerUI {
 	private JPanel mainPanel;
 	private JSpinner monsterCountSpinner;
 	Player player = new Player();
-	private float scale = 1.0f;
+	public static float scale = 1.0f;
+	
+	public static Font mainFont = new Font("Tahoma", Font.PLAIN, scale(12));
+	public static Font boldFont = new Font("Tahoma", Font.BOLD, scale(14));
+	public static Font massiveFont = new Font("Tahoma", Font.BOLD, scale(20));
+	public static Font smallFont = new Font("Tahoma", Font.BOLD, scale(9));
 	
 	JTextPane txtpnCannonballs = new JTextPane();
 	/**
@@ -468,13 +475,13 @@ public class SlayerTrackerUI {
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Cannonballs
 		updateCannonballs();
-		txtpnCannonballs.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		txtpnCannonballs.setFont(mainFont);
 		txtpnCannonballs.setEditable(false);
 		txtpnCannonballs.setBounds(panelWidth-scale(150), scale(5), scale(150), scale(25));
 		mainPanel.add(txtpnCannonballs);
 		
 		JButton btnAddCannonballs = new JButton("Add Cannonballs");
-		btnAddCannonballs.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		btnAddCannonballs.setFont(mainFont);
 		btnAddCannonballs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -493,13 +500,13 @@ public class SlayerTrackerUI {
 		monsterCountSpinner = new JSpinner();
 		monsterCountSpinner.setModel(new SpinnerNumberModel(0, 0, 300, 1));
 		monsterCountSpinner.setBounds((panelWidth/2)-scale(150/2), scale(65), scale(150), scale(25));
-		monsterCountSpinner.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		monsterCountSpinner.setFont(mainFont);
 		mainPanel.add(monsterCountSpinner);
 		
 		
 		JLabel monsterCountLabel = new JLabel("Number of Monsters");
 		monsterCountLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		monsterCountLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		monsterCountLabel.setFont(boldFont);
 		monsterCountLabel.setBounds((panelWidth/2)-scale(150/2), scale(40), scale(150), scale(25));
 		mainPanel.add(monsterCountLabel);
 		
@@ -509,24 +516,24 @@ public class SlayerTrackerUI {
 		// Cannonball jpane
 		
 		JLabel lblAmountBought = new JLabel("Amount Bought");
-		lblAmountBought.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		lblAmountBought.setFont(mainFont);
 		lblAmountBought.setBounds((panelWidth/2)-scale(115), scale(100), scale(100), scale(25));
 		addCannonballsPanel.add(lblAmountBought);
 		
 		
 		amountOfCannonballsBought = new JFormattedTextField(formatter);
-		amountOfCannonballsBought.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		amountOfCannonballsBought.setFont(mainFont);
 		amountOfCannonballsBought.setBounds((panelWidth/2)-scale(115), scale(130), scale(100), scale(25));
 		addCannonballsPanel.add(amountOfCannonballsBought);
 		amountOfCannonballsBought.setColumns(10);
 		
 		JLabel lblPricePaid = new JLabel("Price Per Ball");
-		lblPricePaid.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		lblPricePaid.setFont(mainFont);
 		lblPricePaid.setBounds((panelWidth/2)+scale(15), scale(100), scale(100), scale(25));
 		addCannonballsPanel.add(lblPricePaid);
 		
 		pricePaidForCannonballs = new JFormattedTextField(formatter);
-		pricePaidForCannonballs.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		pricePaidForCannonballs.setFont(mainFont);
 		pricePaidForCannonballs.setBounds((panelWidth/2)+scale(15), scale(130), scale(100), scale(25));
 		addCannonballsPanel.add(pricePaidForCannonballs);
 		pricePaidForCannonballs.setColumns(10);
@@ -536,7 +543,7 @@ public class SlayerTrackerUI {
 		
 		
 		JButton addCannonballsButton = new JButton("Add Cannonballs");
-		addCannonballsButton.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addCannonballsButton.setFont(mainFont);
 		addCannonballsButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -553,7 +560,7 @@ public class SlayerTrackerUI {
 		addCannonballsPanel.add(addCannonballsButton);
 		
 		JButton cancelBuyingCannonBalls = new JButton("Cancel");
-		cancelBuyingCannonBalls.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		cancelBuyingCannonBalls.setFont(mainFont);
 		cancelBuyingCannonBalls.setBackground(new Color(255, 0, 0));
 		cancelBuyingCannonBalls.setBounds((panelWidth/2)-scale(115), scale(225), scale(230), scale(25));
 		addCannonballsPanel.add(cancelBuyingCannonBalls);
@@ -562,14 +569,14 @@ public class SlayerTrackerUI {
 		////////////////////////////////////////////////////
 		// Rune lables
 		deathRuneTextPane = new JTextPane();
-		deathRuneTextPane.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		deathRuneTextPane.setFont(mainFont);
 		deathRuneTextPane.setBounds(scale(15), scale(5), scale(150), scale(25));
 		deathRuneTextPane.setEditable(false);
 		deathRuneTextPane.setText("Death Runes: ");
 		mainPanel.add(deathRuneTextPane);
 		
 		chaosRuneTextPane = new JTextPane();
-		chaosRuneTextPane.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		chaosRuneTextPane.setFont(mainFont);
 		chaosRuneTextPane.setEditable(false);
 		chaosRuneTextPane.setBounds(scale(15), scale(30), scale(150), scale(25));
 		chaosRuneTextPane.setText("Chaos Runes: ");
@@ -577,7 +584,7 @@ public class SlayerTrackerUI {
 		
 		waterRuneTextPane = new JTextPane();
 		waterRuneTextPane.setEditable(false);
-		waterRuneTextPane.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		waterRuneTextPane.setFont(mainFont);
 		waterRuneTextPane.setBounds(scale(15), scale(55), scale(150), scale(25));
 		waterRuneTextPane.setText("Water Runes: ");
 		mainPanel.add(waterRuneTextPane);
@@ -586,7 +593,7 @@ public class SlayerTrackerUI {
 		
 		
 		JButton changeRunesButton = new JButton("Change Runes");
-		changeRunesButton.setFont(new Font("Tahoma", Font.PLAIN, scale(11)));
+		changeRunesButton.setFont(mainFont);
 		changeRunesButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -602,42 +609,42 @@ public class SlayerTrackerUI {
 		
 		JLabel addDeathRunesLabel = new JLabel("Amount of Death Runes");
 		addDeathRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addDeathRunesLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addDeathRunesLabel.setFont(mainFont);
 		addDeathRunesLabel.setBounds((panelWidth/2)-scale(50), scale(100), scale(150), scale(25));
 		addRunesPanel.add(addDeathRunesLabel);
 		
 		JFormattedTextField addDeathRunesTextField = new JFormattedTextField(formatter);
-		addDeathRunesTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addDeathRunesTextField.setFont(mainFont);
 		addDeathRunesTextField.setBounds((panelWidth/2)-scale(50), scale(125), scale(150), scale(25));
 		addRunesPanel.add(addDeathRunesTextField);
 		addDeathRunesTextField.setColumns(10);
 		
 		JLabel addChaosRunesLabel = new JLabel("Amount of Chaos Runes");
 		addChaosRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addChaosRunesLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addChaosRunesLabel.setFont(mainFont);
 		addChaosRunesLabel.setBounds((panelWidth/2)-scale(50), scale(150), scale(150), scale(25));
 		addRunesPanel.add(addChaosRunesLabel);
 		
 		JFormattedTextField addChaosRunesTextField = new JFormattedTextField(formatter);
-		addChaosRunesTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addChaosRunesTextField.setFont(mainFont);
 		addChaosRunesTextField.setBounds((panelWidth/2)-scale(50), scale(175), scale(150), scale(25));
 		addRunesPanel.add(addChaosRunesTextField);
 		addChaosRunesTextField.setColumns(10);
 		
 		JLabel addWaterRunesLabel = new JLabel("Amount of Water Runes");
 		addWaterRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addWaterRunesLabel.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addWaterRunesLabel.setFont(mainFont);
 		addWaterRunesLabel.setBounds((panelWidth/2)-scale(50), scale(200), scale(150), scale(25));
 		addRunesPanel.add(addWaterRunesLabel);
 		
 		JFormattedTextField addWaterRunesTextField = new JFormattedTextField(formatter);
-		addWaterRunesTextField.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		addWaterRunesTextField.setFont(mainFont);
 		addWaterRunesTextField.setBounds((panelWidth/2)-scale(50), scale(225), scale(150), scale(25));
 		addRunesPanel.add(addWaterRunesTextField);
 		addWaterRunesTextField.setColumns(10);
 		
 		JButton acceptChangeRunesButton = new JButton("Change Runes");
-		acceptChangeRunesButton.setFont(new Font("Tahoma", Font.PLAIN, scale(12)));
+		acceptChangeRunesButton.setFont(mainFont);
 		acceptChangeRunesButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -656,6 +663,21 @@ public class SlayerTrackerUI {
 		acceptChangeRunesButton.setBounds((panelWidth/2)-scale(50), scale(250), scale(150), scale(25));
 		addRunesPanel.add(acceptChangeRunesButton);
 		//////////////////////////////////////////////////////
+		// View log button
+		JButton viewLogButton = new JButton("Logs");
+		viewLogButton.setFont(smallFont);
+		viewLogButton.setMargin(new Insets(0, 0, 0, 0));
+		viewLogButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				LogPanel.build(scale,player);
+			}
+		});
+		viewLogButton.setBounds(panelWidth-scale(50), panelHeight-scale(25), scale(50), scale(25));
+		mainPanel.add(viewLogButton);
+		
+		
+		
 	}
 	public void updateCannonballs() {
 		txtpnCannonballs.setText("Cannonballs: "+player.getCannonballs());
@@ -668,7 +690,7 @@ public class SlayerTrackerUI {
 		waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
 	}
 	
-	public int scale(int numberToScale) {
+	public static int scale(int numberToScale) {
 		return Math.round(numberToScale*scale);
 	}
 	public int scale(float numberToScale) {

@@ -1,8 +1,10 @@
 package objects;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class CsvExport {
@@ -165,6 +167,88 @@ public class CsvExport {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public ArrayList<ArrayList<String[]>> getCannonLog() {
+		ArrayList<ArrayList<String[]>> toSend = new ArrayList<ArrayList<String[]>>();
+		
+		// Get Normal Log
+		ArrayList<String[]> normalLog = new ArrayList<String[]>();
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(slayerFile));  
+			line = br.readLine();
+		    while (line != null) {
+		        normalLog.add(line.split(","));
+		        line = br.readLine();
+		    }
+
+		    br.close();
+		}catch(FileNotFoundException e) {
+			normalLog.add(new String[] {"No Normal log"});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		toSend.add(normalLog);
+		
+		// Get Cannon Log
+		ArrayList<String[]> cannonLog = new ArrayList<String[]>();
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(cannonFile));  
+			line = br.readLine();
+		    while (line != null) {
+		    	cannonLog.add(line.split(","));
+		        line = br.readLine();
+		    }
+
+		    br.close();
+		}catch(FileNotFoundException e) {
+			cannonLog.add(new String[] {"No Cannon log"});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		toSend.add(cannonLog);
+		
+		// Get Cannon Log
+		ArrayList<String[]> burstLog = new ArrayList<String[]>();
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(burstFile));  
+			line = br.readLine();
+		    while (line != null) {
+		    	burstLog.add(line.split(","));
+		        line = br.readLine();
+		    }
+
+		    br.close();
+		}catch(FileNotFoundException e) {
+			burstLog.add(new String[] {"No Burst log"});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		toSend.add(burstLog);
+		
+		// Get Cannon Log
+		ArrayList<String[]> cannonBurstLog = new ArrayList<String[]>();
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(cannonBurstFile));  
+			line = br.readLine();
+		    while (line != null) {
+		    	cannonBurstLog.add(line.split(","));
+		        line = br.readLine();
+		    }
+
+		    br.close();
+		}catch(FileNotFoundException e) {
+			cannonBurstLog.add(new String[] {"No Cannon/Burst log"});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		toSend.add(cannonBurstLog);
+				
+		return toSend;
 	}
 	
 }

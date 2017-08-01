@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class Player {
+	/////////////////////////////
+	// SAVE EDIT MODE
+	private static boolean isSafeEdit = false;
+	//////////////////////////////
 	private static int cannonballs;
 	private static int waterRunes;
 	private static int chaosRunes;
@@ -26,8 +31,13 @@ public class Player {
 		chaosRunes = 0;
 		deathRunes = 0;
 		avgCannonballPrice = 0;
-		//csv = new CsvExport();
-		csv = new CsvExport(path);
+		if(isSafeEdit) {
+			csv = new CsvExport();
+			savePath = "player.sav";
+		}else {
+			csv = new CsvExport(path);
+		}
+
 	}
 
 	/***
@@ -210,6 +220,10 @@ public class Player {
 			cannonballs = (int)data[3];
 		}
 		csv.saveLog(toSend);
+	}
+
+	public ArrayList<ArrayList<String[]>> getCannonLog() {
+		return csv.getCannonLog();
 	}
 	
 }
