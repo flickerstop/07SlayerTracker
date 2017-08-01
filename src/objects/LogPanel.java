@@ -36,6 +36,7 @@ public class LogPanel {
 	private static JTable burstTable;
 	private static JTable normalTable;
 	private static JTable cannonBurstTable;
+	private static JTable cannonballTable;
 	private static Font mainFont = SlayerTrackerUI.mainFont;
 	/**
 	 * @wbp.parser.entryPoint
@@ -47,7 +48,7 @@ public class LogPanel {
             @Override
             public void run()
             {
-            	ArrayList<ArrayList<String[]>> log = player.getCannonLog();
+            	ArrayList<ArrayList<String[]>> log = player.getLogs();
             	int width = scale(1000);
         		int height = scale(550);
         		int panelWidth = width-5;
@@ -75,7 +76,7 @@ public class LogPanel {
         				scrollPane.setViewportView(normalTable);
         			}
         		});
-        		normalLogButton.setBounds(0,panelHeight-scale(20),panelWidth/4,scale(20));
+        		normalLogButton.setBounds(0,panelHeight-scale(20),panelWidth/5,scale(20));
         		mainFrame.add(normalLogButton);
         		
         		
@@ -88,7 +89,7 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonTable);
         			}
         		});
-        		cannonLogButton.setBounds((panelWidth/4)*1,panelHeight-scale(20),panelWidth/4,scale(20));
+        		cannonLogButton.setBounds((panelWidth/5)*1,panelHeight-scale(20),panelWidth/5,scale(20));
         		mainFrame.add(cannonLogButton);
         		
         		
@@ -101,7 +102,7 @@ public class LogPanel {
         				scrollPane.setViewportView(burstTable);
         			}
         		});
-        		burstLogButton.setBounds((panelWidth/4)*2,panelHeight-scale(20),panelWidth/4,scale(20));
+        		burstLogButton.setBounds((panelWidth/5)*2,panelHeight-scale(20),panelWidth/5,scale(20));
         		mainFrame.add(burstLogButton);
         		
         		JButton cannonBurstLogButton = new JButton("Cannon/Burst Slayer Logs");
@@ -113,8 +114,20 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonBurstTable);
         			}
         		});
-        		cannonBurstLogButton.setBounds((panelWidth/4)*3,panelHeight-scale(20),panelWidth/4,scale(20));
+        		cannonBurstLogButton.setBounds((panelWidth/5)*3,panelHeight-scale(20),panelWidth/5,scale(20));
         		mainFrame.add(cannonBurstLogButton);
+        		
+        		JButton cannonballLogButton = new JButton("Cannonball Purchase Logs");
+        		cannonballLogButton.setFont(mainFont);
+        		cannonballLogButton.setMargin(new Insets(0, 0, 0, 0));
+        		cannonballLogButton.addMouseListener(new MouseAdapter() {
+        			@Override
+        			public void mouseClicked(MouseEvent arg0) {
+        				scrollPane.setViewportView(cannonballTable);
+        			}
+        		});
+        		cannonballLogButton.setBounds((panelWidth/5)*4,panelHeight-scale(20),panelWidth/5,scale(20));
+        		mainFrame.add(cannonballLogButton);
         		
         		/////////////////////////////////////////
         		// Normal Slayer
@@ -224,7 +237,22 @@ public class LogPanel {
 				cannonBurstTable.getColumn("Profit").setCellRenderer(rightRenderer);
 				cannonBurstTable.getColumn("Time").setCellRenderer(centerRenderer);
 				scrollPane.setViewportView(cannonBurstTable);
-        		
+				/////////////////////////////////////////
+				// Cannonball
+				// name, count, loot, cannonballsUsed, deathsUsed, chaosUsed, waterUsed, priceOfBalls, priceOfRunes, profit, time
+				DefaultTableModel cannonballModel = new DefaultTableModel(); 
+				cannonballModel.addColumn("Total Price"); 
+				cannonballModel.addColumn("Amount of Cannonballs"); 
+				cannonballModel.addColumn("Price per Ball");
+				for(String[] array : log.get(4)) {
+					cannonballModel.addRow(array);
+				}
+				cannonballTable = new JTable(cannonballModel);
+				cannonballTable.setFillsViewportHeight(true);
+				cannonballTable.getColumn("Total Price").setCellRenderer(rightRenderer);
+				cannonballTable.getColumn("Amount of Cannonballs").setCellRenderer(rightRenderer);
+				cannonballTable.getColumn("Price per Ball").setCellRenderer(rightRenderer);
+				scrollPane.setViewportView(cannonballTable);
         		
         		
                 mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

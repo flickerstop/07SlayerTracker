@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class Player {
 	/////////////////////////////
 	// SAVE EDIT MODE
-	private static boolean isSafeEdit = false;
+	// Is it safe to edit the cannonballs/runes
+	private static boolean isSafeEdit = true; 
 	//////////////////////////////
 	private static int cannonballs;
 	private static int waterRunes;
@@ -222,8 +223,8 @@ public class Player {
 		csv.saveLog(toSend);
 	}
 
-	public ArrayList<ArrayList<String[]>> getCannonLog() {
-		return csv.getCannonLog();
+	public ArrayList<ArrayList<String[]>> getLogs() {
+		return csv.getLogs();
 	}
 	
 }

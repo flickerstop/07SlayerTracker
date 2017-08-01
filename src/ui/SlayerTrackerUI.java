@@ -233,29 +233,29 @@ public class SlayerTrackerUI {
 		mainPanel.add(btnAbbySpec);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Black Dragon
-		JButton btnBlackDragon = new JButton("Black Dragons");
-		btnBlackDragon.setBounds(col4X, row1Y, buttonWidth, buttonHeight);
+		// other
+		JButton otherButton = new JButton("Other");
+		otherButton.setBounds(col5X, row1Y, buttonWidth, buttonHeight);
 		
 		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Black_dragon.png")); // load the image to a imageIcon
+			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/question_mark.png")); // load the image to a imageIcon
 			Image image = imageIcon.getImage(); // transform it 
 			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
 			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnBlackDragon.addMouseListener(new MouseAdapter() {
+			otherButton.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Black Dragons",true,false);
+					openMonsterPanel("other",false,false);
 				}
 			});
-			btnBlackDragon.setIcon(imageIcon);
+			otherButton.setIcon(imageIcon);
 		}
-		mainPanel.add(btnBlackDragon);
+		mainPanel.add(otherButton);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Bloodveld
 		JButton btnBloodveld = new JButton("Bloodveld");
-		btnBloodveld.setBounds(col5X, row1Y, buttonWidth, buttonHeight);
+		btnBloodveld.setBounds(col4X, row1Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Bloodveld.png")); // load the image to a imageIcon
 			Image image = imageIcon.getImage(); // transform it 
@@ -563,6 +563,14 @@ public class SlayerTrackerUI {
 		cancelBuyingCannonBalls.setFont(mainFont);
 		cancelBuyingCannonBalls.setBackground(new Color(255, 0, 0));
 		cancelBuyingCannonBalls.setBounds((panelWidth/2)-scale(115), scale(225), scale(230), scale(25));
+		cancelBuyingCannonBalls.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				mainPanel.setVisible(true);
+				addCannonballsPanel.setVisible(false);
+			}
+		});
 		addCannonballsPanel.add(cancelBuyingCannonBalls);
 		
 		
@@ -614,6 +622,7 @@ public class SlayerTrackerUI {
 		addRunesPanel.add(addDeathRunesLabel);
 		
 		JFormattedTextField addDeathRunesTextField = new JFormattedTextField(formatter);
+		addDeathRunesTextField.setText(player.getDeathRunes()+"");
 		addDeathRunesTextField.setFont(mainFont);
 		addDeathRunesTextField.setBounds((panelWidth/2)-scale(50), scale(125), scale(150), scale(25));
 		addRunesPanel.add(addDeathRunesTextField);
@@ -626,6 +635,7 @@ public class SlayerTrackerUI {
 		addRunesPanel.add(addChaosRunesLabel);
 		
 		JFormattedTextField addChaosRunesTextField = new JFormattedTextField(formatter);
+		addChaosRunesTextField.setText(player.getChaosRunes()+"");
 		addChaosRunesTextField.setFont(mainFont);
 		addChaosRunesTextField.setBounds((panelWidth/2)-scale(50), scale(175), scale(150), scale(25));
 		addRunesPanel.add(addChaosRunesTextField);
@@ -638,6 +648,7 @@ public class SlayerTrackerUI {
 		addRunesPanel.add(addWaterRunesLabel);
 		
 		JFormattedTextField addWaterRunesTextField = new JFormattedTextField(formatter);
+		addWaterRunesTextField.setText(player.getWaterRunes()+"");
 		addWaterRunesTextField.setFont(mainFont);
 		addWaterRunesTextField.setBounds((panelWidth/2)-scale(50), scale(225), scale(150), scale(25));
 		addRunesPanel.add(addWaterRunesTextField);
