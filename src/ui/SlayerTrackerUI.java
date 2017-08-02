@@ -108,7 +108,11 @@ public class SlayerTrackerUI {
 		mainFrame = new JFrame();
 		//mainFrame.setUndecorated(true);
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
-		mainFrame.setTitle("Jr2254's Slayer Tracker\r\n");
+		if(player.isSafeEdit()) {
+			mainFrame.setTitle("Jr2254's Slayer Tracker - SAFE EDIT MODE\r\n");
+		}else {
+			mainFrame.setTitle("Jr2254's Slayer Tracker\r\n");
+		}
 		mainFrame.setBounds(100, 100, width, height);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(null);

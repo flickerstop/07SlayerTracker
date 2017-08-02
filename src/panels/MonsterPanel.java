@@ -1,6 +1,7 @@
 package panels;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -24,6 +25,7 @@ import ui.SlayerTrackerUI;
 public class MonsterPanel{
 	private static Font mainFont = SlayerTrackerUI.mainFont;
 	private static Font massiveFont = SlayerTrackerUI.massiveFont;
+	private static Font smallFont = SlayerTrackerUI.massiveFont;
 	private String name;
 	//private ImageIcon image;
 	private int count;
@@ -43,6 +45,7 @@ public class MonsterPanel{
 	long currentTime = 0;
 	long timerStart = 0;
 	long timerStop = 0;
+	long pauseTime = 0;
 	private JTextField timerTextField;
 	private Player player;
 	private JPanel tripsPanel = new JPanel();
@@ -188,6 +191,7 @@ public class MonsterPanel{
 			}else {
 				time = 0;
 			}
+			time += pauseTime;
 			//System.out.println(time);
 			// If valid end
 			/////////////////////////////
@@ -415,10 +419,13 @@ public class MonsterPanel{
 		//////////////
 		// Timer
 		JButton startTimerButton = new JButton("Start Timer");
+		JButton stopTimerButton = new JButton("Stop Timer");
 		startTimerButton.setFont(mainFont);
 		startTimerButton.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
+			startTimerButton.setEnabled(false);
+			stopTimerButton.setEnabled(true);
 			startTimer();
 		}
 		});
@@ -426,15 +433,18 @@ public class MonsterPanel{
 		startTimerButton.setBounds(scale(10), (infoPanelHeight)-(rowHeight*2+scale(5)), (infoPanelWidth/2)-scale(10), rowHeight);
 		otherInfoPanel.add(startTimerButton);
 		
-		JButton stopTimerButton = new JButton("Stop Timer");
+		
 		stopTimerButton.setFont(mainFont);
 		stopTimerButton.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			startTimerButton.setEnabled(true);
+			stopTimerButton.setEnabled(false);
 			stopTimer();
 		}
 		});
 		stopTimerButton.setBounds(infoPanelWidth/2, (infoPanelHeight)-(rowHeight*2+scale(5)), (infoPanelWidth/2)-scale(10), rowHeight);
+		stopTimerButton.setEnabled(false);
 		otherInfoPanel.add(stopTimerButton);
 		
 		timerTextField = new JTextField();
@@ -446,11 +456,11 @@ public class MonsterPanel{
 		otherInfoPanel.add(timerTextField);
 		timerTextField.setColumns(10);
 		
-		final Timer timer = new Timer(1000, new ActionListener() {
+		final Timer timer = new Timer(500, new ActionListener() {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			if(timerStart > 0 && timerStop == 0) {
-				long millis = System.currentTimeMillis() - timerStart;
+				long millis = (System.currentTimeMillis() - timerStart)+pauseTime;
 			    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
 			            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
 			            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
@@ -465,7 +475,8 @@ public class MonsterPanel{
 		/////////////////////////////////////////////////////////
 		// home button
 		JButton homeButton = new JButton("H");
-		homeButton.setFont(mainFont);
+		homeButton.setFont(smallFont);
+		homeButton.setMargin(new Insets(0, 0, 0, 0));
 		homeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -488,10 +499,18 @@ public class MonsterPanel{
 		return panel;
 	}
 	public void startTimer() {
-		timerStart = System.currentTimeMillis();
+		if(timerStop == 0) { // if the stop button was never clicked
+			timerStart = System.currentTimeMillis();
+		}if(timerStop > 0) { // if stop was clicked
+			pauseTime += timerStop - timerStart;
+			timerStart = System.currentTimeMillis();
+			timerStop = 0;
+		}
 	}
 	public void stopTimer() {
-		timerStop = System.currentTimeMillis();
+		if (timerStart != 0) { // if timer has started
+			timerStop = System.currentTimeMillis();
+		}
 	}
 	
 	public int scale(int numberToScale) {

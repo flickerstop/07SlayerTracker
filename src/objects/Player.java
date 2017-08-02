@@ -99,6 +99,10 @@ public class Player {
 	public int getDeathRunes() {
 		return deathRunes;
 	}
+	
+	public boolean isSafeEdit() {
+		return isSafeEdit;
+	}
 
 	/**
 	 * Set the amount of death runes
