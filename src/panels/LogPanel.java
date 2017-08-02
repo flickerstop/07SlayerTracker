@@ -1,4 +1,4 @@
-package objects;
+package panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
+import objects.Player;
 import ui.SlayerTrackerUI;
 
 

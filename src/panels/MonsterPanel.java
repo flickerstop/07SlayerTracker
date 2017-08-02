@@ -1,4 +1,4 @@
-package objects;
+package panels;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.text.NumberFormatter;
 
+import objects.Player;
 import ui.SlayerTrackerUI;
 
 public class MonsterPanel{
@@ -38,7 +39,7 @@ public class MonsterPanel{
 	private JFormattedTextField deathRunesLeftTextField;
 	private JFormattedTextField chaosRunesLeftTextField;
 	private JFormattedTextField waterRunesLeftTextField;
-	
+	private JTextField monsterNameTextField = null;
 	long currentTime = 0;
 	long timerStart = 0;
 	long timerStop = 0;
@@ -87,14 +88,27 @@ public class MonsterPanel{
 		
 		/////////////////////
 		// Label
-		JLabel monsterNameLabel = new JLabel(count + " " +name);
-		monsterNameLabel.setFont(massiveFont);
-		monsterNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		int monsterLabelWidth = panelWidth;
 		int monsterLabelHeight = scale(24);
-		monsterNameLabel.setBounds((width/2)-(monsterLabelWidth/2), scale(10), monsterLabelWidth, monsterLabelHeight);
-		panel.add(monsterNameLabel);
 		
+		if(name == "other") {
+			JLabel countLabel = new JLabel(count+"  ");
+			countLabel.setFont(massiveFont);
+			countLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+			countLabel.setBounds((width/2)-(monsterLabelWidth/4), scale(10), monsterLabelWidth/4, monsterLabelHeight);
+			panel.add(countLabel);
+			monsterNameTextField = new JTextField();
+			monsterNameTextField.setText("Monster Name");
+			monsterNameTextField.setFont(massiveFont);
+			monsterNameTextField.setBounds((width/2), scale(10), monsterLabelWidth/4, monsterLabelHeight);
+			panel.add(monsterNameTextField);
+		}else {
+			JLabel monsterNameLabel = new JLabel(count + " " +name);
+			monsterNameLabel.setFont(massiveFont);
+			monsterNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			monsterNameLabel.setBounds((width/2)-(monsterLabelWidth/2), scale(10), monsterLabelWidth, monsterLabelHeight);
+			panel.add(monsterNameLabel);
+		}
 		//////////////////
 		// Finish task button
 		JButton finishTaskButton = new JButton("Finish Task!");
@@ -184,7 +198,13 @@ public class MonsterPanel{
 			
 			// player.finishCannonTask(name, count, profit, cannonballLeft);
 			if(profit != 0) {
-				if(isCannon && !isBurst) {
+				if(name == "other") {
+					if(!monsterNameTextField.getText().equals("Monster Name")) {
+						name = monsterNameTextField.getText();
+						Object[] toSend = {name, count, profit,time};
+						player.finishTask(toSend);
+					}
+				}else if(isCannon && !isBurst) {
 					Object[] toSend = {name, count, profit, cannonballLeft, time};
 					player.finishTask(toSend);
 				}else if(!isCannon && isBurst) {

@@ -21,9 +21,10 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
-import objects.LogPanel;
-import objects.MonsterPanel;
 import objects.Player;
+import panels.FarmRunPanel;
+import panels.LogPanel;
+import panels.MonsterPanel;
 
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
@@ -50,7 +51,7 @@ public class SlayerTrackerUI {
 	public static Font mainFont = new Font("Tahoma", Font.PLAIN, scale(12));
 	public static Font boldFont = new Font("Tahoma", Font.BOLD, scale(14));
 	public static Font massiveFont = new Font("Tahoma", Font.BOLD, scale(20));
-	public static Font smallFont = new Font("Tahoma", Font.BOLD, scale(9));
+	public static Font smallFont = new Font("Tahoma", Font.BOLD, scale(7));
 	
 	JTextPane txtpnCannonballs = new JTextPane();
 	/**
@@ -105,6 +106,7 @@ public class SlayerTrackerUI {
 		int col5X = 15+(buttonWidth+buttonSpace)*4;
 		
 		mainFrame = new JFrame();
+		//mainFrame.setUndecorated(true);
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
 		mainFrame.setTitle("Jr2254's Slayer Tracker\r\n");
 		mainFrame.setBounds(100, 100, width, height);
@@ -473,6 +475,19 @@ public class SlayerTrackerUI {
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Farm Run);
+		
+		JButton startFarmRunButton = new JButton("Farm Run Timer");
+		startFarmRunButton.setFont(mainFont);
+		startFarmRunButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				FarmRunPanel.build(player,false);
+			}
+		});
+		startFarmRunButton.setBounds(panelWidth-scale(150), scale(60), scale(150), scale(25));
+		mainPanel.add(startFarmRunButton);
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Cannonballs
 		updateCannonballs();
 		txtpnCannonballs.setFont(mainFont);
@@ -483,15 +498,14 @@ public class SlayerTrackerUI {
 		JButton btnAddCannonballs = new JButton("Add Cannonballs");
 		btnAddCannonballs.setFont(mainFont);
 		btnAddCannonballs.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				mainPanel.setVisible(false);
-				addCannonballsPanel.setVisible(true);
-			}
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+		mainPanel.setVisible(false);
+		addCannonballsPanel.setVisible(true);
+		}
 		});
 		btnAddCannonballs.setBounds(panelWidth-scale(150), scale(30), scale(150), scale(25));
-		mainPanel.add(btnAddCannonballs);
-		
+mainPanel.add(btnAddCannonballs);
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
