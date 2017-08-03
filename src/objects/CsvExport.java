@@ -185,7 +185,7 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			normalLog.add(new String[] {"No Normal log"});
+			normalLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -204,7 +204,7 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			cannonLog.add(new String[] {"No Cannon log"});
+			cannonLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -223,7 +223,7 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			burstLog.add(new String[] {"No Burst log"});
+			burstLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -242,7 +242,7 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			cannonBurstLog.add(new String[] {"No Cannon/Burst log"});
+			cannonBurstLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -262,7 +262,7 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			cannonballLog.add(new String[] {"No cannonball log"});
+			cannonballLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}

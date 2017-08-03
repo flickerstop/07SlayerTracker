@@ -30,8 +30,15 @@ public class Globals {
 	public static Color tripsBackground = new Color(255, 51, 51);
 	public static Color otherInfoBackground = new Color(0, 204, 255);
 	
-	public static boolean isDarkMode = true;
-	
+	public static boolean isDarkMode = false;
+
+	/////////////////////////////
+	// SAVE EDIT MODE
+	// Is it safe to edit the cannonballs/runes
+	public static boolean isSafeEdit = false;
+	///////
+
+	public static String versionNumber = "0.5.1";
 	
 	public static void reload() {
 		width = scale(640);

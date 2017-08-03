@@ -282,6 +282,9 @@ public class LogPanel {
 				int count = 0;
 				for(ArrayList<String[]>logs : log) {
 					for(String[] row: logs) {
+						if(row[0].equals("Nothing")) {
+							break;
+						}
 						amountOfKills[count] += Integer.parseInt(row[1]);
 						totalLoot[count] += Integer.parseInt(row[2]);
 					}
