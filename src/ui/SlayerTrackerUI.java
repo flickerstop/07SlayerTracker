@@ -35,7 +35,7 @@ import javax.swing.SpinnerNumberModel;
 import java.awt.Toolkit;
 
 public class SlayerTrackerUI {
-
+	public static final String versionNumber = "v0.4.4";
 	private JFrame mainFrame;
 	int cannonballs = 0;
 	private JFormattedTextField amountOfCannonballsBought;
@@ -109,9 +109,9 @@ public class SlayerTrackerUI {
 		//mainFrame.setUndecorated(true);
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
 		if(player.isSafeEdit()) {
-			mainFrame.setTitle("Jr2254's Slayer Tracker - SAFE EDIT MODE\r\n");
+			mainFrame.setTitle("Jr2254's Slayer Tracker "+versionNumber+" - SAFE EDIT MODE\r\n");
 		}else {
-			mainFrame.setTitle("Jr2254's Slayer Tracker\r\n");
+			mainFrame.setTitle("Jr2254's Slayer Tracker "+versionNumber+"\r\n");
 		}
 		mainFrame.setBounds(100, 100, width, height);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

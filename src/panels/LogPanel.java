@@ -38,6 +38,7 @@ public class LogPanel {
 	private static JTable normalTable;
 	private static JTable cannonBurstTable;
 	private static JTable cannonballTable;
+	private static JTable logTable;
 	private static Font mainFont = SlayerTrackerUI.mainFont;
 	/**
 	 * @wbp.parser.entryPoint
@@ -57,6 +58,7 @@ public class LogPanel {
         		
             	JFrame mainFrame = new JFrame("Test");
             	mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
+            	mainFrame.setLocationByPlatform(true);
         		mainFrame.setTitle("Slayer Logs\r\n");
         		mainFrame.setBounds(100, 100, width, height);
         		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +79,7 @@ public class LogPanel {
         				scrollPane.setViewportView(normalTable);
         			}
         		});
-        		normalLogButton.setBounds(0,panelHeight-scale(20),panelWidth/5,scale(20));
+        		normalLogButton.setBounds(0,panelHeight-scale(20),panelWidth/6,scale(20));
         		mainFrame.add(normalLogButton);
         		
         		
@@ -90,7 +92,7 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonTable);
         			}
         		});
-        		cannonLogButton.setBounds((panelWidth/5)*1,panelHeight-scale(20),panelWidth/5,scale(20));
+        		cannonLogButton.setBounds((panelWidth/6)*1,panelHeight-scale(20),panelWidth/6,scale(20));
         		mainFrame.add(cannonLogButton);
         		
         		
@@ -103,7 +105,7 @@ public class LogPanel {
         				scrollPane.setViewportView(burstTable);
         			}
         		});
-        		burstLogButton.setBounds((panelWidth/5)*2,panelHeight-scale(20),panelWidth/5,scale(20));
+        		burstLogButton.setBounds((panelWidth/6)*2,panelHeight-scale(20),panelWidth/6,scale(20));
         		mainFrame.add(burstLogButton);
         		
         		JButton cannonBurstLogButton = new JButton("Cannon/Burst Slayer Logs");
@@ -115,7 +117,7 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonBurstTable);
         			}
         		});
-        		cannonBurstLogButton.setBounds((panelWidth/5)*3,panelHeight-scale(20),panelWidth/5,scale(20));
+        		cannonBurstLogButton.setBounds((panelWidth/6)*3,panelHeight-scale(20),panelWidth/6,scale(20));
         		mainFrame.add(cannonBurstLogButton);
         		
         		JButton cannonballLogButton = new JButton("Cannonball Purchase Logs");
@@ -127,8 +129,20 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonballTable);
         			}
         		});
-        		cannonballLogButton.setBounds((panelWidth/5)*4,panelHeight-scale(20),panelWidth/5,scale(20));
+        		cannonballLogButton.setBounds((panelWidth/6)*4,panelHeight-scale(20),panelWidth/6,scale(20));
         		mainFrame.add(cannonballLogButton);
+        		
+        		JButton logButton = new JButton("Log of the Logs");
+        		logButton.setFont(mainFont);
+        		logButton.setMargin(new Insets(0, 0, 0, 0));
+        		logButton.addMouseListener(new MouseAdapter() {
+        			@Override
+        			public void mouseClicked(MouseEvent arg0) {
+        				scrollPane.setViewportView(logTable);
+        			}
+        		});
+        		logButton.setBounds((panelWidth/6)*5,panelHeight-scale(20),panelWidth/6,scale(20));
+        		mainFrame.add(logButton);
         		
         		/////////////////////////////////////////
         		// Normal Slayer
@@ -260,6 +274,49 @@ public class LogPanel {
                 mainFrame.setLocationByPlatform(true);
                 mainFrame.setVisible(true);
                 mainFrame.setResizable(false);
+				/////////////////////////////////////////
+				// Logs
+				
+				DefaultTableModel logModel = new DefaultTableModel(); 
+				logModel.addColumn("Type of Log"); 
+				logModel.addColumn("Amount of Kills"); 
+				logModel.addColumn("Total Profit"); 
+
+				int[] amountOfKills = {0,0,0,0,0};
+				int[] totalLoot = {0,0,0,0,0};
+				int absoluteTotalLoot = 0;
+				int absoluteAmountOfKills = 0;
+				int count = 0;
+				for(ArrayList<String[]>logs : log) {
+					for(String[] row: logs) {
+						amountOfKills[count] += Integer.parseInt(row[1]);
+						totalLoot[count] += Integer.parseInt(row[2]);
+					}
+					count++;
+				}
+				for(int i = 0; i<totalLoot.length;i++) {
+					absoluteTotalLoot += totalLoot[i];
+					absoluteAmountOfKills += amountOfKills[i];
+				}
+				
+				logModel.addRow(new Object[] {"Normal Tasks",amountOfKills[0],totalLoot[0]});
+				logModel.addRow(new Object[] {"Cannon Tasks",amountOfKills[1],totalLoot[1]});
+				logModel.addRow(new Object[] {"Burst Tasks",amountOfKills[2],totalLoot[2]});
+				logModel.addRow(new Object[] {"Burst/Cannon Tasks",amountOfKills[3],totalLoot[3]});
+				logModel.addRow(new Object[] {"All Tasks",absoluteAmountOfKills,absoluteTotalLoot});
+				//logModel.addRow(new Object[] {"Cannonballs",amountOfKills[4],totalLoot[0]});
+				
+				logTable = new JTable(logModel);
+				logTable.setFillsViewportHeight(true);
+				logTable.getColumn("Type of Log").setCellRenderer(centerRenderer);
+				logTable.getColumn("Amount of Kills").setCellRenderer(rightRenderer);
+				logTable.getColumn("Total Profit").setCellRenderer(rightRenderer);
+				
+				
+				
+				mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				mainFrame.setVisible(true);
+				mainFrame.setResizable(false);
 
 			}
         });
