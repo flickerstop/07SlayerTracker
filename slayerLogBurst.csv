@@ -1,3 +1,24 @@
-monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit
-test monster,69,100000,900,900,900,846000,-746000
-test monster,69,100000,90,90,90,84600,15400
+Lizardmen,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,0,0,0,0,1,00:00:00
+Dust Devils,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,-1,-1,-1,-364,365,00:00:00
+Dust Devils,1,1,0,0,0,0,1,00:00:00
+Dust Devils,1,1,0,0,0,0,1,00:00:00
+Nechryaels,1,1,0,0,0,0,1,00:00:00
+Dust Devils,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,0,0,0,0,1,00:00:00
+Dust Devils,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,-1,-1,-1,-364,365,00:00:00
+Nechryaels,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,0,0,0,0,1,00:00:00
+Nechryaels,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,-1,-1,-1,-364,365,00:00:00
+Nechryaels,1,1,0,0,0,0,1,00:00:00
+Nechryaels,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,-1,-1,-1,-364,365,00:00:00
+Lizardmen,1,1,0,0,0,0,1,00:00:00
+Dust Devils,1,1,0,0,0,0,1,00:00:00
+Nechryaels,1,1,0,0,0,0,1,00:00:00
+Lizardmen,1,1,-1,-1,-1,-364,365,00:00:00
+Lizardmen,1,1,-1,-1,-1,-364,365,00:00:00

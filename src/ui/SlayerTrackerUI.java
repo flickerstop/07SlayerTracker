@@ -2,6 +2,7 @@ package ui;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,22 +22,25 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
+import objects.Globals;
 import objects.Player;
 import panels.FarmRunPanel;
 import panels.LogPanel;
 import panels.MonsterPanel;
+import panels.SettingsPanel;
 
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
-import java.awt.Font;
+import java.awt.Frame;
+
 import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Toolkit;
 
 public class SlayerTrackerUI {
-	public static final String versionNumber = "v0.4.4";
-	private JFrame mainFrame;
+	public static final String versionNumber = "v0.5.0";
+	private static JFrame mainFrame;
 	int cannonballs = 0;
 	private JFormattedTextField amountOfCannonballsBought;
 	private JFormattedTextField pricePaidForCannonballs;
@@ -45,24 +49,20 @@ public class SlayerTrackerUI {
 	JTextPane waterRuneTextPane;
 	private JPanel mainPanel;
 	private JSpinner monsterCountSpinner;
+	static SlayerTrackerUI window;
 	Player player = new Player();
-	public static float scale = 1.0f;
-	
-	public static Font mainFont = new Font("Tahoma", Font.PLAIN, scale(12));
-	public static Font boldFont = new Font("Tahoma", Font.BOLD, scale(14));
-	public static Font massiveFont = new Font("Tahoma", Font.BOLD, scale(20));
-	public static Font smallFont = new Font("Tahoma", Font.BOLD, scale(7));
 	
 	JTextPane txtpnCannonballs = new JTextPane();
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		Globals.reload();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SlayerTrackerUI window = new SlayerTrackerUI();
-					window.mainFrame.setVisible(true);
+					window = new SlayerTrackerUI();
+					SlayerTrackerUI.mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -84,21 +84,23 @@ public class SlayerTrackerUI {
 		
 		player.load();
 		
-		int width = scale(640);
-		int height = scale(550);
-		int panelWidth = width-18;
-		int panelHeight = height-40;
+		int width = Globals.width;
 		
+		int height = Globals.height;
+		
+		int panelWidth = width;
+		
+		String title = "";
 		int numButtonCol = 5;
-		int buttonSpace = scale(10);
-		int buttonWidth = ((panelWidth-scale(30))-((numButtonCol-1)*buttonSpace))/numButtonCol;
-		int buttonHeight = scale(100);
+		int buttonSpace = Globals.scale(10);
+		int buttonWidth = ((panelWidth-Globals.scale(30))-((numButtonCol-1)*buttonSpace))/numButtonCol;
+		int buttonHeight = Globals.scale(100);
 		
 		///
 		// Button coords
-		int row1Y = (panelHeight-15)-(buttonWidth*1)-(buttonSpace*1);
-		int row2Y = (panelHeight-15)-(buttonWidth*2)-(buttonSpace*2);
-		int row3Y = (panelHeight-15)-(buttonWidth*3)-(buttonSpace*3);
+		int row1Y = (Globals.panelHeight-15)-(buttonWidth*1)-(buttonSpace*1);
+		int row2Y = (Globals.panelHeight-15)-(buttonWidth*2)-(buttonSpace*2);
+		int row3Y = (Globals.panelHeight-15)-(buttonWidth*3)-(buttonSpace*3);
 		int col1X = 15;
 		int col2X = 15+(buttonWidth+buttonSpace);
 		int col3X = 15+(buttonWidth+buttonSpace)*2;
@@ -106,13 +108,14 @@ public class SlayerTrackerUI {
 		int col5X = 15+(buttonWidth+buttonSpace)*4;
 		
 		mainFrame = new JFrame();
-		//mainFrame.setUndecorated(true);
+		mainFrame.setUndecorated(true);
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
 		if(player.isSafeEdit()) {
-			mainFrame.setTitle("Jr2254's Slayer Tracker "+versionNumber+" - SAFE EDIT MODE\r\n");
+			title = "Jr2254's Slayer Tracker "+versionNumber+" - SAFE EDIT MODE\r\n";
 		}else {
-			mainFrame.setTitle("Jr2254's Slayer Tracker "+versionNumber+"\r\n");
+			title = "Jr2254's Slayer Tracker "+versionNumber+"\r\n";
 		}
+		mainFrame.setTitle(title);
 		mainFrame.setBounds(100, 100, width, height);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(null);
@@ -136,11 +139,89 @@ public class SlayerTrackerUI {
 		// If you want the value to be committed on each keystroke instead of focus lost
 		formatter.setCommitsOnValidEdit(true);
 
+		//////////////////////////////
+		// Top Bar
+		FrameDragListener frameDragListener = new FrameDragListener(mainFrame);
+		JPanel topBar = new JPanel();
+		topBar.setBounds(0, 0, panelWidth, Globals.topMenuBarHeight);
+		topBar.setBackground(Globals.black);
+		topBar.addMouseListener(frameDragListener);
+		topBar.addMouseMotionListener(frameDragListener);
+		topBar.setLayout(null);
+		mainFrame.getContentPane().add(topBar);
+		
+		JButton closeButton = new JButton();
+		closeButton.setFocusPainted(false);
+		closeButton.setIcon(new ImageIcon(SlayerTrackerUI.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
+		closeButton.setBackground(new Color(231, 76, 60));
+		closeButton.setBounds(panelWidth-Globals.scale(25), 0, Globals.scale(25), Globals.scale(25));
+		closeButton.setMargin(new Insets(0, 0, 0, 0));
+		closeButton.setToolTipText("Close Window");
+		closeButton.addMouseListener(new MouseAdapter() {
+    		@Override
+    		public void mouseClicked(MouseEvent arg0) {
+				mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+    		}
+		});
+		topBar.add(closeButton);
+		
+		
+		JButton minimizeButton = new JButton();
+		minimizeButton.setFocusPainted(false);
+		{
+			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/minimize.png")); // load the image to a imageIcon
+			Image image = imageIcon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_DEFAULT); // scale it the smooth way  
+			imageIcon = new ImageIcon(newimg);  // transform it back
+			
+			minimizeButton.setIcon(imageIcon);
+		}
+		minimizeButton.setBackground(new Color(52, 152, 219));
+		minimizeButton.setBounds(panelWidth-Globals.scale(50), 0, Globals.scale(25), Globals.scale(25));
+		minimizeButton.setMargin(new Insets(0, 0, 0, 0));
+		minimizeButton.setToolTipText("Minimize Window");
+		minimizeButton.addMouseListener(new MouseAdapter() {
+    		@Override
+    		public void mouseClicked(MouseEvent arg0) {
+				mainFrame.setState(Frame.ICONIFIED);
+    		}
+		});
+		topBar.add(minimizeButton);
+		
+		JLabel settingsButton = new JLabel();
+		{
+			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/settingsIcon.png")); // load the image to a imageIcon
+			Image image = imageIcon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			imageIcon = new ImageIcon(newimg);  // transform it back
+			
+			settingsButton.setIcon(imageIcon);
+		}
+		settingsButton.setBounds(panelWidth-Globals.scale(80), 0, Globals.scale(25), Globals.scale(25));
+		settingsButton.setToolTipText("Settings");
+		settingsButton.addMouseListener(new MouseAdapter() {
+    		@Override
+    		public void mouseClicked(MouseEvent arg0) {
+				SettingsPanel temp = new SettingsPanel();
+				temp.build();
+    		}
+		});
+		topBar.add(settingsButton);
+		
+		
+		JLabel titleLabel = new JLabel();
+		titleLabel.setBounds(Globals.scale(5),0,panelWidth/2,Globals.scale(25));
+		titleLabel.setText(title);
+		titleLabel.setForeground(new Color(214, 214, 214));
+		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		titleLabel.setFont(Globals.mainFont);
+		topBar.add(titleLabel);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Panels
 
 		mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, panelWidth, panelHeight);
+		mainPanel.setBackground(Globals.panelBackground);
+		mainPanel.setBounds(0, Globals.topMenuBarHeight, panelWidth, Globals.panelHeight);
 		mainFrame.getContentPane().add(mainPanel);
 		mainPanel.setLayout(null);
 		
@@ -161,12 +242,14 @@ public class SlayerTrackerUI {
 	    } );
 		
 		JPanel addCannonballsPanel = new JPanel();
-		addCannonballsPanel.setBounds(0, 0, panelWidth, panelHeight);
+		addCannonballsPanel.setBackground(Globals.panelBackground);
+		addCannonballsPanel.setBounds(0, 0, panelWidth, Globals.panelHeight);
 		mainFrame.getContentPane().add(addCannonballsPanel);
 		addCannonballsPanel.setLayout(null);
 
 		JPanel addRunesPanel = new JPanel();
-		addRunesPanel.setBounds(0, 0, panelWidth, panelHeight);
+		addRunesPanel.setBackground(Globals.panelBackground);
+		addRunesPanel.setBounds(0, 0, panelWidth, Globals.panelHeight);
 		mainFrame.getContentPane().add(addRunesPanel);
 		addRunesPanel.setLayout(null);
 		
@@ -179,8 +262,8 @@ public class SlayerTrackerUI {
 		
 		
 		
-		JButton btnDustDevil = new JButton("Dust Devil");
-		btnDustDevil.setBackground(UIManager.getColor("Button.background"));
+		JButton btnDustDevil = new JButton();
+		btnDustDevil.setBackground(Globals.buttonBackground);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Dust_devil.png")); // load the image to a imageIcon
 			Image image = imageIcon.getImage(); // transform it 
@@ -200,7 +283,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Smoke Devil
-		JButton btnSmokeDevil = new JButton("Smoke Devil");
+		JButton btnSmokeDevil = new JButton();
+		btnSmokeDevil.setBackground(Globals.buttonBackground);
 		btnSmokeDevil.setBounds(col2X, row1Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Smoke_devil.png")); // load the image to a imageIcon
@@ -220,7 +304,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Abby Spec
-		JButton btnAbbySpec = new JButton("Abby Spec");
+		JButton btnAbbySpec = new JButton();
+		btnAbbySpec.setBackground(Globals.buttonBackground);
 		btnAbbySpec.setBounds(col3X, row1Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Aberrant_spectre.png")); // load the image to a imageIcon
@@ -240,7 +325,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// other
-		JButton otherButton = new JButton("Other");
+		JButton otherButton = new JButton();
+		otherButton.setBackground(Globals.buttonBackground);
 		otherButton.setBounds(col5X, row1Y, buttonWidth, buttonHeight);
 		
 		{
@@ -260,7 +346,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Bloodveld
-		JButton btnBloodveld = new JButton("Bloodveld");
+		JButton btnBloodveld = new JButton();
+		btnBloodveld.setBackground(Globals.buttonBackground);
 		btnBloodveld.setBounds(col4X, row1Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Bloodveld.png")); // load the image to a imageIcon
@@ -281,7 +368,8 @@ public class SlayerTrackerUI {
 // ROW 2
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Blue Dragon
-		JButton btnBlueDragon = new JButton("Blue Dragon");
+		JButton btnBlueDragon = new JButton();
+		btnBlueDragon.setBackground(Globals.buttonBackground);
 		btnBlueDragon.setBounds(col1X, row2Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Blue_dragon.png")); // load the image to a imageIcon
@@ -301,7 +389,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Dagannoth
-		JButton btnDagannoth = new JButton("Dagannoth");
+		JButton btnDagannoth = new JButton();
+		btnDagannoth.setBackground(Globals.buttonBackground);
 		btnDagannoth.setBounds(col2X, row2Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Dagannoth.png")); // load the image to a imageIcon
@@ -321,7 +410,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Fire Giant
-		JButton btnFireGiant = new JButton("Fire Giant");
+		JButton btnFireGiant = new JButton();
+		btnFireGiant.setBackground(Globals.buttonBackground);
 		btnFireGiant.setBounds(col3X, row2Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Fire_giant.png")); // load the image to a imageIcon
@@ -341,7 +431,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Gargoyle
-		JButton btnGargoyle = new JButton("Gargoyle");
+		JButton btnGargoyle = new JButton();
+		btnGargoyle.setBackground(Globals.buttonBackground);
 		btnGargoyle.setBounds(col4X, row2Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/garg.png")); // load the image to a imageIcon
@@ -361,7 +452,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Greater Demon
-		JButton btnGreaterDemon = new JButton("Greater Demon");
+		JButton btnGreaterDemon = new JButton();
+		btnGreaterDemon.setBackground(Globals.buttonBackground);
 		btnGreaterDemon.setBounds(col5X, row2Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Greater_demon.png")); // load the image to a imageIcon
@@ -382,7 +474,8 @@ public class SlayerTrackerUI {
 // ROW 3
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Trolls
-		JButton btnTrolls = new JButton("Trolls");
+		JButton btnTrolls = new JButton();
+		btnTrolls.setBackground(Globals.buttonBackground);
 		btnTrolls.setBounds(col1X, row3Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Ice_troll_female.png")); // load the image to a imageIcon
@@ -402,7 +495,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Kalphite
-		JButton btnKalphite = new JButton("Kalphite");
+		JButton btnKalphite = new JButton();
+		btnKalphite.setBackground(Globals.buttonBackground);
 		btnKalphite.setBounds(col2X, row3Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Kalphite_Worker.png")); // load the image to a imageIcon
@@ -422,7 +516,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Lizardman
-		JButton btnLizardman = new JButton("Lizardman");
+		JButton btnLizardman = new JButton();
+		btnLizardman.setBackground(Globals.buttonBackground);
 		btnLizardman.setBounds(col3X, row3Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Lizardman.png")); // load the image to a imageIcon
@@ -441,7 +536,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Nechryael
-		JButton btnNechryael = new JButton("Nechryael");
+		JButton btnNechryael = new JButton();
+		btnNechryael.setBackground(Globals.buttonBackground);
 		btnNechryael.setBounds(col4X, row3Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Nechryael.png")); // load the image to a imageIcon
@@ -460,7 +556,8 @@ public class SlayerTrackerUI {
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Wyvern
-		JButton btnWyvern = new JButton("Wyvern");
+		JButton btnWyvern = new JButton();
+		btnWyvern.setBackground(Globals.buttonBackground);
 		btnWyvern.setBounds(col5X, row3Y, buttonWidth, buttonHeight);
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Skeletal_Wyvern.png")); // load the image to a imageIcon
@@ -482,25 +579,29 @@ public class SlayerTrackerUI {
 		// Farm Run);
 		
 		JButton startFarmRunButton = new JButton("Farm Run Timer");
-		startFarmRunButton.setFont(mainFont);
+		startFarmRunButton.setForeground(Globals.buttonForground);
+		startFarmRunButton.setBackground(Globals.buttonBackground);
+		startFarmRunButton.setFont(Globals.mainFont);
 		startFarmRunButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				FarmRunPanel.build(player,false);
 			}
 		});
-		startFarmRunButton.setBounds(panelWidth-scale(150), scale(60), scale(150), scale(25));
+		startFarmRunButton.setBounds(panelWidth-Globals.scale(150), Globals.scale(60), Globals.scale(150), Globals.scale(25));
 		mainPanel.add(startFarmRunButton);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Cannonballs
 		updateCannonballs();
-		txtpnCannonballs.setFont(mainFont);
+		txtpnCannonballs.setFont(Globals.mainFont);
 		txtpnCannonballs.setEditable(false);
-		txtpnCannonballs.setBounds(panelWidth-scale(150), scale(5), scale(150), scale(25));
+		txtpnCannonballs.setBounds(panelWidth-Globals.scale(150), Globals.scale(5), Globals.scale(150), Globals.scale(25));
 		mainPanel.add(txtpnCannonballs);
 		
 		JButton btnAddCannonballs = new JButton("Add Cannonballs");
-		btnAddCannonballs.setFont(mainFont);
+		btnAddCannonballs.setForeground(Globals.buttonForground);
+		btnAddCannonballs.setBackground(Globals.buttonBackground);
+		btnAddCannonballs.setFont(Globals.mainFont);
 		btnAddCannonballs.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
@@ -508,7 +609,7 @@ public class SlayerTrackerUI {
 		addCannonballsPanel.setVisible(true);
 		}
 		});
-		btnAddCannonballs.setBounds(panelWidth-scale(150), scale(30), scale(150), scale(25));
+		btnAddCannonballs.setBounds(panelWidth-Globals.scale(150), Globals.scale(30), Globals.scale(150), Globals.scale(25));
 mainPanel.add(btnAddCannonballs);
 		
 		
@@ -516,16 +617,19 @@ mainPanel.add(btnAddCannonballs);
 		// Monster Count
 		
 		monsterCountSpinner = new JSpinner();
+		monsterCountSpinner.setForeground(Globals.buttonForground);
+		monsterCountSpinner.setBackground(Globals.buttonBackground);
 		monsterCountSpinner.setModel(new SpinnerNumberModel(0, 0, 300, 1));
-		monsterCountSpinner.setBounds((panelWidth/2)-scale(150/2), scale(65), scale(150), scale(25));
-		monsterCountSpinner.setFont(mainFont);
+		monsterCountSpinner.setBounds((panelWidth/2)-Globals.scale(150/2), Globals.scale(65), Globals.scale(150), Globals.scale(25));
+		monsterCountSpinner.setFont(Globals.mainFont);
 		mainPanel.add(monsterCountSpinner);
 		
 		
 		JLabel monsterCountLabel = new JLabel("Number of Monsters");
+		monsterCountLabel.setForeground(Globals.buttonForground);
 		monsterCountLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		monsterCountLabel.setFont(boldFont);
-		monsterCountLabel.setBounds((panelWidth/2)-scale(150/2), scale(40), scale(150), scale(25));
+		monsterCountLabel.setFont(Globals.boldFont);
+		monsterCountLabel.setBounds((panelWidth/2)-Globals.scale(150/2), Globals.scale(40), Globals.scale(150), Globals.scale(25));
 		mainPanel.add(monsterCountLabel);
 		
 		
@@ -534,25 +638,27 @@ mainPanel.add(btnAddCannonballs);
 		// Cannonball jpane
 		
 		JLabel lblAmountBought = new JLabel("Amount Bought");
-		lblAmountBought.setFont(mainFont);
-		lblAmountBought.setBounds((panelWidth/2)-scale(115), scale(100), scale(100), scale(25));
+		lblAmountBought.setForeground(Globals.buttonForground);
+		lblAmountBought.setFont(Globals.mainFont);
+		lblAmountBought.setBounds((panelWidth/2)-Globals.scale(115), Globals.scale(100), Globals.scale(100), Globals.scale(25));
 		addCannonballsPanel.add(lblAmountBought);
 		
 		
 		amountOfCannonballsBought = new JFormattedTextField(formatter);
-		amountOfCannonballsBought.setFont(mainFont);
-		amountOfCannonballsBought.setBounds((panelWidth/2)-scale(115), scale(130), scale(100), scale(25));
+		amountOfCannonballsBought.setFont(Globals.mainFont);
+		amountOfCannonballsBought.setBounds((panelWidth/2)-Globals.scale(115), Globals.scale(130), Globals.scale(100), Globals.scale(25));
 		addCannonballsPanel.add(amountOfCannonballsBought);
 		amountOfCannonballsBought.setColumns(10);
 		
 		JLabel lblPricePaid = new JLabel("Price Per Ball");
-		lblPricePaid.setFont(mainFont);
-		lblPricePaid.setBounds((panelWidth/2)+scale(15), scale(100), scale(100), scale(25));
+		lblPricePaid.setForeground(Globals.buttonForground);
+		lblPricePaid.setFont(Globals.mainFont);
+		lblPricePaid.setBounds((panelWidth/2)+Globals.scale(15), Globals.scale(100), Globals.scale(100), Globals.scale(25));
 		addCannonballsPanel.add(lblPricePaid);
 		
 		pricePaidForCannonballs = new JFormattedTextField(formatter);
-		pricePaidForCannonballs.setFont(mainFont);
-		pricePaidForCannonballs.setBounds((panelWidth/2)+scale(15), scale(130), scale(100), scale(25));
+		pricePaidForCannonballs.setFont(Globals.mainFont);
+		pricePaidForCannonballs.setBounds((panelWidth/2)+Globals.scale(15), Globals.scale(130), Globals.scale(100), Globals.scale(25));
 		addCannonballsPanel.add(pricePaidForCannonballs);
 		pricePaidForCannonballs.setColumns(10);
 		
@@ -561,7 +667,9 @@ mainPanel.add(btnAddCannonballs);
 		
 		
 		JButton addCannonballsButton = new JButton("Add Cannonballs");
-		addCannonballsButton.setFont(mainFont);
+		addCannonballsButton.setForeground(Globals.buttonForground);
+		addCannonballsButton.setBackground(Globals.buttonBackground);
+		addCannonballsButton.setFont(Globals.mainFont);
 		addCannonballsButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -574,13 +682,13 @@ mainPanel.add(btnAddCannonballs);
 				
 			}
 		});
-		addCannonballsButton.setBounds((panelWidth/2)-scale(115), scale(200), scale(230), scale(25));
+		addCannonballsButton.setBounds((panelWidth/2)-Globals.scale(115), Globals.scale(200), Globals.scale(230), Globals.scale(25));
 		addCannonballsPanel.add(addCannonballsButton);
 		
 		JButton cancelBuyingCannonBalls = new JButton("Cancel");
-		cancelBuyingCannonBalls.setFont(mainFont);
+		cancelBuyingCannonBalls.setFont(Globals.mainFont);
 		cancelBuyingCannonBalls.setBackground(new Color(255, 0, 0));
-		cancelBuyingCannonBalls.setBounds((panelWidth/2)-scale(115), scale(225), scale(230), scale(25));
+		cancelBuyingCannonBalls.setBounds((panelWidth/2)-Globals.scale(115), Globals.scale(225), Globals.scale(230), Globals.scale(25));
 		cancelBuyingCannonBalls.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -595,23 +703,23 @@ mainPanel.add(btnAddCannonballs);
 		////////////////////////////////////////////////////
 		// Rune lables
 		deathRuneTextPane = new JTextPane();
-		deathRuneTextPane.setFont(mainFont);
-		deathRuneTextPane.setBounds(scale(15), scale(5), scale(150), scale(25));
+		deathRuneTextPane.setFont(Globals.mainFont);
+		deathRuneTextPane.setBounds(Globals.scale(15), Globals.scale(5), Globals.scale(150), Globals.scale(25));
 		deathRuneTextPane.setEditable(false);
 		deathRuneTextPane.setText("Death Runes: ");
 		mainPanel.add(deathRuneTextPane);
 		
 		chaosRuneTextPane = new JTextPane();
-		chaosRuneTextPane.setFont(mainFont);
+		chaosRuneTextPane.setFont(Globals.mainFont);
 		chaosRuneTextPane.setEditable(false);
-		chaosRuneTextPane.setBounds(scale(15), scale(30), scale(150), scale(25));
+		chaosRuneTextPane.setBounds(Globals.scale(15), Globals.scale(30), Globals.scale(150), Globals.scale(25));
 		chaosRuneTextPane.setText("Chaos Runes: ");
 		mainPanel.add(chaosRuneTextPane);
 		
 		waterRuneTextPane = new JTextPane();
 		waterRuneTextPane.setEditable(false);
-		waterRuneTextPane.setFont(mainFont);
-		waterRuneTextPane.setBounds(scale(15), scale(55), scale(150), scale(25));
+		waterRuneTextPane.setFont(Globals.mainFont);
+		waterRuneTextPane.setBounds(Globals.scale(15), Globals.scale(55), Globals.scale(150), Globals.scale(25));
 		waterRuneTextPane.setText("Water Runes: ");
 		mainPanel.add(waterRuneTextPane);
 		
@@ -619,7 +727,9 @@ mainPanel.add(btnAddCannonballs);
 		
 		
 		JButton changeRunesButton = new JButton("Change Runes");
-		changeRunesButton.setFont(mainFont);
+		changeRunesButton.setForeground(Globals.buttonForground);
+		changeRunesButton.setBackground(Globals.buttonBackground);
+		changeRunesButton.setFont(Globals.mainFont);
 		changeRunesButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -627,53 +737,58 @@ mainPanel.add(btnAddCannonballs);
 				mainPanel.setVisible(false);
 			}
 		});
-		changeRunesButton.setBounds(scale(15), scale(80), scale(150), scale(25));
+		changeRunesButton.setBounds(Globals.scale(15), Globals.scale(80), Globals.scale(150), Globals.scale(25));
 		mainPanel.add(changeRunesButton);
 		
 		//////////////////////////////////////////////////////
 		// Change Runes Panel
 		
 		JLabel addDeathRunesLabel = new JLabel("Amount of Death Runes");
+		addDeathRunesLabel.setForeground(Globals.buttonForground);
 		addDeathRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addDeathRunesLabel.setFont(mainFont);
-		addDeathRunesLabel.setBounds((panelWidth/2)-scale(50), scale(100), scale(150), scale(25));
+		addDeathRunesLabel.setFont(Globals.mainFont);
+		addDeathRunesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(100), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(addDeathRunesLabel);
 		
 		JFormattedTextField addDeathRunesTextField = new JFormattedTextField(formatter);
 		addDeathRunesTextField.setText(player.getDeathRunes()+"");
-		addDeathRunesTextField.setFont(mainFont);
-		addDeathRunesTextField.setBounds((panelWidth/2)-scale(50), scale(125), scale(150), scale(25));
+		addDeathRunesTextField.setFont(Globals.mainFont);
+		addDeathRunesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(125), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(addDeathRunesTextField);
 		addDeathRunesTextField.setColumns(10);
 		
 		JLabel addChaosRunesLabel = new JLabel("Amount of Chaos Runes");
+		addChaosRunesLabel.setForeground(Globals.buttonForground);
 		addChaosRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addChaosRunesLabel.setFont(mainFont);
-		addChaosRunesLabel.setBounds((panelWidth/2)-scale(50), scale(150), scale(150), scale(25));
+		addChaosRunesLabel.setFont(Globals.mainFont);
+		addChaosRunesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(150), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(addChaosRunesLabel);
 		
 		JFormattedTextField addChaosRunesTextField = new JFormattedTextField(formatter);
 		addChaosRunesTextField.setText(player.getChaosRunes()+"");
-		addChaosRunesTextField.setFont(mainFont);
-		addChaosRunesTextField.setBounds((panelWidth/2)-scale(50), scale(175), scale(150), scale(25));
+		addChaosRunesTextField.setFont(Globals.mainFont);
+		addChaosRunesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(175), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(addChaosRunesTextField);
 		addChaosRunesTextField.setColumns(10);
 		
 		JLabel addWaterRunesLabel = new JLabel("Amount of Water Runes");
+		addWaterRunesLabel.setForeground(Globals.buttonForground);
 		addWaterRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addWaterRunesLabel.setFont(mainFont);
-		addWaterRunesLabel.setBounds((panelWidth/2)-scale(50), scale(200), scale(150), scale(25));
+		addWaterRunesLabel.setFont(Globals.mainFont);
+		addWaterRunesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(200), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(addWaterRunesLabel);
 		
 		JFormattedTextField addWaterRunesTextField = new JFormattedTextField(formatter);
 		addWaterRunesTextField.setText(player.getWaterRunes()+"");
-		addWaterRunesTextField.setFont(mainFont);
-		addWaterRunesTextField.setBounds((panelWidth/2)-scale(50), scale(225), scale(150), scale(25));
+		addWaterRunesTextField.setFont(Globals.mainFont);
+		addWaterRunesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(225), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(addWaterRunesTextField);
 		addWaterRunesTextField.setColumns(10);
 		
 		JButton acceptChangeRunesButton = new JButton("Change Runes");
-		acceptChangeRunesButton.setFont(mainFont);
+		acceptChangeRunesButton.setForeground(Globals.buttonForground);
+		acceptChangeRunesButton.setBackground(Globals.buttonBackground);
+		acceptChangeRunesButton.setFont(Globals.mainFont);
 		acceptChangeRunesButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -689,23 +804,24 @@ mainPanel.add(btnAddCannonballs);
 				}
 			}
 		});
-		acceptChangeRunesButton.setBounds((panelWidth/2)-scale(50), scale(250), scale(150), scale(25));
+		acceptChangeRunesButton.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(250), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(acceptChangeRunesButton);
 		//////////////////////////////////////////////////////
 		// View log button
 		JButton viewLogButton = new JButton("Logs");
-		viewLogButton.setFont(smallFont);
+		viewLogButton.setForeground(Globals.buttonForground);
+		viewLogButton.setBackground(Globals.buttonBackground);
+		viewLogButton.setFont(Globals.smallFont);
 		viewLogButton.setMargin(new Insets(0, 0, 0, 0));
 		viewLogButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				LogPanel.build(scale,player);
+				LogPanel.build(player);
 			}
 		});
-		viewLogButton.setBounds(panelWidth-scale(50), panelHeight-scale(25), scale(50), scale(25));
+		viewLogButton.setBounds(panelWidth-Globals.scale(50), Globals.panelHeight-Globals.scale(25), Globals.scale(50), Globals.scale(25));
 		mainPanel.add(viewLogButton);
-		
-		
+
 		
 	}
 	public void updateCannonballs() {
@@ -719,12 +835,7 @@ mainPanel.add(btnAddCannonballs);
 		waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
 	}
 	
-	public static int scale(int numberToScale) {
-		return Math.round(numberToScale*scale);
-	}
-	public int scale(float numberToScale) {
-		return Math.round(numberToScale*scale);
-	}
+
 	
 	public void openMonsterPanel(String monsterName, boolean isCannon, boolean isBurst) {
 		int count = (int) monsterCountSpinner.getValue();
@@ -735,11 +846,41 @@ mainPanel.add(btnAddCannonballs);
 			if(mainFrame.getContentPane().getComponentCount() > 3) {
 				mainFrame.getContentPane().remove(mainFrame.getContentPane().getComponentCount()-1);
 			}
-			monsterCountSpinner.setBackground(new Color(240, 240, 240));
+			monsterCountSpinner.setBackground(Globals.buttonBackground);
 			mainPanel.setVisible(false);
-			MonsterPanel monsterPanel = new MonsterPanel(monsterName, null, count, scale,player);
+			MonsterPanel monsterPanel = new MonsterPanel(monsterName, null, count, player);
 			mainFrame.getContentPane().add(monsterPanel.build(mainPanel,isCannon,isBurst));
 		}
 		//System.out.println(mainFrame.getContentPane().getComponentCount());
 	}
+	public static class FrameDragListener extends MouseAdapter {
+
+        private final JFrame frame;
+        private Point mouseDownCompCoords = null;
+
+        public FrameDragListener(JFrame frame) {
+            this.frame = frame;
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            mouseDownCompCoords = null;
+        }
+
+        public void mousePressed(MouseEvent e) {
+            mouseDownCompCoords = e.getPoint();
+        }
+
+        public void mouseDragged(MouseEvent e) {
+            Point currCoords = e.getLocationOnScreen();
+            frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+        }
+    }
+	
+	public static void reload() {
+		SlayerTrackerUI.mainFrame.setVisible(false);
+		Globals.reload();
+		window = new SlayerTrackerUI();
+		SlayerTrackerUI.mainFrame.setVisible(true);
+	}
+
 }

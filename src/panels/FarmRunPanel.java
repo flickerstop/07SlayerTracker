@@ -1,7 +1,6 @@
 package panels;
 
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -10,11 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.AudioInputStream;
@@ -23,30 +20,22 @@ import javax.sound.sampled.Clip;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
+import objects.Globals;
 import objects.Player;
 import ui.SlayerTrackerUI;
-import java.awt.Window.Type;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 
 public class FarmRunPanel {
-	private static float scale = SlayerTrackerUI.scale;
-	private static Font mainFont = SlayerTrackerUI.mainFont;
-	private static Font smallFont = SlayerTrackerUI.smallFont;
 	private static long timerStart;
 	private static long timerStop;
 	private static JTextField timerTextField;
 	private static Clip clip;
 	private static JLabel endTimeLabel;
-	private static Color panelColour = new Color(240,241,245);
 	private static Color buttonColour = new Color(68,187,255);
 	private static Color textFieldColour = new Color(102,204,153);
 	
@@ -59,16 +48,16 @@ public class FarmRunPanel {
             @Override
             public void run()
             {
-            	int rowHeight = scale(25);
+            	int rowHeight = Globals.scale(25);
             	
-            	int width = scale(400);
-        		int height = scale(200);
+            	int width = Globals.scale(400);
+        		int height = Globals.scale(200);
         		int panelWidth = width;
         		int panelHeight = height;
         		
             	JFrame mainFrame = new JFrame("Test");
             	mainFrame.setUndecorated(true);
-            	mainFrame.getContentPane().setBackground(panelColour);
+            	mainFrame.getContentPane().setBackground(Globals.panelBackground);
             	mainFrame.setResizable(false);
             	mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(FarmRunPanel.class.getResource("/images/Farming-icon.png")));
         		mainFrame.setTitle("Farm Run");
@@ -78,7 +67,8 @@ public class FarmRunPanel {
         		
         		
         		endTimeLabel = new JLabel("Start the timer!");
-        		endTimeLabel.setFont(mainFont);
+        		endTimeLabel.setFont(Globals.mainFont);
+        		endTimeLabel.setForeground(Globals.buttonForground);
         		endTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         		endTimeLabel.setBounds(0, panelHeight/3, panelWidth, rowHeight);
         		mainFrame.getContentPane().add(endTimeLabel);
@@ -87,8 +77,8 @@ public class FarmRunPanel {
         		closeButton.setFocusPainted(false);
         		closeButton.setIcon(new ImageIcon(FarmRunPanel.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
         		closeButton.setBackground(new Color(255,0,0));
-        		closeButton.setFont(smallFont);
-        		closeButton.setBounds(panelWidth-scale(15), 0, scale(15), scale(15));
+        		closeButton.setFont(Globals.smallFont);
+        		closeButton.setBounds(panelWidth-Globals.scale(15), 0, Globals.scale(15), Globals.scale(15));
         		closeButton.setMargin(new Insets(0, 0, 0, 0));
         		closeButton.addMouseListener(new MouseAdapter() {
 	        		@Override
@@ -107,7 +97,7 @@ public class FarmRunPanel {
         		startTimerButton.setBackground(buttonColour);
         		JButton stopTimerButton = new JButton("Stop Countdown");
         		stopTimerButton.setBackground(buttonColour);
-        		startTimerButton.setFont(mainFont);
+        		startTimerButton.setFont(Globals.mainFont);
         		startTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
@@ -117,11 +107,11 @@ public class FarmRunPanel {
 	        		}
         		});
         		
-        		startTimerButton.setBounds(scale(10), (panelHeight)-(rowHeight*2+scale(5)), (panelWidth/2)-scale(10), rowHeight);
+        		startTimerButton.setBounds(Globals.scale(10), (panelHeight)-(rowHeight*2+Globals.scale(5)), (panelWidth/2)-Globals.scale(10), rowHeight);
         		mainFrame.getContentPane().add(startTimerButton);
         		
         		
-        		stopTimerButton.setFont(mainFont);
+        		stopTimerButton.setFont(Globals.mainFont);
         		stopTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent e) {
@@ -130,16 +120,17 @@ public class FarmRunPanel {
 	        			startTimerButton.setEnabled(true);
 	        		}
         		});
-        		stopTimerButton.setBounds(panelWidth/2, (panelHeight)-(rowHeight*2+scale(5)), (panelWidth/2)-scale(10), rowHeight);
+        		stopTimerButton.setBounds(panelWidth/2, (panelHeight)-(rowHeight*2+Globals.scale(5)), (panelWidth/2)-Globals.scale(10), rowHeight);
         		mainFrame.getContentPane().add(stopTimerButton);
         		
         		timerTextField = new JTextField();
-        		timerTextField.setBackground(textFieldColour);
+        		timerTextField.setBackground(Globals.panelBackground);
+        		timerTextField.setForeground(Globals.buttonForground);
         		timerTextField.setHorizontalAlignment(SwingConstants.CENTER);
         		timerTextField.setText("00:00:00");
-        		timerTextField.setFont(mainFont);
+        		timerTextField.setFont(Globals.mainFont);
         		timerTextField.setEditable(false);
-        		timerTextField.setBounds(panelWidth/4, (panelHeight)-(rowHeight+scale(5)), (panelWidth/2), rowHeight);
+        		timerTextField.setBounds(panelWidth/4, (panelHeight)-(rowHeight+Globals.scale(5)), (panelWidth/2), rowHeight);
         		mainFrame.getContentPane().add(timerTextField);
         		timerTextField.setColumns(10);
         		
@@ -209,12 +200,6 @@ public class FarmRunPanel {
 		clip.stop();
 		timerTextField.setText("00:00:00");
 		endTimeLabel.setText("Start the timer!");
-	}
-	public static int scale(int numberToScale) {
-		return Math.round(numberToScale*scale);
-	}
-	public int scale(float numberToScale) {
-		return Math.round(numberToScale*scale);
 	}
 	
 	public static class FrameDragListener extends MouseAdapter {

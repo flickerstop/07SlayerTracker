@@ -1,7 +1,6 @@
 package panels;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -11,11 +10,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
-import ui.SlayerTrackerUI;
+import objects.Globals;
 
+@SuppressWarnings("serial")
 public class HerbPanel extends JPanel{
-	private static float scale = SlayerTrackerUI.scale;
-	private static Font mainFont = SlayerTrackerUI.mainFont;
 	private static ArrayList<JFormattedTextField> textFields = new ArrayList<JFormattedTextField>();
 	
 	/**
@@ -23,10 +21,10 @@ public class HerbPanel extends JPanel{
 	 */
 	public JPanel build(int panelWidth, int panelHeight) {
 		
-		int tripPanelWidth = (panelWidth-scale(60))/2;
-		int tripPanelHeight = scale(300);
-		int tripInputWidth = (tripPanelWidth/2)-scale(15);
-		int rowHeight = scale(25);
+		int tripPanelWidth = (panelWidth-Globals.scale(60))/2;
+		int tripPanelHeight = Globals.scale(300);
+		int tripInputWidth = (tripPanelWidth/2)-Globals.scale(15);
+		int rowHeight = Globals.scale(25);
 		
 		/////////////////////////////
 		// Formatter
@@ -42,13 +40,13 @@ public class HerbPanel extends JPanel{
 
 		JPanel herbsPanel = new JPanel();
 		herbsPanel.setBackground(new Color(0, 153, 51));
-		herbsPanel.setBounds((panelWidth/2)-tripPanelWidth-scale(15), (panelHeight/2)-(tripPanelHeight/2), tripPanelWidth, tripPanelHeight);
+		herbsPanel.setBounds((panelWidth/2)-tripPanelWidth-Globals.scale(15), (panelHeight/2)-(tripPanelHeight/2), tripPanelWidth, tripPanelHeight);
 		herbsPanel.setLayout(null);
 		
 		
 		
 		JLabel tripPanelLabel = new JLabel("Herbs");
-		tripPanelLabel.setFont(mainFont);
+		tripPanelLabel.setFont(Globals.mainFont);
 		tripPanelLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		tripPanelLabel.setBounds(0, 0, tripPanelWidth, rowHeight);
 		herbsPanel.add(tripPanelLabel);
@@ -57,15 +55,15 @@ public class HerbPanel extends JPanel{
 		String herbType[] = {"Ranarr", "Irit", "Avantoe", "Kwuarm", "Cadantine", "Lantadyme", "Dwarf Weed", "Other Stuff"};
 		for(int i = 0; i<8;i++) {
 			JLabel tempLabel = new JLabel(herbType[i]);
-			tempLabel.setFont(mainFont);
+			tempLabel.setFont(Globals.mainFont);
 			tempLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			tempLabel.setBounds(0, scale(30*(i+1)), tripPanelWidth/2, rowHeight);
+			tempLabel.setBounds(0, Globals.scale(30*(i+1)), tripPanelWidth/2, rowHeight);
 			herbsPanel.add(tempLabel);
 			
 			JFormattedTextField tempTextFeild = new JFormattedTextField(formatter);
 			tempTextFeild.setText("");
-			tempTextFeild.setFont(mainFont);
-			tempTextFeild.setBounds(tripPanelWidth/2, scale(30*(i+1)), tripInputWidth, rowHeight);
+			tempTextFeild.setFont(Globals.mainFont);
+			tempTextFeild.setBounds(tripPanelWidth/2, Globals.scale(30*(i+1)), tripInputWidth, rowHeight);
 			herbsPanel.add(tempTextFeild);
 			textFields.add(tempTextFeild);
 		}
@@ -91,12 +89,5 @@ public class HerbPanel extends JPanel{
 		
 		
 		return totalPrice;
-	}
-	
-	public static int scale(int numberToScale) {
-		return Math.round(numberToScale*scale);
-	}
-	public int scale(float numberToScale) {
-		return Math.round(numberToScale*scale);
 	}
 }

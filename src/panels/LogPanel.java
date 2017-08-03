@@ -1,58 +1,47 @@
 package panels;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.DefaultCaret;
 
+import objects.Globals;
 import objects.Player;
 import ui.SlayerTrackerUI;
 
 
 public class LogPanel {
 	
-	private static float scale = 1.0f;
 	private static JTable cannonTable;
 	private static JTable burstTable;
 	private static JTable normalTable;
 	private static JTable cannonBurstTable;
 	private static JTable cannonballTable;
 	private static JTable logTable;
-	private static Font mainFont = SlayerTrackerUI.mainFont;
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public static void build(float scale, Player player) {
-		LogPanel.scale = scale;
+	public static void build(Player player) {
 		EventQueue.invokeLater(new Runnable()
         {
             @Override
             public void run()
             {
             	ArrayList<ArrayList<String[]>> log = player.getLogs();
-            	int width = scale(1000);
-        		int height = scale(550);
+            	int width = Globals.scale(1000);
+        		int height = Globals.scale(550);
         		int panelWidth = width-5;
         		int panelHeight = height-40;
         		
@@ -65,13 +54,13 @@ public class LogPanel {
         		mainFrame.getContentPane().setLayout(null);
         		
         		JScrollPane scrollPane = new JScrollPane();
-        		scrollPane.setBounds(0, 0, panelWidth, panelHeight-scale(30));
+        		scrollPane.setBounds(0, 0, panelWidth, panelHeight-Globals.scale(30));
         		mainFrame.getContentPane().add(scrollPane);
         		
         		//////////////////////////////
         		// change log buttons
         		JButton normalLogButton = new JButton("Normal Slayer Logs");
-        		normalLogButton.setFont(mainFont);
+        		normalLogButton.setFont(Globals.mainFont);
         		normalLogButton.setMargin(new Insets(0, 0, 0, 0));
         		normalLogButton.addMouseListener(new MouseAdapter() {
         			@Override
@@ -79,12 +68,12 @@ public class LogPanel {
         				scrollPane.setViewportView(normalTable);
         			}
         		});
-        		normalLogButton.setBounds(0,panelHeight-scale(20),panelWidth/6,scale(20));
+        		normalLogButton.setBounds(0,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
         		mainFrame.add(normalLogButton);
         		
         		
         		JButton cannonLogButton = new JButton("Cannon Slayer Logs");
-        		cannonLogButton.setFont(mainFont);
+        		cannonLogButton.setFont(Globals.mainFont);
         		cannonLogButton.setMargin(new Insets(0, 0, 0, 0));
         		cannonLogButton.addMouseListener(new MouseAdapter() {
         			@Override
@@ -92,12 +81,12 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonTable);
         			}
         		});
-        		cannonLogButton.setBounds((panelWidth/6)*1,panelHeight-scale(20),panelWidth/6,scale(20));
+        		cannonLogButton.setBounds((panelWidth/6)*1,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
         		mainFrame.add(cannonLogButton);
         		
         		
         		JButton burstLogButton = new JButton("Burst Slayer Logs");
-        		burstLogButton.setFont(mainFont);
+        		burstLogButton.setFont(Globals.mainFont);
         		burstLogButton.setMargin(new Insets(0, 0, 0, 0));
         		burstLogButton.addMouseListener(new MouseAdapter() {
         			@Override
@@ -105,11 +94,11 @@ public class LogPanel {
         				scrollPane.setViewportView(burstTable);
         			}
         		});
-        		burstLogButton.setBounds((panelWidth/6)*2,panelHeight-scale(20),panelWidth/6,scale(20));
+        		burstLogButton.setBounds((panelWidth/6)*2,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
         		mainFrame.add(burstLogButton);
         		
         		JButton cannonBurstLogButton = new JButton("Cannon/Burst Slayer Logs");
-        		cannonBurstLogButton.setFont(mainFont);
+        		cannonBurstLogButton.setFont(Globals.mainFont);
         		cannonBurstLogButton.setMargin(new Insets(0, 0, 0, 0));
         		cannonBurstLogButton.addMouseListener(new MouseAdapter() {
         			@Override
@@ -117,11 +106,11 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonBurstTable);
         			}
         		});
-        		cannonBurstLogButton.setBounds((panelWidth/6)*3,panelHeight-scale(20),panelWidth/6,scale(20));
+        		cannonBurstLogButton.setBounds((panelWidth/6)*3,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
         		mainFrame.add(cannonBurstLogButton);
         		
         		JButton cannonballLogButton = new JButton("Cannonball Purchase Logs");
-        		cannonballLogButton.setFont(mainFont);
+        		cannonballLogButton.setFont(Globals.mainFont);
         		cannonballLogButton.setMargin(new Insets(0, 0, 0, 0));
         		cannonballLogButton.addMouseListener(new MouseAdapter() {
         			@Override
@@ -129,11 +118,11 @@ public class LogPanel {
         				scrollPane.setViewportView(cannonballTable);
         			}
         		});
-        		cannonballLogButton.setBounds((panelWidth/6)*4,panelHeight-scale(20),panelWidth/6,scale(20));
+        		cannonballLogButton.setBounds((panelWidth/6)*4,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
         		mainFrame.add(cannonballLogButton);
         		
         		JButton logButton = new JButton("Log of the Logs");
-        		logButton.setFont(mainFont);
+        		logButton.setFont(Globals.mainFont);
         		logButton.setMargin(new Insets(0, 0, 0, 0));
         		logButton.addMouseListener(new MouseAdapter() {
         			@Override
@@ -141,7 +130,7 @@ public class LogPanel {
         				scrollPane.setViewportView(logTable);
         			}
         		});
-        		logButton.setBounds((panelWidth/6)*5,panelHeight-scale(20),panelWidth/6,scale(20));
+        		logButton.setBounds((panelWidth/6)*5,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
         		mainFrame.add(logButton);
         		
         		/////////////////////////////////////////
@@ -161,10 +150,11 @@ public class LogPanel {
         		rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
         		normalTable = new JTable(normalModel);
         		normalTable.setFillsViewportHeight(true);
-        		normalTable.getColumn("Monster").setCellRenderer(centerRenderer);
+        		/*normalTable.getColumn("Monster").setCellRenderer(centerRenderer);
         		normalTable.getColumn("Amount").setCellRenderer(rightRenderer);
         		normalTable.getColumn("Loot").setCellRenderer(rightRenderer);
-        		normalTable.getColumn("Time").setCellRenderer(centerRenderer);
+        		normalTable.getColumn("Time").setCellRenderer(centerRenderer);*/
+        		normalTable.setDefaultRenderer(Object.class, colourCells());
         		scrollPane.setViewportView(normalTable);
 				/////////////////////////////////////////
 				// Cannon
@@ -179,18 +169,19 @@ public class LogPanel {
 				cannonModel.addColumn("Profit");
 				cannonModel.addColumn("Time");
 				for(String[] array : log.get(1)) {
-				cannonModel.addRow(array);
+					cannonModel.addRow(array);
 				}
 				cannonTable = new JTable(cannonModel);
 				cannonTable.setFillsViewportHeight(true);
-				cannonTable.getColumn("Monster").setCellRenderer(centerRenderer);
-				cannonTable.getColumn("Amount").setCellRenderer(rightRenderer);
-				cannonTable.getColumn("Loot").setCellRenderer(rightRenderer);
-				cannonTable.getColumn("Cannonballs Left").setCellRenderer(rightRenderer);
-				cannonTable.getColumn("Cannonballs Used").setCellRenderer(rightRenderer);
-				cannonTable.getColumn("Cost of Cannonballs").setCellRenderer(rightRenderer);
-				cannonTable.getColumn("Profit").setCellRenderer(rightRenderer);
-				cannonTable.getColumn("Time").setCellRenderer(centerRenderer);
+				cannonTable.setDefaultRenderer(Object.class, colourCells());
+//				cannonTable.getColumn("Monster").setCellRenderer(centerRenderer);
+//				cannonTable.getColumn("Amount").setCellRenderer(rightRenderer);
+//				cannonTable.getColumn("Loot").setCellRenderer(rightRenderer);
+//				cannonTable.getColumn("Cannonballs Left").setCellRenderer(rightRenderer);
+//				cannonTable.getColumn("Cannonballs Used").setCellRenderer(rightRenderer);
+//				cannonTable.getColumn("Cost of Cannonballs").setCellRenderer(rightRenderer);
+//				cannonTable.getColumn("Profit").setCellRenderer(rightRenderer);
+//				cannonTable.getColumn("Time").setCellRenderer(centerRenderer);
 				scrollPane.setViewportView(cannonTable);
 				/////////////////////////////////////////
 				// Burst
@@ -210,7 +201,7 @@ public class LogPanel {
 				}
 				burstTable = new JTable(burstModel);
 				burstTable.setFillsViewportHeight(true);
-				burstTable.getColumn("Monster").setCellRenderer(centerRenderer);
+				/*burstTable.getColumn("Monster").setCellRenderer(centerRenderer);
 				burstTable.getColumn("Amount").setCellRenderer(rightRenderer);
 				burstTable.getColumn("Loot").setCellRenderer(rightRenderer);
 				burstTable.getColumn("Deaths Used").setCellRenderer(rightRenderer);
@@ -218,7 +209,8 @@ public class LogPanel {
 				burstTable.getColumn("Water Used").setCellRenderer(rightRenderer);
 				burstTable.getColumn("Price of Runes").setCellRenderer(rightRenderer);
 				burstTable.getColumn("Profit").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Time").setCellRenderer(centerRenderer);
+				burstTable.getColumn("Time").setCellRenderer(centerRenderer);*/
+				burstTable.setDefaultRenderer(Object.class, colourCells());
 				scrollPane.setViewportView(burstTable);
 				/////////////////////////////////////////
 				// Cannon/burst
@@ -240,7 +232,7 @@ public class LogPanel {
 				}
 				cannonBurstTable = new JTable(cannonBurstModel);
 				cannonBurstTable.setFillsViewportHeight(true);
-				cannonBurstTable.getColumn("Monster").setCellRenderer(centerRenderer);
+				/*cannonBurstTable.getColumn("Monster").setCellRenderer(centerRenderer);
 				cannonBurstTable.getColumn("Amount").setCellRenderer(rightRenderer);
 				cannonBurstTable.getColumn("Loot").setCellRenderer(rightRenderer);
 				cannonBurstTable.getColumn("Cbs Used").setCellRenderer(rightRenderer);
@@ -250,7 +242,8 @@ public class LogPanel {
 				cannonBurstTable.getColumn("Cost of Cbs").setCellRenderer(rightRenderer);
 				cannonBurstTable.getColumn("Cost of Runes").setCellRenderer(rightRenderer);
 				cannonBurstTable.getColumn("Profit").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Time").setCellRenderer(centerRenderer);
+				cannonBurstTable.getColumn("Time").setCellRenderer(centerRenderer);*/
+				cannonBurstTable.setDefaultRenderer(Object.class, colourCells());
 				scrollPane.setViewportView(cannonBurstTable);
 				/////////////////////////////////////////
 				// Cannonball
@@ -322,10 +315,96 @@ public class LogPanel {
         });
     }
 	
-	public static int scale(int numberToScale) {
-		return Math.round(numberToScale*scale);
-	}
-	public int scale(float numberToScale) {
-		return Math.round(numberToScale*scale);
+	@SuppressWarnings("serial")
+	public static DefaultTableCellRenderer colourCells() {
+		return new DefaultTableCellRenderer(){
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table,
+		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+		        
+		        setHorizontalAlignment(JLabel.RIGHT);
+		        String status = (String)table.getModel().getValueAt(row, 0);
+		        // trolls 			- (212, 214, 216)
+		        // kalp 			- (99, 124, 91)
+		        // lizardmen 		- (163, 239, 139)
+		        // nech 			- (252, 174, 148)
+		        // daggs 			- (99, 99, 99)
+		        // fire giant 		- (255, 72, 56)
+		        // gargs 			- (61, 61, 61)
+		        // greater demon 	- (165, 9, 9)
+		        // dust devil 		- (255, 196, 94)
+		        // smoke devil 		- (124, 120, 112)
+		        // abby Specs		- (163, 247, 150)
+		        // bloodveld 		- (204, 106, 99)
+		        // Elves 			- (247, 140, 238)
+		        // Iron Dragons 	- (73, 73, 73)
+		        // Steel Dragons	- (255, 255, 255)
+		        // Black Dragons	- (255, 255, 255)
+		        // blue drag 		- (15, 47, 255)
+		        // wyvern 			- (163, 239, 139)
+		        if ("Trolls".equalsIgnoreCase(status)) {
+		            setBackground(new Color(212, 214, 216));
+		            setForeground(new Color(0,0,0));
+		        }else if ("Kalphite".equalsIgnoreCase(status)||"Kalphites".equalsIgnoreCase(status)) {
+		            setBackground(new Color(99, 124, 91));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Lizardman".equalsIgnoreCase(status)||"Lizardmen".equalsIgnoreCase(status)) {
+		            setBackground(new Color(163, 239, 139));
+		            setForeground(new Color(0,0,0));
+		        }else if ("Nechryael".equalsIgnoreCase(status)||"Nechryaels".equalsIgnoreCase(status)) {
+		            setBackground(new Color(252, 174, 148));
+		            setForeground(new Color(0,0,0));
+		        }else if ("Dagannoth".equalsIgnoreCase(status)||"Dagannoths".equalsIgnoreCase(status)) {
+		            setBackground(new Color(99, 99, 99));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Fire Giants".equalsIgnoreCase(status)) {
+		            setBackground(new Color(255, 72, 56));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Gargoyle".equalsIgnoreCase(status)||"Gargoyles".equalsIgnoreCase(status)) {
+		            setBackground(new Color(61, 61, 61));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Greater Demon".equalsIgnoreCase(status)||"Greater Demons".equalsIgnoreCase(status)) {
+		            setBackground(new Color(165, 9, 9));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Dust Devil".equalsIgnoreCase(status)||"Dust Devils".equalsIgnoreCase(status)) {
+		            setBackground(new Color(255, 196, 94));
+		            setForeground(new Color(0,0,0));
+		        }else if ("Smoke Devil".equalsIgnoreCase(status)||"Smoke Devils".equalsIgnoreCase(status)) {
+		            setBackground(new Color(124, 120, 112));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Aberrant Spectres".equalsIgnoreCase(status)) {
+		            setBackground(new Color(163, 247, 150));
+		            setForeground(new Color(0,0,0));
+		        }else if ("Bloodvelds".equalsIgnoreCase(status)) {
+		            setBackground(new Color(204, 106, 99));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Elves".equalsIgnoreCase(status)||"Elf".equalsIgnoreCase(status)||"Elfs".equalsIgnoreCase(status)) {
+		            setBackground(new Color(247, 140, 238));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Iron Dragons".equalsIgnoreCase(status)||"Iron Dragon".equalsIgnoreCase(status)) {
+		            setBackground(new Color(73, 73, 73));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Steel Dragons".equalsIgnoreCase(status)||"Steel Dragon".equalsIgnoreCase(status)) {
+		            setBackground(new Color(255, 255, 255));
+		            setForeground(new Color(0,0,0));
+		        }else if ("Black Dragons".equalsIgnoreCase(status)||"Black Dragon".equalsIgnoreCase(status)) {
+		            setBackground(new Color(0,0,0));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Blue Dragons".equalsIgnoreCase(status)||"Blue Dragon".equalsIgnoreCase(status)) {
+		            setBackground(new Color(15, 47, 255));
+		            setForeground(new Color(255,255,255));
+		        }else if ("Wyverns".equalsIgnoreCase(status)||"Wyvern".equalsIgnoreCase(status)) {
+		            setBackground(new Color(163, 239, 139));
+		            setForeground(new Color(255,255,255));
+		        } else {
+		            setBackground(table.getBackground());
+		            setForeground(table.getForeground());
+		            
+		        }       
+		        return this;
+		    }   
+		};
 	}
 }

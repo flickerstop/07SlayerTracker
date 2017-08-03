@@ -10,7 +10,7 @@ public class Player {
 	/////////////////////////////
 	// SAVE EDIT MODE
 	// Is it safe to edit the cannonballs/runes
-	private static boolean isSafeEdit = false; 
+	private static boolean isSafeEdit = true; 
 	//////////////////////////////
 	private static int cannonballs;
 	private static int waterRunes;
