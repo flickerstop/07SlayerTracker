@@ -21,8 +21,7 @@ public class Player {
 	private static int deathPrice = 258; // prices on 30/07/2017
 	private static int chaosPrice = 101;
 	private static int waterPrice = 5;
-	private static String path = System.getenv("APPDATA")+"\\SlayerTracker";
-	private static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
+
 	/***
 	 * Constructor for player object
 	 */
@@ -34,9 +33,9 @@ public class Player {
 		avgCannonballPrice = 0;
 		if(isSafeEdit) {
 			csv = new CsvExport();
-			savePath = "player.sav";
+			Globals.savePath = "player.sav";
 		}else {
-			csv = new CsvExport(path);
+			csv = new CsvExport(Globals.path);
 		}
 
 	}
@@ -119,7 +118,7 @@ public class Player {
 		String output = cannonballs + "," + waterRunes + "," + chaosRunes + "," + deathRunes+","+avgCannonballPrice;
 		//System.out.println(output);
 		try {
-			PrintWriter out = new PrintWriter(savePath);
+			PrintWriter out = new PrintWriter(Globals.savePath);
 			out.println(output);
 			out.close();
 		}catch(Exception e) {
@@ -134,7 +133,7 @@ public class Player {
 //		System.out.println(savePath);
 		try {
 			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(savePath));
+			BufferedReader br = new BufferedReader(new FileReader(Globals.savePath));
 		    line = br.readLine();
 		    
 		    br.close();
@@ -147,7 +146,7 @@ public class Player {
 		    avgCannonballPrice = Float.parseFloat(data[4]);
 		    
 		} catch (FileNotFoundException e){
-			new File(path).mkdir();
+			new File(Globals.path).mkdir();
 			save();
 		}catch (Exception e){
 			e.printStackTrace();

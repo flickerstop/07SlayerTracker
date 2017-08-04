@@ -1,14 +1,15 @@
-- Options panel
-	- Dark mode
+- Settings panel
 	- Different sounds for alarm
 	
 - Logs
 	- show icons of monster
 	- have each log a different colour
-	- colour rows depending on monster type
-	- 6th panel that shows the stats of the other panels
-	- ability to save
+	- ability to edit/save
+	- fix the lot of logs uses the profit column instead of the loot
 
 - farm timer
 	- button to add 20 minutes
-	- ability to close timer
+	- ability to close timer and save time
+	
+- Monster panel
+	- timer restart

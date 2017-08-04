@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
@@ -23,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class monsterPanelDesigner {
@@ -117,7 +115,9 @@ public class monsterPanelDesigner {
 		finishTaskButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				@SuppressWarnings("unused")
 				int profit = 0;
+				@SuppressWarnings("unused")
 				int cannonballLeft = -1;
 				
 				if(trip1TextField.getText().length() != 0) {

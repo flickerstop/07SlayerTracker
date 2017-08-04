@@ -37,7 +37,6 @@ public class FarmRunPanel {
 	private static Clip clip;
 	private static JLabel endTimeLabel;
 	private static Color buttonColour = new Color(68,187,255);
-	private static Color textFieldColour = new Color(102,204,153);
 	
 	/**
 	 * @wbp.parser.entryPoint
@@ -101,9 +100,11 @@ public class FarmRunPanel {
         		startTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
-	        			stopTimerButton.setEnabled(true);
-	        			startTimerButton.setEnabled(false);
-	        			startTimer();
+	        			if(startTimerButton.isEnabled()) {
+		        			stopTimerButton.setEnabled(true);
+		        			startTimerButton.setEnabled(false);
+		        			startTimer();
+	        			}
 	        		}
         		});
         		
@@ -115,9 +116,11 @@ public class FarmRunPanel {
         		stopTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent e) {
-	        			stopTimer();
-	        			stopTimerButton.setEnabled(false);
-	        			startTimerButton.setEnabled(true);
+	        			if(stopTimerButton.isEnabled()) {
+		        			stopTimer();
+		        			stopTimerButton.setEnabled(false);
+		        			startTimerButton.setEnabled(true);
+	        			}
 	        		}
         		});
         		stopTimerButton.setBounds(panelWidth/2, (panelHeight)-(rowHeight*2+Globals.scale(5)), (panelWidth/2)-Globals.scale(10), rowHeight);

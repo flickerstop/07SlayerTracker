@@ -157,10 +157,12 @@ public class SettingsPanel {
 				normalThemeButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						Globals.setNormalMode();
-						normalThemeButton.setEnabled(false);
-						darkThemeButton.setEnabled(true);
-						currentTheme.setText("Currently Normal Theme");
+						if(normalThemeButton.isEnabled()) {
+							Globals.setNormalMode();
+							normalThemeButton.setEnabled(false);
+							darkThemeButton.setEnabled(true);
+							currentTheme.setText("Currently Normal Theme");
+						}
 					}
 				});
 				mainFrame.getContentPane().add(normalThemeButton);
@@ -174,26 +176,34 @@ public class SettingsPanel {
 				darkThemeButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						Globals.setDarkMode();
-						normalThemeButton.setEnabled(true);
-						darkThemeButton.setEnabled(false);
-						currentTheme.setText("Currently Dark Theme");
+						if(darkThemeButton.isEnabled()) {
+							Globals.setDarkMode();
+							normalThemeButton.setEnabled(true);
+							darkThemeButton.setEnabled(false);
+							currentTheme.setText("Currently Dark Theme");
+						}
 					}
 				});
 				mainFrame.getContentPane().add(darkThemeButton);
 				
 				
-				currentTheme.setText("Currently Normal Theme");
+				
 				currentTheme.setFont(Globals.mainFont);
 				currentTheme.setHorizontalAlignment(SwingConstants.CENTER);
 				currentTheme.setForeground(Globals.white);
 				currentTheme.setBounds(((width/2)-((width/2)/2)),Globals.scale(100),width/2,Globals.scale(25));
 	    		mainFrame.getContentPane().add(currentTheme);
 	    		
-				if(!Globals.isDarkMode) {
-					normalThemeButton.setEnabled(false);
-				}else {
+	    		System.out.println(Globals.isDarkMode);
+	    		
+				if(Globals.isDarkMode) {
 					darkThemeButton.setEnabled(false);
+					normalThemeButton.setEnabled(true);
+					currentTheme.setText("Currently Dark Theme");
+				}else {
+					normalThemeButton.setEnabled(false);
+					darkThemeButton.setEnabled(true);
+					currentTheme.setText("Currently Normal Theme");
 				}
 	    		/////////////////////////////////////
 	    		

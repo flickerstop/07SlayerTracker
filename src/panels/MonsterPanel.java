@@ -431,9 +431,11 @@ public class MonsterPanel{
 		startTimerButton.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			startTimerButton.setEnabled(false);
-			stopTimerButton.setEnabled(true);
-			startTimer();
+			if(startTimerButton.isEnabled()){
+				startTimerButton.setEnabled(false);
+				stopTimerButton.setEnabled(true);
+				startTimer();
+			}
 		}
 		});
 		
@@ -445,9 +447,11 @@ public class MonsterPanel{
 		stopTimerButton.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			startTimerButton.setEnabled(true);
-			stopTimerButton.setEnabled(false);
-			stopTimer();
+			if(stopTimerButton.isEnabled()){
+				startTimerButton.setEnabled(true);
+				stopTimerButton.setEnabled(false);
+				stopTimer();
+			}
 		}
 		});
 		stopTimerButton.setBounds(infowidth/2, (infoheight)-(rowHeight*2+Globals.scale(5)), (infowidth/2)-Globals.scale(10), rowHeight);

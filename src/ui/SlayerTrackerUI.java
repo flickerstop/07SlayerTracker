@@ -19,7 +19,6 @@ import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 
 import javax.swing.ImageIcon;
-import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
@@ -56,7 +55,7 @@ public class SlayerTrackerUI {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		Globals.reload();
+		Globals.load();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -143,7 +142,7 @@ public class SlayerTrackerUI {
 		FrameDragListener frameDragListener = new FrameDragListener(mainFrame);
 		JPanel topBar = new JPanel();
 		topBar.setBounds(0, 0, panelWidth, Globals.topMenuBarHeight);
-		topBar.setBackground(Globals.black);
+		topBar.setBackground(Globals.topBarColour);
 		topBar.addMouseListener(frameDragListener);
 		topBar.addMouseMotionListener(frameDragListener);
 		topBar.setLayout(null);

@@ -1,5 +1,4 @@
 package testing;
-import objects.Player;
 import panels.FarmRunPanel;
 
 public class PlayerTester {
@@ -10,8 +9,7 @@ public class PlayerTester {
 		//test.updateCannonbals(1000, 10);
 		
 		//out(test.getAvgCannonballPrice());
-		FarmRunPanel test = new FarmRunPanel();
-		test.build(null,true);
+		FarmRunPanel.build(null,true);
 //		int arrayLength = (int) Math.round((Math.random()*100));
 //		String[] testArray = new String[arrayLength];
 //		for(int i = 0; i < testArray.length; i++) {
