@@ -1,5 +1,6 @@
 - Settings panel
 	- Different sounds for alarm
+	- Change layout of buttons
 	
 - Logs
 	- show icons of monster
@@ -8,8 +9,6 @@
 	- fix the lot of logs uses the profit column instead of the loot
 
 - farm timer
-	- button to add 20 minutes
 	- ability to close timer and save time
 	
 - Monster panel
-	- timer restart

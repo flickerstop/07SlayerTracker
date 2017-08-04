@@ -427,6 +427,7 @@ public class MonsterPanel{
 		// Timer
 		JButton startTimerButton = new JButton("Start Timer");
 		JButton stopTimerButton = new JButton("Stop Timer");
+		JButton restartTimerButton = new JButton("R");
 		startTimerButton.setFont(Globals.mainFont);
 		startTimerButton.addMouseListener(new MouseAdapter() {
 		@Override
@@ -434,6 +435,7 @@ public class MonsterPanel{
 			if(startTimerButton.isEnabled()){
 				startTimerButton.setEnabled(false);
 				stopTimerButton.setEnabled(true);
+				restartTimerButton.setEnabled(true);
 				startTimer();
 			}
 		}
@@ -450,6 +452,7 @@ public class MonsterPanel{
 			if(stopTimerButton.isEnabled()){
 				startTimerButton.setEnabled(true);
 				stopTimerButton.setEnabled(false);
+				restartTimerButton.setEnabled(false);
 				stopTimer();
 			}
 		}
@@ -466,6 +469,24 @@ public class MonsterPanel{
 		timerTextField.setBounds(infowidth/4, (infoheight)-(rowHeight+Globals.scale(5)), (infowidth/2), rowHeight);
 		otherInfoPanel.add(timerTextField);
 		timerTextField.setColumns(10);
+		
+		restartTimerButton.setFont(Globals.smallFont);
+		restartTimerButton.setBackground(Globals.red);
+		restartTimerButton.setMargin(new Insets(0, 0, 0, 0));
+		restartTimerButton.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(stopTimerButton.isEnabled()){
+				startTimerButton.setEnabled(true);
+				stopTimerButton.setEnabled(false);
+				restartTimerButton.setEnabled(false);
+				restartTimer();
+			}
+		}
+		});
+		restartTimerButton.setBounds(Globals.scale(35), (infoheight)-(rowHeight+Globals.scale(5))+Globals.scale(5), Globals.scale(15), Globals.scale(15));
+		restartTimerButton.setEnabled(false);
+		otherInfoPanel.add(restartTimerButton);
 		
 		final Timer timer = new Timer(500, new ActionListener() {
 		@Override
@@ -522,6 +543,12 @@ public class MonsterPanel{
 		if (timerStart != 0) { // if timer has started
 			timerStop = System.currentTimeMillis();
 		}
+	}
+	
+	public void restartTimer() {
+		timerStart = 0;
+		timerStop = 0;
+		timerTextField.setText("00:00:00");
 	}
 	
 	

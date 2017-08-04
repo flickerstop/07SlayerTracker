@@ -22,7 +22,7 @@ public class Globals {
 	
 	
 	
-	public static String versionNumber = "0.5.2";
+	public static String versionNumber = "0.5.3";
 
 
 	
@@ -39,12 +39,15 @@ public class Globals {
 	public static Font boldFont = new Font("Tahoma", Font.BOLD, scale(14));
 	public static Font massiveFont = new Font("Tahoma", Font.BOLD, scale(20));
 	public static Font smallFont = new Font("Tahoma", Font.BOLD, scale(7));
+	public static Font mediumFont = new Font("Tahoma", Font.BOLD, scale(9));
 	
 	public static Color black = new Color(39,39,39);
 	public static Color darkerBlack = new Color(27,27,27);
 	public static Color white = new Color(255,255,255);
 	public static Color green = new Color(46, 204, 113);
 	public static Color grey = new Color(150, 150, 150);
+	public static Color blue = new Color(68,187,255);
+	public static Color red = new Color(231, 76, 60);
 	
 	public static Color buttonBackground = new Color(240, 240, 240);
 	public static Color topBarColour = black;

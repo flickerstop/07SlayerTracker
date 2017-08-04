@@ -36,7 +36,6 @@ public class FarmRunPanel {
 	private static JTextField timerTextField;
 	private static Clip clip;
 	private static JLabel endTimeLabel;
-	private static Color buttonColour = new Color(68,187,255);
 	
 	/**
 	 * @wbp.parser.entryPoint
@@ -93,9 +92,10 @@ public class FarmRunPanel {
         		//////////////
         		// Timer
         		JButton startTimerButton = new JButton("Start Countdown");
-        		startTimerButton.setBackground(buttonColour);
+        		startTimerButton.setBackground(Globals.blue);
         		JButton stopTimerButton = new JButton("Stop Countdown");
-        		stopTimerButton.setBackground(buttonColour);
+        		stopTimerButton.setBackground(Globals.blue);
+        		JButton oneStageTimerButton = new JButton("20 mins");
         		startTimerButton.setFont(Globals.mainFont);
         		startTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
@@ -103,6 +103,7 @@ public class FarmRunPanel {
 	        			if(startTimerButton.isEnabled()) {
 		        			stopTimerButton.setEnabled(true);
 		        			startTimerButton.setEnabled(false);
+		        			oneStageTimerButton.setEnabled(false);
 		        			startTimer();
 	        			}
 	        		}
@@ -120,6 +121,7 @@ public class FarmRunPanel {
 		        			stopTimer();
 		        			stopTimerButton.setEnabled(false);
 		        			startTimerButton.setEnabled(true);
+		        			oneStageTimerButton.setEnabled(true);
 	        			}
 	        		}
         		});
@@ -136,6 +138,28 @@ public class FarmRunPanel {
         		timerTextField.setBounds(panelWidth/4, (panelHeight)-(rowHeight+Globals.scale(5)), (panelWidth/2), rowHeight);
         		mainFrame.getContentPane().add(timerTextField);
         		timerTextField.setColumns(10);
+        		
+        		
+        		
+        		oneStageTimerButton.setBackground(Globals.green);
+        		oneStageTimerButton.setFont(Globals.mediumFont);
+        		oneStageTimerButton.addMouseListener(new MouseAdapter() {
+	        		@Override
+	        		public void mouseClicked(MouseEvent arg0) {
+	        			if(startTimerButton.isEnabled()) {
+		        			stopTimerButton.setEnabled(true);
+		        			startTimerButton.setEnabled(false);
+		        			oneStageTimerButton.setEnabled(false);
+		        			startTimer(1200000);
+	        			}
+	        		}
+        		});
+        		oneStageTimerButton.setBounds((panelWidth/4)+(panelWidth/2), (panelHeight)-(rowHeight+Globals.scale(5)),Globals.scale(80), rowHeight);
+        		mainFrame.getContentPane().add(oneStageTimerButton);
+        		
+        		
+        		
+        		
         		
         		final Timer timer = new Timer(500, new ActionListener() {
         		@Override
@@ -184,6 +208,21 @@ public class FarmRunPanel {
 	}
 	public static void startTimer() {
 		int timerLength = 4800000; //4800000;
+		timerStart = System.currentTimeMillis();
+		timerStop = System.currentTimeMillis() + timerLength;
+		ZonedDateTime startOfToday = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
+		long todayMillis1 = startOfToday.toEpochSecond() * 1000;
+		long millis = (System.currentTimeMillis() - todayMillis1)+timerLength;
+		if(millis > (3600000*12)) {
+			millis -= (3600000*12);
+		}
+	    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+	            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+	            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+	    endTimeLabel.setText("Farm run at "+hms);
+	}
+	public static void startTimer(int length) {
+		int timerLength = length; //4800000;
 		timerStart = System.currentTimeMillis();
 		timerStop = System.currentTimeMillis() + timerLength;
 		ZonedDateTime startOfToday = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
