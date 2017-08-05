@@ -12,4 +12,5 @@
 	- Save farm run to log
 	
 - Monster panel
-	- if you didn't use cannon on a cannon task, have a toggle button to turn it into a normal task
+	- Asks how you're going to do the task
+	- find a way to add more trips
