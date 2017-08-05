@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class SettingsPanel {
 	        {
 	        	
 	        	int width = Globals.scale(400);
-	    		int height = Globals.scale(600);
+	    		int height = Globals.scale(520);
 	    		JSpinner farmPatchCountSpinner = new JSpinner();
 	    		ArrayList<JFormattedTextField> inputs = new ArrayList<JFormattedTextField>();
 	        	mainFrame.getContentPane().setBackground(Globals.black);
@@ -138,6 +139,7 @@ public class SettingsPanel {
 	    		acceptChangesButton.setBounds(0,height-Globals.scale(25),width,Globals.scale(25));
 	    		acceptChangesButton.setBackground(Globals.green);
 	    		acceptChangesButton.setMargin(new Insets(0, 0, 0, 0));
+	    		acceptChangesButton.setFont(Globals.mainFont);
 	    		acceptChangesButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
@@ -173,6 +175,7 @@ public class SettingsPanel {
 				normalThemeButton.setBounds(((width/2)-Globals.scale(115)),Globals.scale(90),Globals.scale(100),Globals.scale(25));
 				normalThemeButton.setBackground(Globals.white);
 				normalThemeButton.setMargin(new Insets(0, 0, 0, 0));
+				normalThemeButton.setFont(Globals.mainFont);
 				normalThemeButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
@@ -192,6 +195,7 @@ public class SettingsPanel {
 				darkThemeButton.setBackground(Globals.grey);
 				darkThemeButton.setForeground(Globals.white);
 				darkThemeButton.setMargin(new Insets(0, 0, 0, 0));
+				darkThemeButton.setFont(Globals.mainFont);
 				darkThemeButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
@@ -293,23 +297,73 @@ public class SettingsPanel {
 				mainFrame.getContentPane().add(separator2);
 				//////////////////////////////////////////////////////////////////////////////
 				
+				JLabel farmLabel = new JLabel();
+				farmLabel.setText("Farm Info");
+				farmLabel.setFont(Globals.boldFont);
+				farmLabel.setForeground(Globals.white);
+				farmLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				farmLabel.setBounds(0,Globals.scale(350),width,Globals.scale(30));
+	    		mainFrame.getContentPane().add(farmLabel);
+				
+				
 				JLabel numOfPatchesLabel = new JLabel();
     			
     			numOfPatchesLabel.setFont(Globals.mainFont);
     			numOfPatchesLabel.setForeground(Globals.buttonForground);
     			numOfPatchesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
     			numOfPatchesLabel.setText("How many patches do you run:");
-    			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(370),(width/2)-Globals.scale(20),Globals.scale(25));
+    			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(380),(width/2)-Globals.scale(20),Globals.scale(25));
     			mainFrame.getContentPane().add(numOfPatchesLabel);
     			
     			
     			farmPatchCountSpinner.setForeground(Globals.buttonForground);
     			farmPatchCountSpinner.setBackground(Globals.buttonBackground);
     			farmPatchCountSpinner.setModel(new SpinnerNumberModel(Globals.numberOfPatches, 1, 7, 1));
-    			farmPatchCountSpinner.setBounds(width/2+Globals.scale(10),Globals.scale(370),Globals.scale(80),Globals.scale(25));
+    			farmPatchCountSpinner.setBounds(width/2+Globals.scale(10),Globals.scale(380),Globals.scale(80),Globals.scale(25));
     			farmPatchCountSpinner.setFont(Globals.mainFont);
     			mainFrame.getContentPane().add(farmPatchCountSpinner);
 	    		
+				//////////////////////////////////////////////////////////////////////////////
+				JSeparator separator3 = new JSeparator();
+				separator3.setBounds(0,Globals.scale(420),width,Globals.scale(10));
+				separator3.setBackground(Globals.yellow);
+				separator3.setForeground(Globals.yellow);
+				mainFrame.getContentPane().add(separator3);
+				//////////////////////////////////////////////////////////////////////////////
+    			
+				JLabel openFileLabel = new JLabel();
+				openFileLabel.setText("Click me to open where the files are!");
+				openFileLabel.setFont(Globals.mainFont);
+				openFileLabel.setForeground(Globals.blue);
+				openFileLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				openFileLabel.setBounds(0,Globals.scale(430),width,Globals.scale(30));
+				openFileLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						try {
+							Runtime.getRuntime().exec("explorer.exe /select," + Globals.path);
+						} catch (IOException e) {
+							System.err.println(e);
+						}
+					}
+				});
+	    		mainFrame.getContentPane().add(openFileLabel);
+	    		
+	    		JLabel thanksLabel = new JLabel();
+	    		thanksLabel.setText("Special thanks to my Beta tester Metalspike0!");
+	    		thanksLabel.setFont(Globals.smallFont);
+	    		thanksLabel.setForeground(Globals.grey);
+	    		thanksLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    		thanksLabel.setBounds(0,height-Globals.scale(50),width,Globals.scale(10));
+	    		mainFrame.getContentPane().add(thanksLabel);
+	    		JLabel thanksLabel2 = new JLabel();
+	    		thanksLabel2.setText("The finder of bugs, and the man of many great ideas");
+	    		thanksLabel2.setFont(Globals.smallFont);
+	    		thanksLabel2.setForeground(Globals.grey);
+	    		thanksLabel2.setHorizontalAlignment(SwingConstants.CENTER);
+	    		thanksLabel2.setBounds(0,height-Globals.scale(40),width,Globals.scale(10));
+	    		mainFrame.getContentPane().add(thanksLabel2);
+    			
 	    		mainFrame.setLocationByPlatform(true);
 	            mainFrame.setVisible(true);
 	            mainFrame.setResizable(false);
