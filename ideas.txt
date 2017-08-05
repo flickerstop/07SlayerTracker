@@ -1,6 +1,12 @@
 - Settings panel
 	- Different sounds for alarm
 	- Change layout of buttons
+	- Change price of:
+					runes
+					resurrect
+					herbs
+					seeds
+	- Change number of patches
 	
 - Logs
 	- show icons of monster
@@ -10,5 +16,6 @@
 
 - farm timer
 	- ability to close timer and save time
+	- Save farm run to log
 	
 - Monster panel

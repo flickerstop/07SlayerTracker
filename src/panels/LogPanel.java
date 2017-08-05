@@ -3,23 +3,30 @@ package panels;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import objects.Globals;
 import objects.Player;
 import ui.SlayerTrackerUI;
+import ui.SlayerTrackerUI.FrameDragListener;
 
 
 public class LogPanel {
@@ -40,98 +47,180 @@ public class LogPanel {
             public void run()
             {
             	ArrayList<ArrayList<String[]>> log = player.getLogs();
-            	int width = Globals.scale(1000);
+            	int width = Globals.scale(1000)+Globals.topMenuBarHeight;
         		int height = Globals.scale(550);
-        		int panelWidth = width-5;
-        		int panelHeight = height-40;
+        		int panelHeight = height-Globals.topMenuBarHeight;
         		
             	JFrame mainFrame = new JFrame("Test");
+            	mainFrame.getContentPane().setBackground(Globals.panelBackground);
             	mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
             	mainFrame.setLocationByPlatform(true);
         		mainFrame.setTitle("Slayer Logs\r\n");
         		mainFrame.setBounds(100, 100, width, height);
         		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         		mainFrame.getContentPane().setLayout(null);
+        		mainFrame.setUndecorated(true);
+        		mainFrame.setBackground(Globals.panelBackground);
+        		
+				//////////////////////////////
+				// Top Bar
+        		
+				FrameDragListener frameDragListener = new FrameDragListener(mainFrame);
+				JPanel topBar = new JPanel();
+				topBar.setBounds(0, 0, width, Globals.topMenuBarHeight);
+				topBar.setBackground(Globals.topBarColour);
+				topBar.addMouseListener(frameDragListener);
+				topBar.addMouseMotionListener(frameDragListener);
+				topBar.setLayout(null);
+				mainFrame.getContentPane().add(topBar);
+				
+				JButton closeButton = new JButton();
+				closeButton.setFocusPainted(false);
+				closeButton.setIcon(new ImageIcon(SlayerTrackerUI.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
+				closeButton.setBackground(new Color(231, 76, 60));
+				closeButton.setBounds(width-Globals.scale(25), 0, Globals.scale(25), Globals.scale(25));
+				closeButton.setMargin(new Insets(0, 0, 0, 0));
+				closeButton.setToolTipText("Close Window");
+				closeButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+					}
+				});
+				topBar.add(closeButton);
+				
+				
+				JButton minimizeButton = new JButton();
+				minimizeButton.setFocusPainted(false);
+				{
+					ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/minimize.png")); // load the image to a imageIcon
+					Image image = imageIcon.getImage(); // transform it 
+					Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_DEFAULT); // scale it the smooth way  
+					imageIcon = new ImageIcon(newimg);  // transform it back
+					
+					minimizeButton.setIcon(imageIcon);
+				}
+				minimizeButton.setBackground(new Color(52, 152, 219));
+				minimizeButton.setBounds(width-Globals.scale(50), 0, Globals.scale(25), Globals.scale(25));
+				minimizeButton.setMargin(new Insets(0, 0, 0, 0));
+				minimizeButton.setToolTipText("Minimize Window");
+				minimizeButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						mainFrame.setState(Frame.ICONIFIED);
+					}
+				});
+				topBar.add(minimizeButton);
+			
+				
+				
+				JLabel titleLabel = new JLabel();
+				titleLabel.setBounds(Globals.scale(5),0,width/2,Globals.scale(25));
+				titleLabel.setText("Logs Panel v"+Globals.versionNumber);
+				titleLabel.setForeground(new Color(214, 214, 214));
+				titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+				titleLabel.setFont(Globals.mainFont);
+				topBar.add(titleLabel);
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////
+        		
+        		
+        		
         		
         		JScrollPane scrollPane = new JScrollPane();
-        		scrollPane.setBounds(0, 0, panelWidth, panelHeight-Globals.scale(30));
+        		scrollPane.setBounds(Globals.scale(10), Globals.topMenuBarHeight+Globals.scale(10), width-Globals.scale(20), panelHeight-Globals.scale(40));
+        		scrollPane.setBackground(Globals.panelBackground);
+        		scrollPane.setForeground(Globals.panelBackground);
         		mainFrame.getContentPane().add(scrollPane);
+        		
+        		
         		
         		//////////////////////////////
         		// change log buttons
         		JButton normalLogButton = new JButton("Normal Slayer Logs");
         		normalLogButton.setFont(Globals.mainFont);
         		normalLogButton.setMargin(new Insets(0, 0, 0, 0));
+        		normalLogButton.setForeground(Globals.buttonForground);
+        		normalLogButton.setBackground(Globals.buttonBackground);
         		normalLogButton.addMouseListener(new MouseAdapter() {
         			@Override
         			public void mouseClicked(MouseEvent arg0) {
         				scrollPane.setViewportView(normalTable);
         			}
         		});
-        		normalLogButton.setBounds(0,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
-        		mainFrame.add(normalLogButton);
+        		normalLogButton.setBounds(Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/6,Globals.scale(20));
+        		mainFrame.getContentPane().add(normalLogButton);
         		
         		
         		JButton cannonLogButton = new JButton("Cannon Slayer Logs");
         		cannonLogButton.setFont(Globals.mainFont);
         		cannonLogButton.setMargin(new Insets(0, 0, 0, 0));
+        		cannonLogButton.setForeground(Globals.buttonForground);
+        		cannonLogButton.setBackground(Globals.buttonBackground);
         		cannonLogButton.addMouseListener(new MouseAdapter() {
         			@Override
         			public void mouseClicked(MouseEvent arg0) {
         				scrollPane.setViewportView(cannonTable);
         			}
         		});
-        		cannonLogButton.setBounds((panelWidth/6)*1,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
-        		mainFrame.add(cannonLogButton);
+        		cannonLogButton.setBounds(((width-Globals.scale(10))/6)*1+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/6,Globals.scale(20));
+        		mainFrame.getContentPane().add(cannonLogButton);
         		
         		
         		JButton burstLogButton = new JButton("Burst Slayer Logs");
         		burstLogButton.setFont(Globals.mainFont);
         		burstLogButton.setMargin(new Insets(0, 0, 0, 0));
+        		burstLogButton.setForeground(Globals.buttonForground);
+        		burstLogButton.setBackground(Globals.buttonBackground);
         		burstLogButton.addMouseListener(new MouseAdapter() {
         			@Override
         			public void mouseClicked(MouseEvent arg0) {
         				scrollPane.setViewportView(burstTable);
         			}
         		});
-        		burstLogButton.setBounds((panelWidth/6)*2,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
-        		mainFrame.add(burstLogButton);
+        		burstLogButton.setBounds(((width-Globals.scale(10))/6)*2+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/6,Globals.scale(20));
+        		mainFrame.getContentPane().add(burstLogButton);
         		
         		JButton cannonBurstLogButton = new JButton("Cannon/Burst Slayer Logs");
         		cannonBurstLogButton.setFont(Globals.mainFont);
         		cannonBurstLogButton.setMargin(new Insets(0, 0, 0, 0));
+        		cannonBurstLogButton.setForeground(Globals.buttonForground);
+        		cannonBurstLogButton.setBackground(Globals.buttonBackground);
         		cannonBurstLogButton.addMouseListener(new MouseAdapter() {
         			@Override
         			public void mouseClicked(MouseEvent arg0) {
         				scrollPane.setViewportView(cannonBurstTable);
         			}
         		});
-        		cannonBurstLogButton.setBounds((panelWidth/6)*3,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
-        		mainFrame.add(cannonBurstLogButton);
+        		cannonBurstLogButton.setBounds(((width-Globals.scale(10))/6)*3+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/6,Globals.scale(20));
+        		mainFrame.getContentPane().add(cannonBurstLogButton);
         		
         		JButton cannonballLogButton = new JButton("Cannonball Purchase Logs");
         		cannonballLogButton.setFont(Globals.mainFont);
         		cannonballLogButton.setMargin(new Insets(0, 0, 0, 0));
+        		cannonballLogButton.setForeground(Globals.buttonForground);
+        		cannonballLogButton.setBackground(Globals.buttonBackground);
         		cannonballLogButton.addMouseListener(new MouseAdapter() {
         			@Override
         			public void mouseClicked(MouseEvent arg0) {
         				scrollPane.setViewportView(cannonballTable);
         			}
         		});
-        		cannonballLogButton.setBounds((panelWidth/6)*4,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
-        		mainFrame.add(cannonballLogButton);
+        		cannonballLogButton.setBounds(((width-Globals.scale(10))/6)*4+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/6,Globals.scale(20));
+        		mainFrame.getContentPane().add(cannonballLogButton);
         		
         		JButton logButton = new JButton("Log of the Logs");
         		logButton.setFont(Globals.mainFont);
         		logButton.setMargin(new Insets(0, 0, 0, 0));
+        		logButton.setForeground(Globals.buttonForground);
+        		logButton.setBackground(Globals.buttonBackground);
         		logButton.addMouseListener(new MouseAdapter() {
         			@Override
         			public void mouseClicked(MouseEvent arg0) {
         				scrollPane.setViewportView(logTable);
         			}
         		});
-        		logButton.setBounds((panelWidth/6)*5,panelHeight-Globals.scale(20),panelWidth/6,Globals.scale(20));
-        		mainFrame.add(logButton);
+        		logButton.setBounds(((width-Globals.scale(10))/6)*5+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/6,Globals.scale(20));
+        		mainFrame.getContentPane().add(logButton);
         		
         		/////////////////////////////////////////
         		// Normal Slayer
@@ -150,11 +239,9 @@ public class LogPanel {
         		rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
         		normalTable = new JTable(normalModel);
         		normalTable.setFillsViewportHeight(true);
-        		/*normalTable.getColumn("Monster").setCellRenderer(centerRenderer);
-        		normalTable.getColumn("Amount").setCellRenderer(rightRenderer);
-        		normalTable.getColumn("Loot").setCellRenderer(rightRenderer);
-        		normalTable.getColumn("Time").setCellRenderer(centerRenderer);*/
         		normalTable.setDefaultRenderer(Object.class, colourCells());
+        		normalTable.setBackground(Globals.panelBackground);
+        		normalTable.setForeground(Globals.buttonForground);
         		scrollPane.setViewportView(normalTable);
 				/////////////////////////////////////////
 				// Cannon
@@ -174,14 +261,8 @@ public class LogPanel {
 				cannonTable = new JTable(cannonModel);
 				cannonTable.setFillsViewportHeight(true);
 				cannonTable.setDefaultRenderer(Object.class, colourCells());
-//				cannonTable.getColumn("Monster").setCellRenderer(centerRenderer);
-//				cannonTable.getColumn("Amount").setCellRenderer(rightRenderer);
-//				cannonTable.getColumn("Loot").setCellRenderer(rightRenderer);
-//				cannonTable.getColumn("Cannonballs Left").setCellRenderer(rightRenderer);
-//				cannonTable.getColumn("Cannonballs Used").setCellRenderer(rightRenderer);
-//				cannonTable.getColumn("Cost of Cannonballs").setCellRenderer(rightRenderer);
-//				cannonTable.getColumn("Profit").setCellRenderer(rightRenderer);
-//				cannonTable.getColumn("Time").setCellRenderer(centerRenderer);
+				cannonTable.setBackground(Globals.panelBackground);
+				cannonTable.setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(cannonTable);
 				/////////////////////////////////////////
 				// Burst
@@ -201,16 +282,9 @@ public class LogPanel {
 				}
 				burstTable = new JTable(burstModel);
 				burstTable.setFillsViewportHeight(true);
-				/*burstTable.getColumn("Monster").setCellRenderer(centerRenderer);
-				burstTable.getColumn("Amount").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Loot").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Deaths Used").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Chaos Used").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Water Used").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Price of Runes").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Profit").setCellRenderer(rightRenderer);
-				burstTable.getColumn("Time").setCellRenderer(centerRenderer);*/
 				burstTable.setDefaultRenderer(Object.class, colourCells());
+				burstTable.setBackground(Globals.panelBackground);
+				burstTable.setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(burstTable);
 				/////////////////////////////////////////
 				// Cannon/burst
@@ -232,18 +306,9 @@ public class LogPanel {
 				}
 				cannonBurstTable = new JTable(cannonBurstModel);
 				cannonBurstTable.setFillsViewportHeight(true);
-				/*cannonBurstTable.getColumn("Monster").setCellRenderer(centerRenderer);
-				cannonBurstTable.getColumn("Amount").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Loot").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Cbs Used").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Deaths Used").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Chaos Used").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Waters Used").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Cost of Cbs").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Cost of Runes").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Profit").setCellRenderer(rightRenderer);
-				cannonBurstTable.getColumn("Time").setCellRenderer(centerRenderer);*/
 				cannonBurstTable.setDefaultRenderer(Object.class, colourCells());
+				cannonBurstTable.setBackground(Globals.panelBackground);
+				cannonBurstTable.setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(cannonBurstTable);
 				/////////////////////////////////////////
 				// Cannonball
@@ -256,17 +321,15 @@ public class LogPanel {
 					cannonballModel.addRow(array);
 				}
 				cannonballTable = new JTable(cannonballModel);
+				cannonballTable.setBackground(Globals.panelBackground);
 				cannonballTable.setFillsViewportHeight(true);
 				cannonballTable.getColumn("Total Price").setCellRenderer(rightRenderer);
 				cannonballTable.getColumn("Amount of Cannonballs").setCellRenderer(rightRenderer);
 				cannonballTable.getColumn("Price per Ball").setCellRenderer(rightRenderer);
+				cannonballTable.setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(cannonballTable);
         		
-        		
-                mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                mainFrame.setLocationByPlatform(true);
-                mainFrame.setVisible(true);
-                mainFrame.setResizable(false);
+        	
 				/////////////////////////////////////////
 				// Logs
 				
@@ -300,16 +363,18 @@ public class LogPanel {
 				logModel.addRow(new Object[] {"Burst Tasks",amountOfKills[2],totalLoot[2]});
 				logModel.addRow(new Object[] {"Burst/Cannon Tasks",amountOfKills[3],totalLoot[3]});
 				logModel.addRow(new Object[] {"All Tasks",absoluteAmountOfKills,absoluteTotalLoot});
-				//logModel.addRow(new Object[] {"Cannonballs",amountOfKills[4],totalLoot[0]});
 				
 				logTable = new JTable(logModel);
 				logTable.setFillsViewportHeight(true);
 				logTable.getColumn("Type of Log").setCellRenderer(centerRenderer);
 				logTable.getColumn("Amount of Kills").setCellRenderer(rightRenderer);
 				logTable.getColumn("Total Profit").setCellRenderer(rightRenderer);
+				logTable.setBackground(Globals.panelBackground);
+				logTable.setForeground(Globals.buttonForground);
 				
+			
 				
-				
+                mainFrame.setLocationByPlatform(true);
 				mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				mainFrame.setVisible(true);
 				mainFrame.setResizable(false);
@@ -402,8 +467,8 @@ public class LogPanel {
 		            setBackground(new Color(163, 239, 139));
 		            setForeground(new Color(255,255,255));
 		        } else {
-		            setBackground(table.getBackground());
-		            setForeground(table.getForeground());
+		            setBackground(Globals.panelBackground);
+		            setForeground(Globals.buttonForground);
 		            
 		        }       
 		        return this;

@@ -18,11 +18,12 @@ public class Globals {
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
 	public static String settingsFile = path+"\\settings.sav";
+	public static String herbRunFile = path+"\\herbRun.csv";
 	///////
 	
 	
 	
-	public static String versionNumber = "0.5.3";
+	public static String versionNumber = "0.6.0";
 
 
 	
@@ -48,6 +49,8 @@ public class Globals {
 	public static Color grey = new Color(150, 150, 150);
 	public static Color blue = new Color(68,187,255);
 	public static Color red = new Color(231, 76, 60);
+	public static Color yellow = new Color(241, 196, 15);
+	public static Color purple = new Color(155, 89, 182);
 	
 	public static Color buttonBackground = new Color(240, 240, 240);
 	public static Color topBarColour = black;
@@ -59,7 +62,12 @@ public class Globals {
 	
 	public static boolean isDarkMode = false;
 
-	
+	//////////////////////
+	// Farm Run
+	public static int herbPrice = 9964;
+	public static int resurrectprice = 5561;
+	public static int numberOfPatches = 7;
+	public static int seedPrice = 45874;
 	
 	public static void reload() {
 		width = scale(640);

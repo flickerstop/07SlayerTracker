@@ -1,6 +1,8 @@
 package panels;
 
 import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -71,6 +73,22 @@ public class FarmRunPanel {
         		endTimeLabel.setBounds(0, panelHeight/3, panelWidth, rowHeight);
         		mainFrame.getContentPane().add(endTimeLabel);
         		
+        		
+        		JButton logsButton = new JButton();
+        		logsButton.setText("?");
+        		logsButton.setFocusPainted(false);
+        		logsButton.setBackground(Globals.purple);
+        		logsButton.setFont(Globals.smallFont);
+        		logsButton.setBounds(panelWidth-Globals.scale(45), 0, Globals.scale(15), Globals.scale(15));
+        		logsButton.setMargin(new Insets(0, 0, 0, 0));
+        		logsButton.addMouseListener(new MouseAdapter() {
+	        		@Override
+	        		public void mouseClicked(MouseEvent arg0) {
+	        			FarmRunData.build();
+	        		}
+        		});
+        		mainFrame.getContentPane().add(logsButton);
+        		
         		JButton closeButton = new JButton();
         		closeButton.setFocusPainted(false);
         		closeButton.setIcon(new ImageIcon(FarmRunPanel.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
@@ -89,6 +107,27 @@ public class FarmRunPanel {
 	        		}
         		});
         		mainFrame.getContentPane().add(closeButton);
+        		JButton minimizeButton = new JButton();
+        		minimizeButton.setFocusPainted(false);
+        		{
+        			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/minimize.png")); // load the image to a imageIcon
+        			Image image = imageIcon.getImage(); // transform it 
+        			Image newimg = image.getScaledInstance(Globals.scale(15), Globals.scale(15),  java.awt.Image.SCALE_DEFAULT); // scale it the smooth way  
+        			imageIcon = new ImageIcon(newimg);  // transform it back
+        			
+        			minimizeButton.setIcon(imageIcon);
+        		}
+        		minimizeButton.setBackground(new Color(52, 152, 219));
+        		minimizeButton.setBounds(panelWidth-Globals.scale(30), 0, Globals.scale(15), Globals.scale(15));
+        		minimizeButton.setMargin(new Insets(0, 0, 0, 0));
+        		minimizeButton.setToolTipText("Minimize Window");
+        		minimizeButton.addMouseListener(new MouseAdapter() {
+            		@Override
+            		public void mouseClicked(MouseEvent arg0) {
+        				mainFrame.setState(Frame.ICONIFIED);
+            		}
+        		});
+        		mainFrame.add(minimizeButton);
         		//////////////
         		// Timer
         		JButton startTimerButton = new JButton("Start Countdown");
@@ -96,6 +135,7 @@ public class FarmRunPanel {
         		JButton stopTimerButton = new JButton("Stop Countdown");
         		stopTimerButton.setBackground(Globals.blue);
         		JButton oneStageTimerButton = new JButton("20 mins");
+        		JButton saveRunButton = new JButton("Save Run");
         		startTimerButton.setFont(Globals.mainFont);
         		startTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
@@ -146,7 +186,7 @@ public class FarmRunPanel {
         		oneStageTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
-	        			if(startTimerButton.isEnabled()) {
+	        			if(oneStageTimerButton.isEnabled()) {
 		        			stopTimerButton.setEnabled(true);
 		        			startTimerButton.setEnabled(false);
 		        			oneStageTimerButton.setEnabled(false);
@@ -154,8 +194,21 @@ public class FarmRunPanel {
 	        			}
 	        		}
         		});
-        		oneStageTimerButton.setBounds((panelWidth/4)+(panelWidth/2), (panelHeight)-(rowHeight+Globals.scale(5)),Globals.scale(80), rowHeight);
+        		oneStageTimerButton.setBounds((panelWidth/4)+(panelWidth/2), (panelHeight)-(rowHeight+Globals.scale(5)),((panelWidth/2)-Globals.scale(20))/2, rowHeight);
         		mainFrame.getContentPane().add(oneStageTimerButton);
+        		
+        		saveRunButton.setBackground(Globals.yellow);
+        		saveRunButton.setFont(Globals.mediumFont);
+        		saveRunButton.addMouseListener(new MouseAdapter() {
+	        		@Override
+	        		public void mouseClicked(MouseEvent arg0) {
+	        			if(startTimerButton.isEnabled()) {
+		        			openSaveFarmRun();
+	        			}
+	        		}
+        		});
+        		saveRunButton.setBounds(Globals.scale(10), (panelHeight)-(rowHeight+Globals.scale(5)),((panelWidth/2)-Globals.scale(20))/2, rowHeight);
+        		mainFrame.getContentPane().add(saveRunButton);
         		
         		
         		
@@ -266,4 +319,9 @@ public class FarmRunPanel {
             frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
         }
     }
+	
+	private static void openSaveFarmRun() {
+		SaveFarmRun.build();
+		
+	}
 }
