@@ -153,6 +153,7 @@ public class MonsterPanel{
 				}else {
 					// If nothing was entered where cannonballs are left
 					cannonballsLeftTextField.setBackground(new Color(255, 0, 0));
+					return;
 				}
 			}
 			if(isBurst) {
@@ -160,21 +161,27 @@ public class MonsterPanel{
 				// Get cannonballs left
 				if(deathRunesLeftTextField.getText().length() != 0) {
 					deathRunesLeft = Integer.parseInt(deathRunesLeftTextField.getText().replaceAll(",", ""));
+					deathRunesLeftTextField.setBackground(new Color(255, 255,255));
 				}else {
 					// If nothing was entered where cannonballs are left
 					deathRunesLeftTextField.setBackground(new Color(255, 0, 0));
+					return;
 				}
 				if(chaosRunesLeftTextField.getText().length() != 0) {
 					chaosRunesLeft = Integer.parseInt(chaosRunesLeftTextField.getText().replaceAll(",", ""));
+					chaosRunesLeftTextField.setBackground(new Color(255, 255,255));
 				}else {
 					// If nothing was entered where cannonballs are left
 					chaosRunesLeftTextField.setBackground(new Color(255, 0, 0));
+					return;
 				}
 				if(waterRunesLeftTextField.getText().length() != 0) {
 					waterRunesLeft = Integer.parseInt(waterRunesLeftTextField.getText().replaceAll(",", ""));
+					waterRunesLeftTextField.setBackground(new Color(255, 255,255));
 				}else {
 					// If nothing was entered where cannonballs are left
 					waterRunesLeftTextField.setBackground(new Color(255, 0, 0));
+					return;
 				}
 			}
 			////////////
@@ -197,6 +204,7 @@ public class MonsterPanel{
 			
 			// player.finishCannonTask(name, count, profit, cannonballLeft);
 			if(profit != 0) {
+				trip1TextField.setBackground(new Color(0, 0, 0));
 				if(name == "other") {
 					if(!monsterNameTextField.getText().equals("Monster Name")) {
 						name = monsterNameTextField.getText();
@@ -218,6 +226,8 @@ public class MonsterPanel{
 				}
 				panel.setVisible(false);
 				mainPanel.setVisible(true);
+			}else {
+				trip1TextField.setBackground(new Color(255, 0, 0));
 			}
 			//System.out.println(profit);
 		}

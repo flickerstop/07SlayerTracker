@@ -13,7 +13,8 @@ public class Globals {
 	/////////////////////////////
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
-	public static boolean isSafeEdit = false;
+	public static boolean isSafeEdit = true;
+	public static String versionNumber = "0.6.1";
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
@@ -24,7 +25,7 @@ public class Globals {
 	
 	
 	
-	public static String versionNumber = "0.6.0";
+	
 
 
 	
