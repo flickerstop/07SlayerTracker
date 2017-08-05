@@ -34,7 +34,7 @@ public class FarmRunData {
 	        {
 	        	JFrame mainFrame = new JFrame("Test");
 	        	int width = Globals.scale(400);
-	    		int height = Globals.scale(270);
+	    		int height = Globals.scale(300);
 	    		
 	        	mainFrame.getContentPane().setBackground(new Color(0, 0, 0));
 	        	mainFrame.setUndecorated(true);
@@ -62,21 +62,23 @@ public class FarmRunData {
 	    		
 	    		
 	    		/*
-	    		 * Number of herbs
-	    		 * Number of dead patches
-	    		 * Number successfully resurrected
-	    		 * Number failed resurrected
-	    		 * Resurrect cost
-	    		 * Price of herbs
-	    		 * Price of herbs after costs
-	    		 * Time of day & Date
+	    		 * 0Number of herbs
+	    		 * 1Number of dead patches
+	    		 * 2Number successfully resurrected
+	    		 * 3Number failed resurrected
+	    		 * 4Number of cured
+	    		 * 5Resurrect cost
+	    		 * 6Price of herbs
+	    		 * 7Price of herbs after costs
+	    		 * 8Time of day & Date
 	    		 */
 	    		int numberOfHerbs = 0;
 	    		int numberOfDeadPatches = 0;
 	    		int numberOfSucRes = 0;
 	    		int numberOfFailRes = 0;
+	    		int numberOfCured = 0;
 	    		int resCost = 0;
-	    		int newProfit = 0;
+	    		int netProfit = 0;
 	    		int totalProfit = 0;
 	    		int numberOfRuns = 0;
 	    		int highestCollected = Integer.MIN_VALUE;
@@ -89,9 +91,10 @@ public class FarmRunData {
 		    		numberOfDeadPatches += Integer.parseInt(i[1]);
 		    		numberOfSucRes += Integer.parseInt(i[2]);
 		    		numberOfFailRes += Integer.parseInt(i[3]);
-		    		resCost += Integer.parseInt(i[4]);
-		    		newProfit += Integer.parseInt(i[5]);
-		    		totalProfit += Integer.parseInt(i[6]);
+		    		numberOfCured += Integer.parseInt(i[4]);
+		    		resCost += Integer.parseInt(i[5]);
+		    		netProfit += Integer.parseInt(i[6]);
+		    		totalProfit += Integer.parseInt(i[7]);
 	    			
 		    		if(Integer.parseInt(i[0]) > highestCollected) {
 		    			highestCollected = Integer.parseInt(i[0]);
@@ -116,6 +119,7 @@ public class FarmRunData {
 	   	    		"Number successfully resurrected:",
 	   	    		"Number failed resurrected:",
 	   	    		"Resurrect cost:",
+	   	    		"Number of cured: ",
 	   	    		"Net Profit:",
 	   	    		"Profit:"
 	   	    		
@@ -133,12 +137,13 @@ public class FarmRunData {
 			    		numberOfSucRes,
 			    		numberOfFailRes,
 			    		resCost,
-			    		newProfit,
+			    		numberOfCured,
+			    		netProfit,
 			    		totalProfit
 		    			
 		    			
 		    		};
-	    		for(int i = 0; i<11; i++) {
+	    		for(int i = 0; i<13; i++) {
 	    			int y = Globals.scale(15)+Globals.scale(20*i);
 	    			JLabel leftLabel = new JLabel();
 	    			JLabel rightLabel = new JLabel();

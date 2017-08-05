@@ -18,9 +18,6 @@ public class Player {
 	private static int deathRunes;
 	private static float avgCannonballPrice;
 	private static CsvExport csv;
-	private static int deathPrice = 258; // prices on 30/07/2017
-	private static int chaosPrice = 101;
-	private static int waterPrice = 5;
 
 	/***
 	 * Constructor for player object
@@ -207,7 +204,7 @@ public class Player {
 		}else if(data.length == 7) {
 			// burst
 			// name, count, profit, deathLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterPrice,time
-			Object[] temp = {data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice,data[6]};
+			Object[] temp = {data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[6]};
 			toSend = temp;
 			deathRunes = (int)data[3];
 			chaosRunes = (int)data[4];
@@ -216,7 +213,7 @@ public class Player {
 		else if(data.length == 8) {
 			// burst/cannon
 			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballs Used, deathsLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterprice,time
-			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice,data[7]};
+			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[7]};
 			toSend = temp;
 			deathRunes = (int)data[4];
 			chaosRunes = (int)data[5];

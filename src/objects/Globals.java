@@ -12,13 +12,14 @@ public class Globals {
 	
 	/////////////////////////////
 	// SAVE EDIT MODE
-	// Is it safe to edit the cannonballs/runes
+	// Is it safe to edit the files
 	public static boolean isSafeEdit = false;
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
 	public static String settingsFile = path+"\\settings.sav";
 	public static String herbRunFile = path+"\\herbRun.csv";
+	public static String errorFile = path+"\\error.log";
 	///////
 	
 	
@@ -68,6 +69,11 @@ public class Globals {
 	public static int resurrectprice = 5561;
 	public static int numberOfPatches = 7;
 	public static int seedPrice = 45874;
+	/////////////////////
+	// Runes
+	public static int deathPrice = 258; // prices on 30/07/2017
+	public static int chaosPrice = 101;
+	public static int waterPrice = 5;
 	
 	public static void reload() {
 		width = scale(640);
@@ -78,6 +84,7 @@ public class Globals {
 		boldFont = new Font("Tahoma", Font.BOLD, scale(14));
 		massiveFont = new Font("Tahoma", Font.BOLD, scale(20));
 		smallFont = new Font("Tahoma", Font.BOLD, scale(7));
+		mediumFont = new Font("Tahoma", Font.BOLD, scale(9));
 		if(isDarkMode) {
 			setDarkMode();
 		}else {
@@ -124,7 +131,14 @@ public class Globals {
 				buttonForground.getRGB(),
 				tripsBackground.getRGB(),
 				otherInfoBackground.getRGB(),
-				isDarkMode};
+				isDarkMode,
+				herbPrice,
+				resurrectprice,
+				numberOfPatches,
+				seedPrice,
+				deathPrice,
+				chaosPrice,
+				waterPrice};
 		String output = "";
 		for(int i = 0; i <toSave.length;i++) {
 			output += toSave[i];
@@ -143,6 +157,12 @@ public class Globals {
 	}
 	
 	public static void load() {
+		if(isSafeEdit) {
+			savePath = "player.sav";
+			settingsFile = "settings.sav";
+			herbRunFile = "herbRun.csv";
+			errorFile = "error.log";
+		}
 		String line = "";
 		try {		
 			BufferedReader br = new BufferedReader(new FileReader(settingsFile));
@@ -154,14 +174,26 @@ public class Globals {
 		}catch (Exception e){
 			return;
 		}
-		String[] temp = line.split("&");
-		scale = Float.parseFloat(temp[0]);
-		buttonBackground = new Color(Integer.parseInt(temp[1]));
-		panelBackground = new Color(Integer.parseInt(temp[2]));
-		buttonForground = new Color(Integer.parseInt(temp[3]));
-		tripsBackground = new Color(Integer.parseInt(temp[4]));
-		otherInfoBackground = new Color(Integer.parseInt(temp[5]));
-		isDarkMode = Boolean.parseBoolean(temp[6]);
+		try {
+			String[] temp = line.split("&");
+			scale = Float.parseFloat(temp[0]);
+			buttonBackground = new Color(Integer.parseInt(temp[1]));
+			panelBackground = new Color(Integer.parseInt(temp[2]));
+			buttonForground = new Color(Integer.parseInt(temp[3]));
+			tripsBackground = new Color(Integer.parseInt(temp[4]));
+			otherInfoBackground = new Color(Integer.parseInt(temp[5]));
+			isDarkMode = Boolean.parseBoolean(temp[6]);
+			herbPrice = Integer.parseInt(temp[7]);
+			resurrectprice = Integer.parseInt(temp[8]);
+			numberOfPatches = Integer.parseInt(temp[9]);
+			seedPrice = Integer.parseInt(temp[10]);
+			deathPrice = Integer.parseInt(temp[11]);
+			chaosPrice = Integer.parseInt(temp[12]);
+			waterPrice = Integer.parseInt(temp[13]);
+		}catch(ArrayIndexOutOfBoundsException e) {
+			save();
+			load();
+		}
 		
 		reload();
 	}

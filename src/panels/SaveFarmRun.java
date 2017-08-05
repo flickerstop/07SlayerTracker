@@ -48,7 +48,7 @@ public class SaveFarmRun {
 	    		formatter.setCommitsOnValidEdit(true);
 	        	///////////////////////////////////////////
 	        	int width = Globals.scale(400);
-	    		int height = Globals.scale(250);
+	    		int height = Globals.scale(270);
 	    		
 	        	mainFrame.getContentPane().setBackground(Globals.panelBackground);
 	        	mainFrame.setUndecorated(true);
@@ -106,7 +106,7 @@ public class SaveFarmRun {
 	    				"Number of patches that the resurrect spell failed on",
 	    				"Number of patches that you cured because they were diseased"
 	    		};
-	    		for(int i = 0; i < 4; i++) {
+	    		for(int i = 0; i < 5; i++) {
 	    			JFormattedTextField textField = new JFormattedTextField(formatter);
 	    			JLabel label = new JLabel();
 	    			int y = Globals.scale(25*i)+Globals.scale(80);
@@ -187,6 +187,7 @@ public class SaveFarmRun {
 		 * Number of dead patches
 		 * Number successfully resurrected
 		 * Number failed resurrected
+		 * Number of cured
 		 * Resurrect cost
 		 * Price of herbs
 		 * Price of herbs after costs
@@ -195,14 +196,16 @@ public class SaveFarmRun {
 		int herbs = Integer.parseInt(inputs.get(0).getText());
 		int resed = Integer.parseInt(inputs.get(2).getText());
 		int dead = Integer.parseInt(inputs.get(3).getText());
+		int numCured = Integer.parseInt(inputs.get(4).getText());
 		int resCost = (resed+dead)*Globals.resurrectprice;
 		int herbLoot = herbs*Globals.herbPrice;
-		int profit = herbLoot-resCost - ((Globals.numberOfPatches-resed)*Globals.seedPrice);
+		int profit = herbLoot-resCost - ((Globals.numberOfPatches-resed-numCured)*Globals.seedPrice);
 		Object[] toSave = {
 				inputs.get(0).getText(),
 				inputs.get(1).getText(),
 				inputs.get(2).getText(),
 				inputs.get(3).getText(),
+				inputs.get(4).getText(),
 				resCost,
 				herbLoot,
 				profit,

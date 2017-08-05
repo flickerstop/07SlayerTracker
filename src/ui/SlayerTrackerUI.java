@@ -16,7 +16,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.text.NumberFormatter;
@@ -55,6 +63,18 @@ public class SlayerTrackerUI {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		if(Globals.isSafeEdit) {
+			Globals.errorFile = "error.log";
+		}
+		try {
+			PrintStream logFile = new PrintStream(new FileOutputStream(Globals.errorFile, true));
+			logFile.println("---------------\n"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+"\n---------------");
+			System.setOut(logFile);
+			System.setErr(logFile);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Globals.load();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -66,6 +86,7 @@ public class SlayerTrackerUI {
 				}
 			}
 		});
+			
 	}
 
 	/**

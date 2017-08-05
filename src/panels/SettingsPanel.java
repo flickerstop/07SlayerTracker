@@ -6,26 +6,45 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
 import ui.SlayerTrackerUI;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+
+import java.awt.BorderLayout;
+import javax.swing.JToggleButton;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JSeparator;
 
 public class SettingsPanel {
 	private JFrame mainFrame;
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	
 	
 	public SettingsPanel() {
 		mainFrame = new JFrame("Test");
+		
+		
+		
+		
+		
 	}
 	public void build() {
+		/**
+		 * @wbp.parser.entryPoint
+		 */
 		EventQueue.invokeLater(new Runnable()
 	    {
 	        @Override
@@ -33,8 +52,9 @@ public class SettingsPanel {
 	        {
 	        	
 	        	int width = Globals.scale(400);
-	    		int height = Globals.scale(200);
-	    		
+	    		int height = Globals.scale(600);
+	    		JSpinner farmPatchCountSpinner = new JSpinner();
+	    		ArrayList<JFormattedTextField> inputs = new ArrayList<JFormattedTextField>();
 	        	mainFrame.getContentPane().setBackground(Globals.black);
 	        	mainFrame.setUndecorated(true);
 	        	mainFrame.setResizable(false);
@@ -58,7 +78,24 @@ public class SettingsPanel {
 	    		});
 	    		mainFrame.getContentPane().add(closeButton);
 	    		
+	    		JLabel mainLabel = new JLabel();
+	    		mainLabel.setText("Settings");
+	    		mainLabel.setFont(Globals.massiveFont);
+	    		mainLabel.setForeground(Globals.white);
+	    		mainLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    		mainLabel.setBounds(0,Globals.scale(5),width,Globals.scale(30));
+	    		mainFrame.getContentPane().add(mainLabel);
 	    		
+				///////////////////////////////////////////
+				NumberFormat format = NumberFormat.getInstance();
+				NumberFormatter formatter = new NumberFormatter(format);
+				formatter.setValueClass(Integer.class);
+				formatter.setMinimum(0);
+				formatter.setMaximum(Integer.MAX_VALUE);
+				formatter.setAllowsInvalid(true);
+				// If you want the value to be committed on each keystroke instead of focus lost
+				formatter.setCommitsOnValidEdit(true);
+				///////////////////////////////////////////
 	    		////////////////////////////////////////////
 	    		// Scales
 	    		JLabel scaleLabel = new JLabel();
@@ -69,58 +106,24 @@ public class SettingsPanel {
 	    		scaleLabel.setBounds(Globals.scale(15),Globals.scale(50),width/2,Globals.scale(25));
 	    		mainFrame.getContentPane().add(scaleLabel);
 	    		
-	    		JButton scale75Button = new JButton();
-	    		scale75Button.setText("75%");
-	    		scale75Button.setBounds(Globals.scale(50),Globals.scale(50),Globals.scale(50),Globals.scale(25));
-	    		scale75Button.setMargin(new Insets(0, 0, 0, 0));
-	    		scale75Button.addMouseListener(new MouseAdapter() {
-	        		@Override
-	        		public void mouseClicked(MouseEvent arg0) {
-        				Globals.setScale(0.75f);
-        				currentScaleLabel.setText("Current Scale: " + Globals.getScaleString());
-	        		}
-	    		});
-	    		mainFrame.getContentPane().add(scale75Button);
-	    		
-	    		JButton scale100Button = new JButton();
-	    		scale100Button.setText("100%");
-	    		scale100Button.setBounds(Globals.scale(100),Globals.scale(50),Globals.scale(50),Globals.scale(25));
-	    		scale100Button.setMargin(new Insets(0, 0, 0, 0));
-	    		scale100Button.addMouseListener(new MouseAdapter() {
-	        		@Override
-	        		public void mouseClicked(MouseEvent arg0) {
-        				Globals.setScale(1.0f);
-        				currentScaleLabel.setText("Current Scale: " + Globals.getScaleString());
-	        		}
-	    		});
-	    		mainFrame.getContentPane().add(scale100Button);
-	    		
-	    		JButton scale150Button = new JButton();
-	    		scale150Button.setText("150%");
-	    		scale150Button.setBounds(Globals.scale(150),Globals.scale(50),Globals.scale(50),Globals.scale(25));
-	    		scale150Button.setMargin(new Insets(0, 0, 0, 0));
-	    		scale150Button.addMouseListener(new MouseAdapter() {
-	        		@Override
-	        		public void mouseClicked(MouseEvent arg0) {
-        				Globals.setScale(1.5f);
-        				currentScaleLabel.setText("Current Scale: " + Globals.getScaleString());
-	        		}
-	    		});
-	    		mainFrame.getContentPane().add(scale150Button);
-	    		
-	    		JButton scale200Button = new JButton();
-	    		scale200Button.setText("200%");
-	    		scale200Button.setBounds(Globals.scale(200),Globals.scale(50),Globals.scale(50),Globals.scale(25));
-	    		scale200Button.setMargin(new Insets(0, 0, 0, 0));
-	    		scale200Button.addMouseListener(new MouseAdapter() {
-	        		@Override
-	        		public void mouseClicked(MouseEvent arg0) {
-        				Globals.setScale(2.0f);
-        				currentScaleLabel.setText("Current Scale: " + Globals.getScaleString());
-	        		}
-	    		});
-	    		mainFrame.getContentPane().add(scale200Button);
-	    		
+	    		JSlider slider = new JSlider();
+	    		slider.setBounds(Globals.scale(50),Globals.scale(50),Globals.scale(200),Globals.scale(25));
+	    		slider.setMinimum(50);
+	    		slider.setMaximum(300);
+	    		slider.setMinorTickSpacing(25);
+	    		slider.setMajorTickSpacing(50);
+	    		slider.setPaintTicks(true);
+	    		slider.setBackground(Globals.black);
+	    		slider.setValue((int)(Globals.scale*100));
+	    		slider.addChangeListener(new ChangeListener() {
+	                @Override
+	                public void stateChanged(ChangeEvent e) {
+	                	slider.setValue((int)(Math.round(slider.getValue()/25.0) * 25));
+	                	currentScaleLabel.setText("Current Scale: " +slider.getValue()+"%");
+	                	Globals.setScale(slider.getValue()/100.0f);
+	                }
+	            });
+	    		mainFrame.getContentPane().add(slider);
 	    		
 	    		currentScaleLabel.setText("Current Scale: " + Globals.getScaleString());
 	    		currentScaleLabel.setFont(Globals.mainFont);
@@ -139,6 +142,19 @@ public class SettingsPanel {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
         				mainFrame.setVisible(false);
+        				/*
+        				  	"Death Rune:", 
+		    				"Chaos Rune:", 
+		    				"Water Rune:", 
+		    				"Herb:",
+		    				"Seed:"
+        				 */
+        				Globals.deathPrice = Integer.parseInt(inputs.get(0).getText());
+        				Globals.chaosPrice = Integer.parseInt(inputs.get(1).getText());
+        				Globals.waterPrice = Integer.parseInt(inputs.get(2).getText());
+        				Globals.herbPrice = Integer.parseInt(inputs.get(3).getText());
+        				Globals.seedPrice = Integer.parseInt(inputs.get(4).getText());
+        				Globals.numberOfPatches = (int)farmPatchCountSpinner.getValue();
         				SlayerTrackerUI.reload();
 	        		}
 	    		});
@@ -146,12 +162,15 @@ public class SettingsPanel {
 	    		
 				///////////////////////////////////
 				// Theme buttons
+	    		
+	    		
 	    		JLabel currentTheme = new JLabel();
 				JButton normalThemeButton = new JButton();
 				JButton darkThemeButton = new JButton();
 				
+				
 				normalThemeButton.setText("Normal Theme");
-				normalThemeButton.setBounds(((width/2)-Globals.scale(115)),Globals.scale(80),Globals.scale(100),Globals.scale(25));
+				normalThemeButton.setBounds(((width/2)-Globals.scale(115)),Globals.scale(90),Globals.scale(100),Globals.scale(25));
 				normalThemeButton.setBackground(Globals.white);
 				normalThemeButton.setMargin(new Insets(0, 0, 0, 0));
 				normalThemeButton.addMouseListener(new MouseAdapter() {
@@ -169,7 +188,7 @@ public class SettingsPanel {
 				
 				
 				darkThemeButton.setText("Dark Theme");
-				darkThemeButton.setBounds(((width/2)+Globals.scale(15)),Globals.scale(80),Globals.scale(100),Globals.scale(25));
+				darkThemeButton.setBounds(((width/2)+Globals.scale(15)),Globals.scale(90),Globals.scale(100),Globals.scale(25));
 				darkThemeButton.setBackground(Globals.grey);
 				darkThemeButton.setForeground(Globals.white);
 				darkThemeButton.setMargin(new Insets(0, 0, 0, 0));
@@ -191,10 +210,9 @@ public class SettingsPanel {
 				currentTheme.setFont(Globals.mainFont);
 				currentTheme.setHorizontalAlignment(SwingConstants.CENTER);
 				currentTheme.setForeground(Globals.white);
-				currentTheme.setBounds(((width/2)-((width/2)/2)),Globals.scale(100),width/2,Globals.scale(25));
+				currentTheme.setBounds(((width/2)-((width/2)/2)),Globals.scale(110),width/2,Globals.scale(25));
 	    		mainFrame.getContentPane().add(currentTheme);
 	    		
-	    		System.out.println(Globals.isDarkMode);
 	    		
 				if(Globals.isDarkMode) {
 					darkThemeButton.setEnabled(false);
@@ -205,7 +223,92 @@ public class SettingsPanel {
 					darkThemeButton.setEnabled(true);
 					currentTheme.setText("Currently Normal Theme");
 				}
-	    		/////////////////////////////////////
+				
+				
+				//////////////////////////////////////////////////////////////////////////////
+				JSeparator separator = new JSeparator();
+				separator.setBounds(0,Globals.scale(140),width,Globals.scale(10));
+				separator.setBackground(Globals.yellow);
+				separator.setForeground(Globals.yellow);
+				mainFrame.getContentPane().add(separator);
+				//////////////////////////////////////////////////////////////////////////////
+				// Prices
+				
+				JLabel pricesLabel = new JLabel();
+				pricesLabel.setText("Prices");
+				pricesLabel.setFont(Globals.boldFont);
+				pricesLabel.setForeground(Globals.white);
+				pricesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				pricesLabel.setBounds(0,Globals.scale(150),width,Globals.scale(30));
+	    		mainFrame.getContentPane().add(pricesLabel);
+				
+				
+	    		String[] labelText = {
+	    				"Death Rune:", 
+	    				"Chaos Rune:", 
+	    				"Water Rune:", 
+	    				"Herb:",
+	    				"Seed:"
+	    				};
+	    		String[] tooltips = {
+	    				"The current price of Death Runes",
+	    				"The current price of Chaos Runes",
+	    				"The current price of Water Runes",
+	    				"The current price of Herb you are planting",
+	    				"The current price of Seeds of the herb you are planting"
+	    		};
+	    		String[] text = {
+	    				Globals.deathPrice+"",
+	    				Globals.chaosPrice+"",
+	    				Globals.waterPrice+"",
+	    				Globals.herbPrice+"",
+	    				Globals.seedPrice+"",
+	    		};
+	    		for(int i = 0; i < 5; i++) {
+	    			JFormattedTextField textField = new JFormattedTextField(formatter);
+	    			JLabel label = new JLabel();
+	    			int y = Globals.scale(25*i)+Globals.scale(190);
+	    			
+	    			label.setFont(Globals.mainFont);
+	    			label.setForeground(Globals.buttonForground);
+	    			label.setHorizontalAlignment(SwingConstants.RIGHT);
+	    			label.setText(labelText[i]);
+	    			label.setBounds(Globals.scale(10),y,(width/2)-Globals.scale(20),Globals.scale(25));
+	    			label.setToolTipText(tooltips[i]);
+	    			
+	    			textField.setFont(Globals.mainFont);
+	    			textField.setBounds(width/2+Globals.scale(10),y,Globals.scale(80),Globals.scale(25));
+	    			textField.setToolTipText(tooltips[i]);
+	    			textField.setText(text[i]);
+	    			
+	    			mainFrame.getContentPane().add(label);
+	    			mainFrame.getContentPane().add(textField);
+	    			inputs.add(textField);
+	    		}
+				//////////////////////////////////////////////////////////////////////////////
+				JSeparator separator2 = new JSeparator();
+				separator2.setBounds(0,Globals.scale(340),width,Globals.scale(10));
+				separator2.setBackground(Globals.yellow);
+				separator2.setForeground(Globals.yellow);
+				mainFrame.getContentPane().add(separator2);
+				//////////////////////////////////////////////////////////////////////////////
+				
+				JLabel numOfPatchesLabel = new JLabel();
+    			
+    			numOfPatchesLabel.setFont(Globals.mainFont);
+    			numOfPatchesLabel.setForeground(Globals.buttonForground);
+    			numOfPatchesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+    			numOfPatchesLabel.setText("How many patches do you run:");
+    			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(370),(width/2)-Globals.scale(20),Globals.scale(25));
+    			mainFrame.getContentPane().add(numOfPatchesLabel);
+    			
+    			
+    			farmPatchCountSpinner.setForeground(Globals.buttonForground);
+    			farmPatchCountSpinner.setBackground(Globals.buttonBackground);
+    			farmPatchCountSpinner.setModel(new SpinnerNumberModel(Globals.numberOfPatches, 1, 7, 1));
+    			farmPatchCountSpinner.setBounds(width/2+Globals.scale(10),Globals.scale(370),Globals.scale(80),Globals.scale(25));
+    			farmPatchCountSpinner.setFont(Globals.mainFont);
+    			mainFrame.getContentPane().add(farmPatchCountSpinner);
 	    		
 	    		mainFrame.setLocationByPlatform(true);
 	            mainFrame.setVisible(true);
