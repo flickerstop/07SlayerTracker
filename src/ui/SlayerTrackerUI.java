@@ -69,7 +69,7 @@ public class SlayerTrackerUI {
 		try {
 			PrintStream logFile = new PrintStream(new FileOutputStream(Globals.errorFile, true));
 			logFile.println("---------------\n"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+"\n---------------");
-			System.setOut(logFile);
+			//System.setOut(logFile);
 			System.setErr(logFile);
 
 		} catch (IOException e) {
@@ -260,17 +260,19 @@ public class SlayerTrackerUI {
 //	        }
 	    } );
 		
+		JPanel addRunesPanel = new JPanel();
+		addRunesPanel.setBackground(Globals.panelBackground);
+		addRunesPanel.setBounds(0, 0, panelWidth, Globals.panelHeight);
+		mainFrame.getContentPane().add(addRunesPanel);
+		addRunesPanel.setLayout(null);
+		
 		JPanel addCannonballsPanel = new JPanel();
 		addCannonballsPanel.setBackground(Globals.panelBackground);
 		addCannonballsPanel.setBounds(0, 0, panelWidth, Globals.panelHeight);
 		mainFrame.getContentPane().add(addCannonballsPanel);
 		addCannonballsPanel.setLayout(null);
 
-		JPanel addRunesPanel = new JPanel();
-		addRunesPanel.setBackground(Globals.panelBackground);
-		addRunesPanel.setBounds(0, 0, panelWidth, Globals.panelHeight);
-		mainFrame.getContentPane().add(addRunesPanel);
-		addRunesPanel.setLayout(null);
+		
 		
 		addCannonballsPanel.setVisible(false);
 		addRunesPanel.setVisible(false);
@@ -622,11 +624,11 @@ public class SlayerTrackerUI {
 		btnAddCannonballs.setBackground(Globals.buttonBackground);
 		btnAddCannonballs.setFont(Globals.mainFont);
 		btnAddCannonballs.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-		mainPanel.setVisible(false);
-		addCannonballsPanel.setVisible(true);
-		}
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				mainPanel.setVisible(false);
+				addCannonballsPanel.setVisible(true);
+			}
 		});
 		btnAddCannonballs.setBounds(panelWidth-Globals.scale(150), Globals.scale(30), Globals.scale(150), Globals.scale(25));
 mainPanel.add(btnAddCannonballs);
@@ -752,8 +754,8 @@ mainPanel.add(btnAddCannonballs);
 		changeRunesButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				addRunesPanel.setVisible(true);
 				mainPanel.setVisible(false);
+				addRunesPanel.setVisible(true);
 			}
 		});
 		changeRunesButton.setBounds(Globals.scale(15), Globals.scale(80), Globals.scale(150), Globals.scale(25));
@@ -862,15 +864,18 @@ mainPanel.add(btnAddCannonballs);
 			monsterCountSpinner.setBackground(new Color(255, 0, 0));
 		}else {
 			// This if fixes the issue of unlimited panes being created
-			if(mainFrame.getContentPane().getComponentCount() > 3) {
-				mainFrame.getContentPane().remove(mainFrame.getContentPane().getComponentCount()-1);
-			}
+			// TODO FIXME Find a way to fix this damn issue
+			// if this is commented out, unlimited panels are made
+			// BUT going from a monsterpane to add cannonballs causes it
+			// to delete the cannonball pane
+//			if(mainFrame.getContentPane().getComponentCount() > 3) {
+//				mainFrame.getContentPane().remove(mainFrame.getContentPane().getComponentCount()-1);
+//			}
 			monsterCountSpinner.setBackground(Globals.buttonBackground);
 			mainPanel.setVisible(false);
 			MonsterPanel monsterPanel = new MonsterPanel(monsterName, null, count, player);
 			mainFrame.getContentPane().add(monsterPanel.build(mainPanel,isCannon,isBurst));
 		}
-		//System.out.println(mainFrame.getContentPane().getComponentCount());
 	}
 	public static class FrameDragListener extends MouseAdapter {
 

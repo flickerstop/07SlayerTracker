@@ -22,3 +22,68 @@
 ---------------
 2017-08-05 01:50:32.563
 ---------------
+---------------
+2017-08-05 01:54:24.298
+---------------
+---------------
+2017-08-05 02:02:11.118
+---------------
+---------------
+2017-08-05 02:03:17.163
+---------------
+---------------
+2017-08-05 02:04:30.504
+---------------
+---------------
+2017-08-05 02:05:04.261
+---------------
+---------------
+2017-08-05 02:07:07.591
+---------------
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException
+	at panels.FarmRunData$1.run(FarmRunData.java:89)
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$500(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+
+---------------
+2017-08-05 02:10:11.406
+---------------
+---------------
+2017-08-05 02:13:18.587
+---------------
+---------------
+2017-08-05 02:14:00.418
+---------------
+---------------
+2017-08-05 02:15:32.077
+---------------
+---------------
+2017-08-05 02:19:48.562
+---------------
+---------------
+2017-08-05 02:20:16.231
+---------------
+---------------
+2017-08-05 02:21:23.819
+---------------
+---------------
+2017-08-05 02:21:42.152
+---------------
+---------------
+2017-08-05 02:22:02.291
+---------------
+---------------
+2017-08-05 02:22:52.282
+---------------

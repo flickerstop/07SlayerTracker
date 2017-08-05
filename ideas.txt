@@ -1,16 +1,9 @@
 - Settings panel
 	- Different sounds for alarm
 	- Change layout of buttons
-	- Change price of:
-					runes
-					resurrect
-					herbs
-					seeds
-	- Change number of patches
 	
 - Logs
 	- show icons of monster
-	- have each log a different colour
 	- ability to edit/save
 	- fix the lot of logs uses the profit column instead of the loot
 
@@ -19,3 +12,4 @@
 	- Save farm run to log
 	
 - Monster panel
+	- if you didn't use cannon on a cannon task, have a toggle button to turn it into a normal task

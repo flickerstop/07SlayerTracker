@@ -86,6 +86,9 @@ public class FarmRunData {
 	    		
 	    		
 	    		ArrayList<String[]> data = getData();
+	    		if(data == null) {
+	    			return;
+	    		}
 	    		for(String[] i : data) {
 	    			numberOfHerbs += Integer.parseInt(i[0]);
 		    		numberOfDeadPatches += Integer.parseInt(i[1]);
