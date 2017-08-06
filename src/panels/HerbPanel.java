@@ -53,7 +53,7 @@ public class HerbPanel extends JPanel{
 		
 		
 		String herbType[] = {"Ranarr", "Irit", "Avantoe", "Kwuarm", "Cadantine", "Lantadyme", "Dwarf Weed", "Other Stuff"};
-		for(int i = 0; i<8;i++) {
+		for(int i = 0; i!=8;i++) {
 			JLabel tempLabel = new JLabel(herbType[i]);
 			tempLabel.setFont(Globals.mainFont);
 			tempLabel.setHorizontalAlignment(SwingConstants.CENTER);

@@ -344,8 +344,12 @@ public class LogPanel {
 				int absoluteAmountOfKills = 0;
 				int count = 0;
 				for(ArrayList<String[]>logs : log) {
+					System.err.println(logs.size());
+					System.err.println("~~");
 					for(String[] row: logs) {
-						if(row[0].equals("Nothing")) {
+						System.err.println(row.length);
+						
+						if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
 							break;
 						}
 						amountOfKills[count] += Integer.parseInt(row[1]);

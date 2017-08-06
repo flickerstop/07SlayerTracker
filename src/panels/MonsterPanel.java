@@ -22,7 +22,7 @@ import objects.Globals;
 import objects.Player;
 
 public class MonsterPanel{
-	private String name;
+	private String name = "";
 	//private ImageIcon image;
 	private int count;
 	
@@ -55,7 +55,6 @@ public class MonsterPanel{
 	public MonsterPanel(String monsterName, ImageIcon icon, int count, Player player) {
 		this.player = player;
 		name = monsterName;
-		//image = icon;
 		this.count = count;
 	}
 	
