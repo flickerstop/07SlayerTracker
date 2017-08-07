@@ -14,21 +14,24 @@ public class Globals {
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
 	public static boolean isSafeEdit = false;
-	public static String versionNumber = "0.6.5";
+	public static String versionNumber = "0.7.0";
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
 	public static String settingsFile = path+"\\settings.sav";
 	public static String herbRunFile = path+"\\herbRun.csv";
 	public static String errorFile = path+"\\error.log";
+	public static String monstersFile = path+"\\monsters.csv";
 	///////
 	
 	
 	
-	
+	public static Object[][] prefMonsters;
 
 
-	
+	public static int numberOfRows = 5;
+	public static int numberOfCols = 7;
+	public static int numberOfMonsters = numberOfRows * numberOfCols;
 	
 	public static float scale = 1.0f;
 	
@@ -126,6 +129,7 @@ public class Globals {
 	}
 	
 	public static void save() {
+		savePrefMonsters();
 		Object[] toSave = {scale,
 				buttonBackground.getRGB(),
 				panelBackground.getRGB(),
@@ -163,7 +167,10 @@ public class Globals {
 			settingsFile = "settings.sav";
 			herbRunFile = "herbRun.csv";
 			errorFile = "error.log";
+			monstersFile = "monsters.csv";
 		}
+		prefMonsters = new Object[(numberOfRows * numberOfCols)][5];
+		getPrefMonsters();
 		String line = "";
 		try {		
 			BufferedReader br = new BufferedReader(new FileReader(settingsFile));
@@ -197,5 +204,45 @@ public class Globals {
 		}
 		
 		reload();
+	}
+	
+	public static void getPrefMonsters() {
+		String line = "";
+		try {		
+			BufferedReader br = new BufferedReader(new FileReader(monstersFile));
+		    line = br.readLine();
+		    br.close();
+		} catch (FileNotFoundException e){
+			line = null;
+		}catch (Exception e){
+			line = null;
+			System.err.println(e.getMessage());
+		}
+		
+		if(line != null) {
+			String[] monstersString = line.split(",");
+			
+			for(int i = 0; i < numberOfMonsters; i++) {
+				prefMonsters[i] = Monsters.getMonster(monstersString[i]);
+			}
+		}else {
+			for(int i = 0; i < numberOfMonsters; i++) {
+				prefMonsters[i] = Monsters.getQuestionMark();
+			}
+		}
+	}
+	
+	public static void savePrefMonsters() {
+		String output = "";
+		for(Object[] monster : prefMonsters) {
+			output += monster[0] + ",";
+		}
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(monstersFile, false)); 
+			out.println(output);
+			out.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -19,7 +19,7 @@ public class HerbPanel extends JPanel{
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public JPanel build(int panelWidth, int panelHeight) {
+	public static JPanel build(int panelWidth, int panelHeight) {
 		
 		int tripPanelWidth = (panelWidth-Globals.scale(60))/2;
 		int tripPanelHeight = Globals.scale(300);
@@ -71,7 +71,7 @@ public class HerbPanel extends JPanel{
 		return herbsPanel;
 	}
 	
-	public int calculateHerbs() {
+	public static int calculateHerbs() {
 		// prices on 1/8/2017
 		int[] prices = {8388,1153,2435,2691,1598,2050,1130,1};
 		int totalPrice = 0;
@@ -89,5 +89,11 @@ public class HerbPanel extends JPanel{
 		
 		
 		return totalPrice;
+	}
+	
+	public static void resetFields() {
+		for(JFormattedTextField i:textFields) {
+			i.setText("");
+		}
 	}
 }

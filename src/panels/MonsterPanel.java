@@ -6,13 +6,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -26,25 +29,31 @@ public class MonsterPanel{
 	//private ImageIcon image;
 	private int count;
 	
-	private JFormattedTextField trip1TextField;
-	private JFormattedTextField trip2TextField;
-	private JFormattedTextField trip3TextField;
-	private JFormattedTextField trip4TextField;
-	private JFormattedTextField trip5TextField;
-	private JFormattedTextField trip6TextField;
 	private JFormattedTextField cannonballsLeftTextField;
 	private JFormattedTextField deathRunesLeftTextField;
 	private JFormattedTextField chaosRunesLeftTextField;
 	private JFormattedTextField waterRunesLeftTextField;
-	private JTextField monsterNameTextField = null;
-	long currentTime = 0;
+	JLabel cannonballsLeftLabel = new JLabel("Cannonballs Left");
+	JLabel deathRunesLeftLabel = new JLabel("Death Runes Left");
+	JLabel chaosRunesLeftLabel = new JLabel("Chaos Runes Left");
+	JLabel waterRunesLeftLabel = new JLabel("Water Runes Left");
+	JRadioButton r1 = new JRadioButton("Normal");
+	JRadioButton r2 = new JRadioButton("Cannon");
+	JRadioButton r3 = new JRadioButton("Burst");
+	JRadioButton r4 = new JRadioButton("Burst & Cannon");
+	ArrayList<JFormattedTextField> trips = new ArrayList<JFormattedTextField>();
 	long timerStart = 0;
 	long timerStop = 0;
 	long pauseTime = 0;
+	JLabel monsterNameLabel;
 	private JTextField timerTextField;
 	private Player player;
 	private JPanel tripsPanel = new JPanel();
-	private HerbPanel herbPanel;
+	private JPanel herbPanel;
+	JPanel panel;
+	
+	boolean isCannon = false;
+	boolean isBurst = false;
 	
 	public MonsterPanel() {
 		name = "";
@@ -58,8 +67,7 @@ public class MonsterPanel{
 		this.count = count;
 	}
 	
-	public JPanel build(JPanel mainPanel, boolean isCannon, boolean isBurst) {
-		 
+	public JPanel build(JPanel mainPanel) {
 		/////////////////////
 		// Variables
 		int width = Globals.width;
@@ -76,7 +84,7 @@ public class MonsterPanel{
 		
 		/////////////////////
 		// Panel
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBounds(0, Globals.topMenuBarHeight, width, Globals.panelHeight);
 		panel.setLayout(null);
 		panel.setBackground(Globals.panelBackground);
@@ -86,26 +94,14 @@ public class MonsterPanel{
 		int monsterLabelWidth = width;
 		int monsterLabelHeight = Globals.scale(24);
 		
-		if(name == "other") {
-			JLabel countLabel = new JLabel(count+"  ");
-			countLabel.setFont(Globals.massiveFont);
-			countLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-			countLabel.setForeground(Globals.buttonForground);
-			countLabel.setBounds((width/2)-(monsterLabelWidth/4), Globals.scale(10), monsterLabelWidth/4, monsterLabelHeight);
-			panel.add(countLabel);
-			monsterNameTextField = new JTextField();
-			monsterNameTextField.setText("Monster Name");
-			monsterNameTextField.setFont(Globals.massiveFont);
-			monsterNameTextField.setBounds((width/2), Globals.scale(10), monsterLabelWidth/4, monsterLabelHeight);
-			panel.add(monsterNameTextField);
-		}else {
-			JLabel monsterNameLabel = new JLabel(count + " " +name);
-			monsterNameLabel.setForeground(Globals.buttonForground);
-			monsterNameLabel.setFont(Globals.massiveFont);
-			monsterNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			monsterNameLabel.setBounds((width/2)-(monsterLabelWidth/2), Globals.scale(10), monsterLabelWidth, monsterLabelHeight);
-			panel.add(monsterNameLabel);
-		}
+
+		monsterNameLabel = new JLabel(count + " " +name);
+		monsterNameLabel.setForeground(Globals.buttonForground);
+		monsterNameLabel.setFont(Globals.massiveFont);
+		monsterNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		monsterNameLabel.setBounds((width/2)-(monsterLabelWidth/2), Globals.scale(10), monsterLabelWidth, monsterLabelHeight);
+		panel.add(monsterNameLabel);
+
 		//////////////////
 		// Finish task button
 		JButton finishTaskButton = new JButton("Finish Task!");
@@ -118,37 +114,24 @@ public class MonsterPanel{
 			int deathRunesLeft = -1;
 			int chaosRunesLeft = -1;
 			int waterRunesLeft = -1;
-			
+
 			////////////////
 			// Get loot
 			if(name == "Aberrant Spectres") {
-				profit = herbPanel.calculateHerbs();
+				profit = HerbPanel.calculateHerbs();
 			}else {
-				if(trip1TextField.getText().length() != 0) {
-					profit += Integer.parseInt(trip1TextField.getText().replaceAll(",", ""));
+				for(JFormattedTextField trip : trips) {
+					if(trip.getText().length() != 0) {
+						profit += Integer.parseInt(trip.getText().replaceAll(",", ""));
+					}
 				}
-				if(trip2TextField.getText().length() != 0) {
-					profit += Integer.parseInt(trip2TextField.getText().replaceAll(",", ""));
-				}
-				if(trip3TextField.getText().length() != 0) {
-					profit += Integer.parseInt(trip3TextField.getText().replaceAll(",", ""));
-				}
-				if(trip4TextField.getText().length() != 0) {
-					profit += Integer.parseInt(trip4TextField.getText().replaceAll(",", ""));
-				}
-				if(trip5TextField.getText().length() != 0) {
-					profit += Integer.parseInt(trip5TextField.getText().replaceAll(",", ""));
-				}
-				if(trip6TextField.getText().length() != 0) {
-					profit += Integer.parseInt(trip6TextField.getText().replaceAll(",", ""));
-				}
-			
 			}
 			if(isCannon) {
 				///////////////
 				// Get cannonballs left
 				if(cannonballsLeftTextField.getText().length() != 0) {
 					cannonballLeft = Integer.parseInt(cannonballsLeftTextField.getText().replaceAll(",", ""));
+					cannonballsLeftTextField.setBackground(new Color(255, 255, 255));
 				}else {
 					// If nothing was entered where cannonballs are left
 					cannonballsLeftTextField.setBackground(new Color(255, 0, 0));
@@ -203,14 +186,13 @@ public class MonsterPanel{
 			
 			// player.finishCannonTask(name, count, profit, cannonballLeft);
 			if(profit != 0) {
-				trip1TextField.setBackground(new Color(0, 0, 0));
-				if(name == "other") {
-					if(!monsterNameTextField.getText().equals("Monster Name")) {
-						name = monsterNameTextField.getText();
-						Object[] toSend = {name, count, profit,time};
-						player.finishTask(toSend);
+				//System.out.println("pong");
+				if(name != "Aberrant Spectres") {
+					for(JFormattedTextField trip : trips) {
+						trip.setBackground(Globals.white);
 					}
-				}else if(isCannon && !isBurst) {
+				}
+				if(isCannon && !isBurst) {
 					Object[] toSend = {name, count, profit, cannonballLeft, time};
 					player.finishTask(toSend);
 				}else if(!isCannon && isBurst) {
@@ -226,7 +208,10 @@ public class MonsterPanel{
 				panel.setVisible(false);
 				mainPanel.setVisible(true);
 			}else {
-				trip1TextField.setBackground(new Color(255, 0, 0));
+				System.out.println("ping");
+				for(JFormattedTextField trip : trips) {
+					trip.setBackground(Globals.red);
+				}
 			}
 			//System.out.println(profit);
 		}
@@ -242,125 +227,59 @@ public class MonsterPanel{
 		// Trips
 		
 		int tripwidth = (width-Globals.scale(60))/2;
-		int tripheight = Globals.scale(220);
+		int tripheight = Globals.scale(450);
 		int tripInputWidth = (tripwidth/2)-Globals.scale(15);
 		int rowHeight = Globals.scale(25);
 		
+		herbPanel = HerbPanel.build(width, height);
+		
+		panel.add(herbPanel);
+		
+		tripsPanel.setVisible(true);
+		tripsPanel.setBackground(Globals.tripsBackground);
+		tripsPanel.setBounds((width/2)-tripwidth-Globals.scale(15), (height/2)-(tripheight/2), tripwidth, tripheight);
+		panel.add(tripsPanel);
+		tripsPanel.setLayout(null);
+		
+		
+		
+		JLabel tripPanelLabel = new JLabel("Trips");
+		tripPanelLabel.setForeground(Globals.buttonForground);
+		tripPanelLabel.setFont(Globals.mainFont);
+		tripPanelLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		tripPanelLabel.setBounds(0, 0, tripwidth, rowHeight);
+		tripsPanel.add(tripPanelLabel);
+		
+		
+		for(int i = 0; i < 16; i++) {
+			JLabel tripLabel = new JLabel("Trip #"+i);
+			tripLabel.setFont(Globals.mainFont);
+			tripLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			tripLabel.setBounds(0, Globals.scale(25*(i+1)), tripwidth/2, rowHeight);
+			tripLabel.setForeground(Globals.buttonForground);
+			tripsPanel.add(tripLabel);
+			
+			JFormattedTextField tripTextField = new JFormattedTextField(formatter);
+			tripTextField.setText("");
+			tripTextField.setFont(Globals.mainFont);
+			tripTextField.setBounds(tripwidth/2, Globals.scale(25*(i+1)), tripInputWidth, rowHeight);
+			tripsPanel.add(tripTextField);
+			trips.add(tripTextField);
+		}
+		
 		if(name == "Aberrant Spectres") {
-			herbPanel = new HerbPanel();
-			panel.add(herbPanel.build(width, height));
+			System.out.println("Abby");
+			herbPanel.setVisible(true);
+			tripsPanel.setVisible(false);
 		}else {
-			
-			tripsPanel.setBackground(Globals.tripsBackground);
-			tripsPanel.setBounds((width/2)-tripwidth-Globals.scale(15), (height/2)-(tripheight/2), tripwidth, tripheight);
-			panel.add(tripsPanel);
-			tripsPanel.setLayout(null);
-			
-			
-			
-			JLabel tripPanelLabel = new JLabel("Trips");
-			tripPanelLabel.setForeground(Globals.buttonForground);
-			tripPanelLabel.setFont(Globals.mainFont);
-			tripPanelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			tripPanelLabel.setBounds(0, 0, tripwidth, rowHeight);
-			tripsPanel.add(tripPanelLabel);
-			
-			// 30 down
-			JLabel trip1Label = new JLabel("Trip #1");
-			trip1Label.setFont(Globals.mainFont);
-			trip1Label.setHorizontalAlignment(SwingConstants.CENTER);
-			trip1Label.setBounds(0, Globals.scale(30), tripwidth/2, rowHeight);
-			tripsPanel.add(trip1Label);
-			
-			trip1TextField = new JFormattedTextField(formatter);
-			trip1TextField.setText("");
-			trip1Label.setForeground(Globals.buttonForground);
-			trip1TextField.setFont(Globals.mainFont);
-			trip1TextField.setBounds(tripwidth/2, Globals.scale(30), tripInputWidth, rowHeight);
-			tripsPanel.add(trip1TextField);
-			trip1TextField.setColumns(10);
-			
-			// 60 down
-			
-			JLabel trip2Label = new JLabel("Trip #2");
-			trip2Label.setFont(Globals.mainFont);
-			trip2Label.setHorizontalAlignment(SwingConstants.CENTER);
-			trip2Label.setBounds(0, Globals.scale(60), tripwidth/2, rowHeight);
-			tripsPanel.add(trip2Label);
-			
-			trip2TextField = new JFormattedTextField(formatter);
-			trip2TextField.setText("");
-			trip2TextField.setFont(Globals.mainFont);
-			trip2Label.setForeground(Globals.buttonForground);
-			trip2TextField.setColumns(10);
-			trip2TextField.setBounds(tripwidth/2, Globals.scale(60), tripInputWidth, rowHeight);
-			tripsPanel.add(trip2TextField);
-			
-			// 90 down
-			JLabel trip3Label = new JLabel("Trip #3");
-			trip3Label.setFont(Globals.mainFont);
-			trip3Label.setHorizontalAlignment(SwingConstants.CENTER);
-			trip3Label.setBounds(0, Globals.scale(90), tripwidth/2, rowHeight);
-			tripsPanel.add(trip3Label);
-			
-			trip3TextField = new JFormattedTextField(formatter);
-			trip3TextField.setText("");
-			trip3TextField.setFont(Globals.mainFont);
-			trip3Label.setForeground(Globals.buttonForground);
-			trip3TextField.setColumns(10);
-			trip3TextField.setBounds(tripwidth/2, Globals.scale(90), tripInputWidth, rowHeight);
-			tripsPanel.add(trip3TextField);
-			
-			// 120 down
-			JLabel trip4Label = new JLabel("Trip #4");
-			trip4Label.setFont(Globals.mainFont);
-			trip4Label.setHorizontalAlignment(SwingConstants.CENTER);
-			trip4Label.setBounds(0, Globals.scale(120), tripwidth/2, rowHeight);
-			tripsPanel.add(trip4Label);
-			
-			trip4TextField = new JFormattedTextField(formatter);
-			trip4TextField.setText("");
-			trip4TextField.setFont(Globals.mainFont);
-			trip4Label.setForeground(Globals.buttonForground);
-			trip4TextField.setColumns(10);
-			trip4TextField.setBounds(tripwidth/2, Globals.scale(120), tripInputWidth, rowHeight);
-			tripsPanel.add(trip4TextField);
-			
-			// 150 down
-			JLabel trip5Label = new JLabel("Trip #5");
-			trip5Label.setFont(Globals.mainFont);
-			trip5Label.setHorizontalAlignment(SwingConstants.CENTER);
-			trip5Label.setBounds(0, Globals.scale(150), tripwidth/2, rowHeight);
-			tripsPanel.add(trip5Label);
-			
-			trip5TextField = new JFormattedTextField(formatter);
-			trip5TextField.setText("");
-			trip5TextField.setFont(Globals.mainFont);
-			trip5Label.setForeground(Globals.buttonForground);
-			trip5TextField.setColumns(10);
-			trip5TextField.setBounds(tripwidth/2, Globals.scale(150), tripInputWidth, rowHeight);
-			tripsPanel.add(trip5TextField);
-			
-			// 180 down
-			JLabel trip6Label = new JLabel("Trip #6");
-			trip6Label.setFont(Globals.mainFont);
-			trip6Label.setHorizontalAlignment(SwingConstants.CENTER);
-			trip6Label.setBounds(0, Globals.scale(180), tripwidth/2, rowHeight);
-			tripsPanel.add(trip6Label);
-			
-			trip6TextField = new JFormattedTextField(formatter);
-			trip6TextField.setText("");
-			trip6TextField.setFont(Globals.mainFont);
-			trip6Label.setForeground(Globals.buttonForground);
-			trip6TextField.setColumns(10);
-			trip6TextField.setBounds(tripwidth/2, Globals.scale(180), tripInputWidth, rowHeight);
-			tripsPanel.add(trip6TextField);
+			System.out.println("Normal");
+			herbPanel.setVisible(false);
+			tripsPanel.setVisible(true);
 		}
 		/////////////////////////////////////////////////////////////
 		// Other Info Panel
 		int infowidth = (width-Globals.scale(60))/2;
-		int infoheight = Globals.scale(220);
-		
+		int infoheight = Globals.scale(300);
 		
 		JPanel otherInfoPanel = new JPanel();
 		otherInfoPanel.setBackground(Globals.otherInfoBackground);
@@ -375,63 +294,147 @@ public class MonsterPanel{
 		otherInfoLabel.setBounds(0, 0, infowidth, rowHeight);
 		otherInfoPanel.add(otherInfoLabel);
 		
-		if(isCannon) {
-			//////////////
-			// Cannonball Label
-			JLabel cannonballsLeftLabel = new JLabel("Cannonballs Left");
-			cannonballsLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			cannonballsLeftLabel.setFont(Globals.mainFont);
-			cannonballsLeftLabel.setForeground(Globals.buttonForground);
-			cannonballsLeftLabel.setBounds(0, Globals.scale(30), infowidth/2, rowHeight);
-			otherInfoPanel.add(cannonballsLeftLabel);
-			
-			cannonballsLeftTextField = new JFormattedTextField(formatter);
-			cannonballsLeftTextField.setFont(Globals.mainFont);
-			cannonballsLeftTextField.setBounds(infowidth/2, Globals.scale(30), (infowidth/2)-Globals.scale(15), rowHeight);
-			otherInfoPanel.add(cannonballsLeftTextField);
-			cannonballsLeftTextField.setColumns(10);
 		
-		}
-		if(isBurst) {
-			JLabel deathRunesLeftLabel = new JLabel("Death Runes Left");
-			deathRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			deathRunesLeftLabel.setFont(Globals.mainFont);
-			deathRunesLeftLabel.setForeground(Globals.buttonForground);
-			deathRunesLeftLabel.setBounds(0, Globals.scale(30)+rowHeight, infowidth/2, rowHeight);
-			otherInfoPanel.add(deathRunesLeftLabel);
-			
-			deathRunesLeftTextField = new JFormattedTextField(formatter);
-			deathRunesLeftTextField.setFont(Globals.mainFont);
-			deathRunesLeftTextField.setBounds(infowidth/2, Globals.scale(30)+rowHeight, (infowidth/2)-Globals.scale(15), rowHeight);
-			otherInfoPanel.add(deathRunesLeftTextField);
-			deathRunesLeftTextField.setColumns(10);
-			
-			JLabel chaosRunesLeftLabel = new JLabel("Chaos Runes Left");
-			chaosRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			chaosRunesLeftLabel.setFont(Globals.mainFont);
-			chaosRunesLeftLabel.setForeground(Globals.buttonForground);
-			chaosRunesLeftLabel.setBounds(0, Globals.scale(30)+rowHeight*2, infowidth/2, rowHeight);
-			otherInfoPanel.add(chaosRunesLeftLabel);
-			
-			chaosRunesLeftTextField = new JFormattedTextField(formatter);
-			chaosRunesLeftTextField.setFont(Globals.mainFont);
-			chaosRunesLeftTextField.setBounds(infowidth/2, Globals.scale(30)+rowHeight*2, (infowidth/2)-Globals.scale(15), rowHeight);
-			otherInfoPanel.add(chaosRunesLeftTextField);
-			chaosRunesLeftTextField.setColumns(10);
-			
-			JLabel waterRunesLeftLabel = new JLabel("Water Runes Left");
-			waterRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			waterRunesLeftLabel.setFont(Globals.mainFont);
-			waterRunesLeftLabel.setForeground(Globals.buttonForground);
-			waterRunesLeftLabel.setBounds(0, Globals.scale(30)+rowHeight*3, infowidth/2, rowHeight);
-			otherInfoPanel.add(waterRunesLeftLabel);
-			
-			waterRunesLeftTextField = new JFormattedTextField(formatter);
-			waterRunesLeftTextField.setFont(Globals.mainFont);
-			waterRunesLeftTextField.setBounds(infowidth/2, Globals.scale(30)+rowHeight*3, (infowidth/2)-Globals.scale(15), rowHeight);
-			otherInfoPanel.add(waterRunesLeftTextField);
-			waterRunesLeftTextField.setColumns(10);
-		}
+		r1.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30), (infowidth/2)-Globals.scale(15), rowHeight);    
+		r2.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30)+Globals.scale(20), (infowidth/2)-Globals.scale(15), rowHeight); 
+		r3.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30)+Globals.scale(20*2), (infowidth/2)-Globals.scale(15), rowHeight); 
+		r4.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30)+Globals.scale(20*3), (infowidth/2)-Globals.scale(15), rowHeight); 
+		r1.setBackground(Globals.otherInfoBackground);
+		r2.setBackground(Globals.otherInfoBackground);
+		r3.setBackground(Globals.otherInfoBackground);
+		r4.setBackground(Globals.otherInfoBackground);
+		r1.setForeground(Globals.buttonForground);
+		r2.setForeground(Globals.buttonForground);
+		r3.setForeground(Globals.buttonForground);
+		r4.setForeground(Globals.buttonForground);
+		r1.setSelected(true);
+		r1.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            isCannon = false;
+	            isBurst = false;
+	            cannonballsLeftTextField.setVisible(false);
+	            deathRunesLeftTextField.setVisible(false);
+	            chaosRunesLeftTextField.setVisible(false);
+	            waterRunesLeftTextField.setVisible(false);
+	            cannonballsLeftLabel.setVisible(false);
+	            deathRunesLeftLabel.setVisible(false);
+	            chaosRunesLeftLabel.setVisible(false);
+	            waterRunesLeftLabel.setVisible(false);
+	        }
+	    });
+		r2.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            isCannon = true;
+	            isBurst = false;
+	            cannonballsLeftTextField.setVisible(true);
+	            deathRunesLeftTextField.setVisible(false);
+	            chaosRunesLeftTextField.setVisible(false);
+	            waterRunesLeftTextField.setVisible(false);
+	            cannonballsLeftLabel.setVisible(true);
+	            deathRunesLeftLabel.setVisible(false);
+	            chaosRunesLeftLabel.setVisible(false);
+	            waterRunesLeftLabel.setVisible(false);
+	        }
+	    });
+		r3.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            isCannon = false;
+	            isBurst = true;
+	            cannonballsLeftTextField.setVisible(false);
+	            deathRunesLeftTextField.setVisible(true);
+	            chaosRunesLeftTextField.setVisible(true);
+	            waterRunesLeftTextField.setVisible(true);
+	            cannonballsLeftLabel.setVisible(false);
+	            deathRunesLeftLabel.setVisible(true);
+	            chaosRunesLeftLabel.setVisible(true);
+	            waterRunesLeftLabel.setVisible(true);
+	        }
+	    });
+		r4.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            isCannon = true;
+	            isBurst = true;
+	            cannonballsLeftTextField.setVisible(true);
+	            deathRunesLeftTextField.setVisible(true);
+	            chaosRunesLeftTextField.setVisible(true);
+	            waterRunesLeftTextField.setVisible(true);
+	            cannonballsLeftLabel.setVisible(true);
+	            deathRunesLeftLabel.setVisible(true);
+	            chaosRunesLeftLabel.setVisible(true);
+	            waterRunesLeftLabel.setVisible(true);
+	        }
+	    });
+		ButtonGroup bg = new ButtonGroup();    
+		bg.add(r1);
+		bg.add(r2);
+		bg.add(r3);
+		bg.add(r4);
+		otherInfoPanel.add(r1);
+		otherInfoPanel.add(r2);
+		otherInfoPanel.add(r3);
+		otherInfoPanel.add(r4);
+		
+		
+		
+		cannonballsLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		cannonballsLeftLabel.setFont(Globals.mainFont);
+		cannonballsLeftLabel.setForeground(Globals.buttonForground);
+		cannonballsLeftLabel.setBounds(0, Globals.scale(120), infowidth/2, rowHeight);
+		cannonballsLeftLabel.setVisible(false);
+		otherInfoPanel.add(cannonballsLeftLabel);
+		cannonballsLeftTextField = new JFormattedTextField(formatter);
+		cannonballsLeftTextField.setFont(Globals.mainFont);
+		cannonballsLeftTextField.setBounds(infowidth/2, Globals.scale(120), (infowidth/2)-Globals.scale(15), rowHeight);
+		otherInfoPanel.add(cannonballsLeftTextField);
+		cannonballsLeftTextField.setColumns(10);
+		cannonballsLeftTextField.setVisible(false);
+		
+		
+		deathRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		deathRunesLeftLabel.setFont(Globals.mainFont);
+		deathRunesLeftLabel.setForeground(Globals.buttonForground);
+		deathRunesLeftLabel.setBounds(0, Globals.scale(120)+rowHeight, infowidth/2, rowHeight);
+		deathRunesLeftLabel.setVisible(false);
+		otherInfoPanel.add(deathRunesLeftLabel);
+		deathRunesLeftTextField = new JFormattedTextField(formatter);
+		deathRunesLeftTextField.setFont(Globals.mainFont);
+		deathRunesLeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight, (infowidth/2)-Globals.scale(15), rowHeight);
+		otherInfoPanel.add(deathRunesLeftTextField);
+		deathRunesLeftTextField.setColumns(10);
+		deathRunesLeftTextField.setVisible(false);
+		
+		
+		chaosRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		chaosRunesLeftLabel.setFont(Globals.mainFont);
+		chaosRunesLeftLabel.setForeground(Globals.buttonForground);
+		chaosRunesLeftLabel.setBounds(0, Globals.scale(120)+rowHeight*2, infowidth/2, rowHeight);
+		chaosRunesLeftLabel.setVisible(false);
+		otherInfoPanel.add(chaosRunesLeftLabel);
+		chaosRunesLeftTextField = new JFormattedTextField(formatter);
+		chaosRunesLeftTextField.setFont(Globals.mainFont);
+		chaosRunesLeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight*2, (infowidth/2)-Globals.scale(15), rowHeight);
+		otherInfoPanel.add(chaosRunesLeftTextField);
+		chaosRunesLeftTextField.setColumns(10);
+		chaosRunesLeftTextField.setVisible(false);
+		
+		
+		waterRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		waterRunesLeftLabel.setFont(Globals.mainFont);
+		waterRunesLeftLabel.setForeground(Globals.buttonForground);
+		waterRunesLeftLabel.setVisible(false);
+		waterRunesLeftLabel.setBounds(0, Globals.scale(120)+rowHeight*3, infowidth/2, rowHeight);
+		otherInfoPanel.add(waterRunesLeftLabel);
+		waterRunesLeftTextField = new JFormattedTextField(formatter);
+		waterRunesLeftTextField.setFont(Globals.mainFont);
+		waterRunesLeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight*3, (infowidth/2)-Globals.scale(15), rowHeight);
+		otherInfoPanel.add(waterRunesLeftTextField);
+		waterRunesLeftTextField.setColumns(10);
+		waterRunesLeftTextField.setVisible(false);
+		
 		//////////////
 		// Timer
 		JButton startTimerButton = new JButton("Start Timer");
@@ -557,7 +560,42 @@ public class MonsterPanel{
 	public void restartTimer() {
 		timerStart = 0;
 		timerStop = 0;
+		pauseTime = 0;
 		timerTextField.setText("00:00:00");
+	}
+
+	public void reset(String monsterName, int count, Player player2) {
+		panel.setVisible(true);
+		for(JFormattedTextField trip : trips) {
+			trip.setText("");
+		}
+		r1.setSelected(true);
+        isCannon = false;
+        isBurst = false;
+        cannonballsLeftTextField.setVisible(false);
+        deathRunesLeftTextField.setVisible(false);
+        chaosRunesLeftTextField.setVisible(false);
+        waterRunesLeftTextField.setVisible(false);
+        cannonballsLeftLabel.setVisible(false);
+        deathRunesLeftLabel.setVisible(false);
+        chaosRunesLeftLabel.setVisible(false);
+        waterRunesLeftLabel.setVisible(false);
+        monsterNameLabel.setText(count + " " +monsterName);
+        name = monsterName;
+        this.count = count;
+        if(monsterName == "Aberrant Spectres") {
+			herbPanel.setVisible(true);
+			tripsPanel.setVisible(false);
+        }else {
+			tripsPanel.setVisible(true);
+			herbPanel.setVisible(false);
+        }
+    	restartTimer();
+    	cannonballsLeftTextField.setText("");
+    	deathRunesLeftTextField.setText("");
+    	chaosRunesLeftTextField.setText("");
+    	waterRunesLeftTextField.setText("");
+    	HerbPanel.resetFields();
 	}
 	
 	

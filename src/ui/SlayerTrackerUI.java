@@ -17,11 +17,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -57,6 +54,7 @@ public class SlayerTrackerUI {
 	private JSpinner monsterCountSpinner;
 	static SlayerTrackerUI window;
 	Player player = new Player();
+	MonsterPanel monsterPanel;
 	
 	JTextPane txtpnCannonballs = new JTextPane();
 	/**
@@ -69,8 +67,8 @@ public class SlayerTrackerUI {
 		try {
 			PrintStream logFile = new PrintStream(new FileOutputStream(Globals.errorFile, true));
 			logFile.println("---------------\n"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+"\n---------------");
-			//System.setOut(logFile);
-			//System.setErr(logFile);
+			System.setOut(logFile);
+			System.setErr(logFile);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -110,21 +108,10 @@ public class SlayerTrackerUI {
 		int panelWidth = width;
 		
 		String title = "";
-		int numButtonCol = 5;
-		int buttonSpace = Globals.scale(10);
-		int buttonWidth = ((panelWidth-Globals.scale(30))-((numButtonCol-1)*buttonSpace))/numButtonCol;
-		int buttonHeight = Globals.scale(100);
+
+
 		
-		///
-		// Button coords
-		int row1Y = (Globals.panelHeight-15)-(buttonWidth*1)-(buttonSpace*1);
-		int row2Y = (Globals.panelHeight-15)-(buttonWidth*2)-(buttonSpace*2);
-		int row3Y = (Globals.panelHeight-15)-(buttonWidth*3)-(buttonSpace*3);
-		int col1X = 15;
-		int col2X = 15+(buttonWidth+buttonSpace);
-		int col3X = 15+(buttonWidth+buttonSpace)*2;
-		int col4X = 15+(buttonWidth+buttonSpace)*3;
-		int col5X = 15+(buttonWidth+buttonSpace)*4;
+		
 		
 		mainFrame = new JFrame();
 		mainFrame.setUndecorated(true);
@@ -227,6 +214,26 @@ public class SlayerTrackerUI {
 		});
 		topBar.add(settingsButton);
 		
+
+		JLabel logsButton = new JLabel();
+		{
+			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/logs_icon.png")); // load the image to a imageIcon
+			Image image = imageIcon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			imageIcon = new ImageIcon(newimg);  // transform it back
+			
+			logsButton.setIcon(imageIcon);
+		}
+		logsButton.setBounds(panelWidth-Globals.scale(105), 0, Globals.scale(25), Globals.scale(25));
+		logsButton.setToolTipText("Settings");
+		logsButton.addMouseListener(new MouseAdapter() {
+    		@Override
+    		public void mouseClicked(MouseEvent arg0) {
+    			LogPanel.build(player);
+    		}
+		});
+		topBar.add(logsButton);
+		
 		
 		JLabel titleLabel = new JLabel();
 		titleLabel.setBounds(Globals.scale(5),0,panelWidth/2,Globals.scale(25));
@@ -276,326 +283,58 @@ public class SlayerTrackerUI {
 		
 		addCannonballsPanel.setVisible(false);
 		addRunesPanel.setVisible(false);
-//////////////////////////////////////
-// ROW 1
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Dust Devil
 		
+		///
+		// Button coords
 		
+		int buttonSpaceY = Globals.scale(105);
 		
-		JButton btnDustDevil = new JButton();
-		btnDustDevil.setBackground(Globals.buttonBackground);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Dust_devil.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			btnDustDevil.setIcon(imageIcon);
+		int buttonSpaceHeight = Globals.panelHeight-buttonSpaceY;
+		int spaceBetweenButtons = Globals.scale(10);
+		
+		int buttonWidth = (panelWidth-(spaceBetweenButtons*(Globals.numberOfCols+1)))/Globals.numberOfCols;
+		int buttonHeight = (buttonSpaceHeight-(spaceBetweenButtons*(Globals.numberOfRows+1)))/Globals.numberOfRows;
+		
+		int y[] = new int[Globals.numberOfRows];
+		int x[] = new int[Globals.numberOfCols];
+		
+		for(int i = 0; i < Globals.numberOfRows; i++) {
+			y[i] = buttonSpaceY + spaceBetweenButtons*(i+1) + buttonHeight*(i);
 		}
-		btnDustDevil.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				openMonsterPanel("Dust Devils",false,true);
+		for(int i = 0; i < Globals.numberOfCols; i++) {
+			x[i] = spaceBetweenButtons*(i+1) + buttonWidth*(i);
+		}
+		
+		int monsterNum = 0;
+		for(int row = 0; row != Globals.numberOfRows; row++) {
+			for(int col = 0; col != Globals.numberOfCols; col++) {
+				final int tempMonsterNum = monsterNum;
+				JButton temp = new JButton();
+				temp.setBackground(Globals.buttonBackground);
+				temp.setBounds(x[col], y[row], buttonWidth, buttonHeight);
+				ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/"+(String)Globals.prefMonsters[monsterNum][2])); // load the image to a imageIcon
+				Image image = imageIcon.getImage(); // transform it 
+				Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+				imageIcon = new ImageIcon(newimg);  // transform it back
+				temp.setIcon(imageIcon);
+				if(((String)Globals.prefMonsters[tempMonsterNum][0]).equals("No Monster Set")) {
+					temp.setToolTipText("No monster set, open the settings to add a monster here!");
+				}else {
+					temp.setToolTipText((String)Globals.prefMonsters[monsterNum][0]);
+				}
+				temp.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						if(!((String)Globals.prefMonsters[tempMonsterNum][0]).equals("No Monster Set")) {
+							openMonsterPanel((String)Globals.prefMonsters[tempMonsterNum][0]);
+						}
+					}
+				});
+				mainPanel.add(temp);
+				monsterNum++;
 			}
-		});
-		btnDustDevil.setBounds(col1X, row1Y, buttonWidth, buttonHeight);
-		mainPanel.add(btnDustDevil);
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Smoke Devil
-		JButton btnSmokeDevil = new JButton();
-		btnSmokeDevil.setBackground(Globals.buttonBackground);
-		btnSmokeDevil.setBounds(col2X, row1Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Smoke_devil.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			btnSmokeDevil.setIcon(imageIcon);
 		}
-		btnSmokeDevil.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				openMonsterPanel("Smoke Devils",true,true);
-			}
-		});
-		mainPanel.add(btnSmokeDevil);
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Abby Spec
-		JButton btnAbbySpec = new JButton();
-		btnAbbySpec.setBackground(Globals.buttonBackground);
-		btnAbbySpec.setBounds(col3X, row1Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Aberrant_spectre.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnAbbySpec.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Aberrant Spectres",true,false);
-				}
-			});
-			btnAbbySpec.setIcon(imageIcon);
-		}
-		
-		mainPanel.add(btnAbbySpec);
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// other
-		JButton otherButton = new JButton();
-		otherButton.setBackground(Globals.buttonBackground);
-		otherButton.setBounds(col5X, row1Y, buttonWidth, buttonHeight);
-		
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/question_mark.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			otherButton.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("other",false,false);
-				}
-			});
-			otherButton.setIcon(imageIcon);
-		}
-		mainPanel.add(otherButton);
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Bloodveld
-		JButton btnBloodveld = new JButton();
-		btnBloodveld.setBackground(Globals.buttonBackground);
-		btnBloodveld.setBounds(col4X, row1Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Bloodveld.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnBloodveld.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Bloodvelds",true,false);
-				}
-			});
-			btnBloodveld.setIcon(imageIcon);
-		}
-		mainPanel.add(btnBloodveld);
-		
-//////////////////////////////////////
-// ROW 2
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Blue Dragon
-		JButton btnBlueDragon = new JButton();
-		btnBlueDragon.setBackground(Globals.buttonBackground);
-		btnBlueDragon.setBounds(col1X, row2Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Blue_dragon.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnBlueDragon.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Blue Dragons",true,false);
-				}
-			});
-			btnBlueDragon.setIcon(imageIcon);
-		}
-		mainPanel.add(btnBlueDragon);
-		
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Dagannoth
-		JButton btnDagannoth = new JButton();
-		btnDagannoth.setBackground(Globals.buttonBackground);
-		btnDagannoth.setBounds(col2X, row2Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Dagannoth.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnDagannoth.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Dagannoths",true,false);
-				}
-			});
-			btnDagannoth.setIcon(imageIcon);
-		}
-		mainPanel.add(btnDagannoth);
-		
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Fire Giant
-		JButton btnFireGiant = new JButton();
-		btnFireGiant.setBackground(Globals.buttonBackground);
-		btnFireGiant.setBounds(col3X, row2Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Fire_giant.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnFireGiant.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Fire Giants",true,false);
-				}
-			});
-			btnFireGiant.setIcon(imageIcon);
-		}
-		mainPanel.add(btnFireGiant);
-		
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Gargoyle
-		JButton btnGargoyle = new JButton();
-		btnGargoyle.setBackground(Globals.buttonBackground);
-		btnGargoyle.setBounds(col4X, row2Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/garg.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnGargoyle.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Gargoyle",false,false);
-				}
-			});
-			btnGargoyle.setIcon(imageIcon);
-		}
-		mainPanel.add(btnGargoyle);
-		
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Greater Demon
-		JButton btnGreaterDemon = new JButton();
-		btnGreaterDemon.setBackground(Globals.buttonBackground);
-		btnGreaterDemon.setBounds(col5X, row2Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Greater_demon.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnGreaterDemon.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Greater Demon",true,false);
-				}
-			});
-			btnGreaterDemon.setIcon(imageIcon);
-		}
-		mainPanel.add(btnGreaterDemon);
-		
-//////////////////////////////////////
-// ROW 3
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Trolls
-		JButton btnTrolls = new JButton();
-		btnTrolls.setBackground(Globals.buttonBackground);
-		btnTrolls.setBounds(col1X, row3Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Ice_troll_female.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnTrolls.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Trolls",true,false);
-				}
-			});
-			btnTrolls.setIcon(imageIcon);
-		}
-		mainPanel.add(btnTrolls);
-		
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Kalphite
-		JButton btnKalphite = new JButton();
-		btnKalphite.setBackground(Globals.buttonBackground);
-		btnKalphite.setBounds(col2X, row3Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Kalphite_Worker.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnKalphite.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Kalphites",true,false);
-				}
-			});
-			btnKalphite.setIcon(imageIcon);
-		}
-		mainPanel.add(btnKalphite);
-		
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Lizardman
-		JButton btnLizardman = new JButton();
-		btnLizardman.setBackground(Globals.buttonBackground);
-		btnLizardman.setBounds(col3X, row3Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Lizardman.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnLizardman.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Lizardmen",false,true);
-				}
-			});
-			btnLizardman.setIcon(imageIcon);
-		}
-		mainPanel.add(btnLizardman);
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Nechryael
-		JButton btnNechryael = new JButton();
-		btnNechryael.setBackground(Globals.buttonBackground);
-		btnNechryael.setBounds(col4X, row3Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Nechryael.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnNechryael.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Nechryaels",false,true);
-				}
-			});
-			btnNechryael.setIcon(imageIcon);
-		}
-		mainPanel.add(btnNechryael);
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Wyvern
-		JButton btnWyvern = new JButton();
-		btnWyvern.setBackground(Globals.buttonBackground);
-		btnWyvern.setBounds(col5X, row3Y, buttonWidth, buttonHeight);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Skeletal_Wyvern.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			btnWyvern.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					openMonsterPanel("Wyverns",false,false);
-				}
-			});
-			btnWyvern.setIcon(imageIcon);
-		}
-		mainPanel.add(btnWyvern);
-		
-		
+	
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Farm Run);
 		
@@ -631,7 +370,7 @@ public class SlayerTrackerUI {
 			}
 		});
 		btnAddCannonballs.setBounds(panelWidth-Globals.scale(150), Globals.scale(30), Globals.scale(150), Globals.scale(25));
-mainPanel.add(btnAddCannonballs);
+		mainPanel.add(btnAddCannonballs);
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -827,21 +566,6 @@ mainPanel.add(btnAddCannonballs);
 		});
 		acceptChangeRunesButton.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(250), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(acceptChangeRunesButton);
-		//////////////////////////////////////////////////////
-		// View log button
-		JButton viewLogButton = new JButton("Logs");
-		viewLogButton.setForeground(Globals.buttonForground);
-		viewLogButton.setBackground(Globals.buttonBackground);
-		viewLogButton.setFont(Globals.smallFont);
-		viewLogButton.setMargin(new Insets(0, 0, 0, 0));
-		viewLogButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				LogPanel.build(player);
-			}
-		});
-		viewLogButton.setBounds(panelWidth-Globals.scale(50), Globals.panelHeight-Globals.scale(25), Globals.scale(50), Globals.scale(25));
-		mainPanel.add(viewLogButton);
 
 		
 	}
@@ -858,7 +582,7 @@ mainPanel.add(btnAddCannonballs);
 	
 
 	
-	public void openMonsterPanel(String monsterName, boolean isCannon, boolean isBurst) {
+	public void openMonsterPanel(String monsterName) {
 		int count = (int) monsterCountSpinner.getValue();
 		if(count == 0) {
 			monsterCountSpinner.setBackground(new Color(255, 0, 0));
@@ -873,8 +597,12 @@ mainPanel.add(btnAddCannonballs);
 //			}
 			monsterCountSpinner.setBackground(Globals.buttonBackground);
 			mainPanel.setVisible(false);
-			MonsterPanel monsterPanel = new MonsterPanel(monsterName, null, count, player);
-			mainFrame.getContentPane().add(monsterPanel.build(mainPanel,isCannon,isBurst));
+			if(monsterPanel== null) {
+				monsterPanel = new MonsterPanel(monsterName, null, count, player);
+				mainFrame.getContentPane().add(monsterPanel.build(mainPanel));
+			}else {
+				monsterPanel.reset(monsterName,count, player);
+			}
 		}
 	}
 	public static class FrameDragListener extends MouseAdapter {

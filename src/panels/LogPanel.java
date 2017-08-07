@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import objects.Globals;
+import objects.Monsters;
 import objects.Player;
 import ui.SlayerTrackerUI;
 import ui.SlayerTrackerUI.FrameDragListener;
@@ -344,11 +345,7 @@ public class LogPanel {
 				int absoluteAmountOfKills = 0;
 				int count = 0;
 				for(ArrayList<String[]>logs : log) {
-					System.err.println(logs.size());
-					System.err.println("~~");
-					for(String[] row: logs) {
-						System.err.println(row.length);
-						
+					for(String[] row: logs) {						
 						if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
 							break;
 						}
@@ -398,78 +395,12 @@ public class LogPanel {
 		        
 		        setHorizontalAlignment(JLabel.RIGHT);
 		        String status = (String)table.getModel().getValueAt(row, 0);
-		        // trolls 			- (212, 214, 216)
-		        // kalp 			- (99, 124, 91)
-		        // lizardmen 		- (163, 239, 139)
-		        // nech 			- (252, 174, 148)
-		        // daggs 			- (99, 99, 99)
-		        // fire giant 		- (255, 72, 56)
-		        // gargs 			- (61, 61, 61)
-		        // greater demon 	- (165, 9, 9)
-		        // dust devil 		- (255, 196, 94)
-		        // smoke devil 		- (124, 120, 112)
-		        // abby Specs		- (163, 247, 150)
-		        // bloodveld 		- (204, 106, 99)
-		        // Elves 			- (247, 140, 238)
-		        // Iron Dragons 	- (73, 73, 73)
-		        // Steel Dragons	- (255, 255, 255)
-		        // Black Dragons	- (255, 255, 255)
-		        // blue drag 		- (15, 47, 255)
-		        // wyvern 			- (163, 239, 139)
-		        if ("Trolls".equalsIgnoreCase(status)) {
-		            setBackground(new Color(212, 214, 216));
-		            setForeground(new Color(0,0,0));
-		        }else if ("Kalphite".equalsIgnoreCase(status)||"Kalphites".equalsIgnoreCase(status)) {
-		            setBackground(new Color(99, 124, 91));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Lizardman".equalsIgnoreCase(status)||"Lizardmen".equalsIgnoreCase(status)) {
-		            setBackground(new Color(163, 239, 139));
-		            setForeground(new Color(0,0,0));
-		        }else if ("Nechryael".equalsIgnoreCase(status)||"Nechryaels".equalsIgnoreCase(status)) {
-		            setBackground(new Color(252, 174, 148));
-		            setForeground(new Color(0,0,0));
-		        }else if ("Dagannoth".equalsIgnoreCase(status)||"Dagannoths".equalsIgnoreCase(status)) {
-		            setBackground(new Color(99, 99, 99));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Fire Giants".equalsIgnoreCase(status)) {
-		            setBackground(new Color(255, 72, 56));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Gargoyle".equalsIgnoreCase(status)||"Gargoyles".equalsIgnoreCase(status)) {
-		            setBackground(new Color(61, 61, 61));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Greater Demon".equalsIgnoreCase(status)||"Greater Demons".equalsIgnoreCase(status)) {
-		            setBackground(new Color(165, 9, 9));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Dust Devil".equalsIgnoreCase(status)||"Dust Devils".equalsIgnoreCase(status)) {
-		            setBackground(new Color(255, 196, 94));
-		            setForeground(new Color(0,0,0));
-		        }else if ("Smoke Devil".equalsIgnoreCase(status)||"Smoke Devils".equalsIgnoreCase(status)) {
-		            setBackground(new Color(124, 120, 112));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Aberrant Spectres".equalsIgnoreCase(status)) {
-		            setBackground(new Color(163, 247, 150));
-		            setForeground(new Color(0,0,0));
-		        }else if ("Bloodvelds".equalsIgnoreCase(status)) {
-		            setBackground(new Color(204, 106, 99));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Elves".equalsIgnoreCase(status)||"Elf".equalsIgnoreCase(status)||"Elfs".equalsIgnoreCase(status)) {
-		            setBackground(new Color(247, 140, 238));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Iron Dragons".equalsIgnoreCase(status)||"Iron Dragon".equalsIgnoreCase(status)) {
-		            setBackground(new Color(73, 73, 73));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Steel Dragons".equalsIgnoreCase(status)||"Steel Dragon".equalsIgnoreCase(status)) {
-		            setBackground(new Color(255, 255, 255));
-		            setForeground(new Color(0,0,0));
-		        }else if ("Black Dragons".equalsIgnoreCase(status)||"Black Dragon".equalsIgnoreCase(status)) {
-		            setBackground(new Color(0,0,0));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Blue Dragons".equalsIgnoreCase(status)||"Blue Dragon".equalsIgnoreCase(status)) {
-		            setBackground(new Color(15, 47, 255));
-		            setForeground(new Color(255,255,255));
-		        }else if ("Wyverns".equalsIgnoreCase(status)||"Wyvern".equalsIgnoreCase(status)) {
-		            setBackground(new Color(163, 239, 139));
-		            setForeground(new Color(255,255,255));
+		        
+		        Object[] monster = Monsters.getMonster(status);
+		        
+		        if (monster != null) {
+		            setBackground((Color) monster[3]);
+		            setForeground((Color) monster[4]);
 		        } else {
 		            setBackground(Globals.panelBackground);
 		            setForeground(Globals.buttonForground);
