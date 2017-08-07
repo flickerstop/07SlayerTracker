@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import objects.Globals;
 import objects.Monsters;
@@ -48,7 +50,7 @@ public class LogPanel {
             public void run()
             {
             	ArrayList<ArrayList<String[]>> log = player.getLogs();
-            	int width = Globals.scale(1000)+Globals.topMenuBarHeight;
+            	int width = Globals.scale(1250);
         		int height = Globals.scale(550);
         		int panelHeight = height-Globals.topMenuBarHeight;
         		
@@ -226,23 +228,36 @@ public class LogPanel {
         		/////////////////////////////////////////
         		// Normal Slayer
         		//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
-        		DefaultTableModel normalModel = new DefaultTableModel(); 
+        		DefaultTableModel normalModel = new DefaultTableModel();
         		normalModel.addColumn("Monster"); 
         		normalModel.addColumn("Amount"); 
         		normalModel.addColumn("Loot");
         		normalModel.addColumn("Time");
+        		normalModel.addColumn("Slayer Exp");
+        		normalModel.addColumn("Exp/min");
         		for(String[] array : log.get(0)) {
-        			normalModel.addRow(array);
+        			Object[] temp = Monsters.getMonster(array[0]);
+        			if(temp == null) {
+        				System.err.println("Error in slayerLog with:"+array[0]);
+        			}else {
+        				String[] time = array[3].split(":");
+            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
+            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
+            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
+        				normalModel.addRow(new Object[]{array[0],array[1],array[2],array[3],exp,String.format("%.2f", expPerMin)});
+        			}
         		}
-        		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        		rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
         		normalTable = new JTable(normalModel);
+        		normalTable.setAutoCreateRowSorter(true);
         		normalTable.setFillsViewportHeight(true);
         		normalTable.setDefaultRenderer(Object.class, colourCells());
         		normalTable.setBackground(Globals.panelBackground);
         		normalTable.setForeground(Globals.buttonForground);
+        		normalTable.setFont(Globals.mainFont);
+        		normalTable.getTableHeader().setFont(Globals.mainFont);
+        		normalTable.getTableHeader().setBackground(Globals.panelBackground);
+        		normalTable.getTableHeader().setForeground(Globals.buttonForground);
+        		
         		scrollPane.setViewportView(normalTable);
 				/////////////////////////////////////////
 				// Cannon
@@ -256,18 +271,34 @@ public class LogPanel {
 				cannonModel.addColumn("Cost of Cannonballs");
 				cannonModel.addColumn("Profit");
 				cannonModel.addColumn("Time");
+				cannonModel.addColumn("Slayer Exp");
+				cannonModel.addColumn("Exp/Min");
+				
 				for(String[] array : log.get(1)) {
-					cannonModel.addRow(array);
+					Object[] temp = Monsters.getMonster(array[0]);
+        			if(temp == null) {
+        				System.err.println("Error in cannonLog with:"+array[0]);
+        			}else {
+        				String[] time = array[7].split(":");
+            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
+            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
+            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
+        				cannonModel.addRow(new Object[] {array[0],array[1],array[2],array[3],array[4],array[5],array[6],array[7],exp,String.format("%.2f", expPerMin)});
+        			}
 				}
 				cannonTable = new JTable(cannonModel);
 				cannonTable.setFillsViewportHeight(true);
 				cannonTable.setDefaultRenderer(Object.class, colourCells());
 				cannonTable.setBackground(Globals.panelBackground);
 				cannonTable.setForeground(Globals.buttonForground);
+				cannonTable.setFont(Globals.mainFont);
+				cannonTable.getTableHeader().setFont(Globals.mainFont);
+				cannonTable.getTableHeader().setBackground(Globals.panelBackground);
+				cannonTable.getTableHeader().setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(cannonTable);
 				/////////////////////////////////////////
 				// Burst
-				// monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit
+				// monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit,time
 				DefaultTableModel burstModel = new DefaultTableModel(); 
 				burstModel.addColumn("Monster"); 
 				burstModel.addColumn("Amount"); 
@@ -278,14 +309,29 @@ public class LogPanel {
 				burstModel.addColumn("Price of Runes");
 				burstModel.addColumn("Profit");
 				burstModel.addColumn("Time");
+				burstModel.addColumn("Slayer Exp");
+				burstModel.addColumn("Exp/Min");
 				for(String[] array : log.get(2)) {
-					burstModel.addRow(array);
+					Object[] temp = Monsters.getMonster(array[0]);
+					if(temp == null) {
+        				System.err.println("Error in burstLog with:"+array[0]);
+        			}else {
+        				String[] time = array[8].split(":");
+            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
+            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
+            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
+            			burstModel.addRow(new Object[] {array[0],array[1],array[2],array[3],array[4],array[5],array[6],array[7],array[8],exp,String.format("%.2f", expPerMin)});
+        			}
 				}
 				burstTable = new JTable(burstModel);
 				burstTable.setFillsViewportHeight(true);
 				burstTable.setDefaultRenderer(Object.class, colourCells());
 				burstTable.setBackground(Globals.panelBackground);
 				burstTable.setForeground(Globals.buttonForground);
+				burstTable.setFont(Globals.mainFont);
+				burstTable.getTableHeader().setFont(Globals.mainFont);
+				burstTable.getTableHeader().setBackground(Globals.panelBackground);
+				burstTable.getTableHeader().setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(burstTable);
 				/////////////////////////////////////////
 				// Cannon/burst
@@ -302,14 +348,29 @@ public class LogPanel {
 				cannonBurstModel.addColumn("Cost of Runes");
 				cannonBurstModel.addColumn("Profit");
 				cannonBurstModel.addColumn("Time");
+				cannonBurstModel.addColumn("Slayer Exp");
+				cannonBurstModel.addColumn("Exp/Min");
 				for(String[] array : log.get(3)) {
-					cannonBurstModel.addRow(array);
+					Object[] temp = Monsters.getMonster(array[0]);
+					if(temp == null) {
+        				System.err.println("Error in cannonBurstLog with:"+array[0]);
+        			}else {
+        				String[] time = array[10].split(":");
+            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
+            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
+            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
+            			cannonBurstModel.addRow(new Object[] {array[0],array[1],array[2],array[3],array[4],array[5],array[6],array[7],array[8],array[9],array[10],exp,String.format("%.2f", expPerMin)});
+        			}
 				}
 				cannonBurstTable = new JTable(cannonBurstModel);
 				cannonBurstTable.setFillsViewportHeight(true);
 				cannonBurstTable.setDefaultRenderer(Object.class, colourCells());
 				cannonBurstTable.setBackground(Globals.panelBackground);
 				cannonBurstTable.setForeground(Globals.buttonForground);
+				cannonBurstTable.setFont(Globals.mainFont);
+				cannonBurstTable.getTableHeader().setFont(Globals.mainFont);
+				cannonBurstTable.getTableHeader().setBackground(Globals.panelBackground);
+				cannonBurstTable.getTableHeader().setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(cannonBurstTable);
 				/////////////////////////////////////////
 				// Cannonball
@@ -324,10 +385,11 @@ public class LogPanel {
 				cannonballTable = new JTable(cannonballModel);
 				cannonballTable.setBackground(Globals.panelBackground);
 				cannonballTable.setFillsViewportHeight(true);
-				cannonballTable.getColumn("Total Price").setCellRenderer(rightRenderer);
-				cannonballTable.getColumn("Amount of Cannonballs").setCellRenderer(rightRenderer);
-				cannonballTable.getColumn("Price per Ball").setCellRenderer(rightRenderer);
 				cannonballTable.setForeground(Globals.buttonForground);
+				cannonballTable.setFont(Globals.mainFont);
+				cannonballTable.getTableHeader().setFont(Globals.mainFont);
+				cannonballTable.getTableHeader().setBackground(Globals.panelBackground);
+				cannonballTable.getTableHeader().setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(cannonballTable);
         		
         	
@@ -367,11 +429,12 @@ public class LogPanel {
 				
 				logTable = new JTable(logModel);
 				logTable.setFillsViewportHeight(true);
-				logTable.getColumn("Type of Log").setCellRenderer(centerRenderer);
-				logTable.getColumn("Amount of Kills").setCellRenderer(rightRenderer);
-				logTable.getColumn("Total Profit").setCellRenderer(rightRenderer);
 				logTable.setBackground(Globals.panelBackground);
 				logTable.setForeground(Globals.buttonForground);
+				logTable.setFont(Globals.mainFont);
+				logTable.getTableHeader().setFont(Globals.mainFont);
+				logTable.getTableHeader().setBackground(Globals.panelBackground);
+				logTable.getTableHeader().setForeground(Globals.buttonForground);
 				
 			
 				

@@ -67,8 +67,8 @@ public class SlayerTrackerUI {
 		try {
 			PrintStream logFile = new PrintStream(new FileOutputStream(Globals.errorFile, true));
 			logFile.println("---------------\n"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+"\n---------------");
-			System.setOut(logFile);
-			System.setErr(logFile);
+			//System.setOut(logFile);
+			//System.setErr(logFile);
 
 		} catch (IOException e) {
 			e.printStackTrace();

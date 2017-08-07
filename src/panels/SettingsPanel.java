@@ -26,8 +26,6 @@ import ui.SlayerTrackerUI;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 
-import java.awt.BorderLayout;
-import javax.swing.JToggleButton;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
