@@ -228,10 +228,24 @@ public class LogPanel {
         		/////////////////////////////////////////
         		// Normal Slayer
         		//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
-        		DefaultTableModel normalModel = new DefaultTableModel();
+        		//TODO
+
+        		DefaultTableModel normalModel = new DefaultTableModel(){
+					@Override
+                    public Class<?> getColumnClass(int column) {
+                        switch (column) {
+                            case 0:
+                                return String.class;
+                            case 5:
+                                return Float.class;
+                            default:
+                                return Integer.class;
+                        }
+                    }
+                };
         		normalModel.addColumn("Monster"); 
         		normalModel.addColumn("Amount"); 
-        		normalModel.addColumn("Loot");
+        		normalModel.addColumn("Net Profit");
         		normalModel.addColumn("Time");
         		normalModel.addColumn("Slayer Exp");
         		normalModel.addColumn("Exp/min");
@@ -244,13 +258,27 @@ public class LogPanel {
             			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
             			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
             			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-        				normalModel.addRow(new Object[]{array[0],array[1],array[2],array[3],exp,String.format("%.2f", expPerMin)});
+        				normalModel.addRow(new Object[]{
+        						array[0],
+        						Integer.parseInt(array[1]),
+        						Integer.parseInt(array[2]),
+        						array[3],
+        						exp,
+        						Float.parseFloat(String.format("%.2f", expPerMin))
+        						});
         			}
         		}
         		normalTable = new JTable(normalModel);
-        		normalTable.setAutoCreateRowSorter(true);
+        		//normalTable.setAutoCreateRowSorter(true);
         		normalTable.setFillsViewportHeight(true);
         		normalTable.setDefaultRenderer(Object.class, colourCells());
+        		normalTable.setDefaultRenderer(String.class, colourCells());
+        		normalTable.setDefaultRenderer(Integer.class, colourCells());
+        		normalTable.setDefaultRenderer(Float.class, colourCells());
+        		normalTable.setAutoCreateRowSorter(true);
+        		normalTable.setEnabled(false);
+                normalTable.setRowSelectionAllowed(false);
+                normalTable.setShowVerticalLines(false);
         		normalTable.setBackground(Globals.panelBackground);
         		normalTable.setForeground(Globals.buttonForground);
         		normalTable.setFont(Globals.mainFont);
@@ -262,10 +290,22 @@ public class LogPanel {
 				/////////////////////////////////////////
 				// Cannon
 				//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
-				DefaultTableModel cannonModel = new DefaultTableModel(); 
+				DefaultTableModel cannonModel = new DefaultTableModel(){
+					@Override
+                    public Class<?> getColumnClass(int column) {
+                        switch (column) {
+                            case 0:
+                                return String.class;
+                            case 9:
+                                return Float.class;
+                            default:
+                                return Integer.class;
+                        }
+                    }
+                };
 				cannonModel.addColumn("Monster"); 
 				cannonModel.addColumn("Amount"); 
-				cannonModel.addColumn("Loot");
+				cannonModel.addColumn("Net Profit");
 				cannonModel.addColumn("Cannonballs Left");
 				cannonModel.addColumn("Cannonballs Used");
 				cannonModel.addColumn("Cost of Cannonballs");
@@ -283,12 +323,30 @@ public class LogPanel {
             			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
             			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
             			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-        				cannonModel.addRow(new Object[] {array[0],array[1],array[2],array[3],array[4],array[5],array[6],array[7],exp,String.format("%.2f", expPerMin)});
+        				cannonModel.addRow(new Object[] {
+        						array[0],
+        						Integer.parseInt(array[1]),
+        						Integer.parseInt(array[2]),
+        						Integer.parseInt(array[3]),
+        						Integer.parseInt(array[4]),
+        						Integer.parseInt(array[5]),
+        						Integer.parseInt(array[6]),
+        						array[7],
+        						exp,
+        						Float.parseFloat(String.format("%.2f", expPerMin))
+        						});
         			}
 				}
 				cannonTable = new JTable(cannonModel);
 				cannonTable.setFillsViewportHeight(true);
 				cannonTable.setDefaultRenderer(Object.class, colourCells());
+        		cannonTable.setDefaultRenderer(String.class, colourCells());
+        		cannonTable.setDefaultRenderer(Integer.class, colourCells());
+        		cannonTable.setDefaultRenderer(Float.class, colourCells());
+        		cannonTable.setAutoCreateRowSorter(true);
+        		cannonTable.setEnabled(false);
+        		cannonTable.setRowSelectionAllowed(false);
+                cannonTable.setShowVerticalLines(false);
 				cannonTable.setBackground(Globals.panelBackground);
 				cannonTable.setForeground(Globals.buttonForground);
 				cannonTable.setFont(Globals.mainFont);
@@ -299,10 +357,22 @@ public class LogPanel {
 				/////////////////////////////////////////
 				// Burst
 				// monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit,time
-				DefaultTableModel burstModel = new DefaultTableModel(); 
+				DefaultTableModel burstModel = new DefaultTableModel(){
+					@Override
+                    public Class<?> getColumnClass(int column) {
+                        switch (column) {
+                            case 0:
+                                return String.class;
+                            case 10:
+                                return Float.class;
+                            default:
+                                return Integer.class;
+                        }
+                    }
+                };
 				burstModel.addColumn("Monster"); 
 				burstModel.addColumn("Amount"); 
-				burstModel.addColumn("Loot");
+				burstModel.addColumn("Net Profit");
 				burstModel.addColumn("Deaths Used");
 				burstModel.addColumn("Chaos Used");
 				burstModel.addColumn("Water Used");
@@ -320,12 +390,31 @@ public class LogPanel {
             			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
             			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
             			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-            			burstModel.addRow(new Object[] {array[0],array[1],array[2],array[3],array[4],array[5],array[6],array[7],array[8],exp,String.format("%.2f", expPerMin)});
+            			burstModel.addRow(new Object[] {
+            					array[0],
+            					Integer.parseInt(array[1]),
+            					Integer.parseInt(array[2]),
+            					Integer.parseInt(array[3]),
+            					Integer.parseInt(array[4]),
+            					Integer.parseInt(array[5]),
+            					Integer.parseInt(array[6]),
+            					Integer.parseInt(array[7]),
+            					array[8],
+            					exp,
+            					Float.parseFloat(String.format("%.2f", expPerMin))
+            					});
         			}
 				}
 				burstTable = new JTable(burstModel);
 				burstTable.setFillsViewportHeight(true);
 				burstTable.setDefaultRenderer(Object.class, colourCells());
+        		burstTable.setDefaultRenderer(String.class, colourCells());
+        		burstTable.setDefaultRenderer(Integer.class, colourCells());
+        		burstTable.setDefaultRenderer(Float.class, colourCells());
+        		burstTable.setAutoCreateRowSorter(true);
+        		burstTable.setEnabled(false);
+        		burstTable.setRowSelectionAllowed(false);
+                burstTable.setShowVerticalLines(false);
 				burstTable.setBackground(Globals.panelBackground);
 				burstTable.setForeground(Globals.buttonForground);
 				burstTable.setFont(Globals.mainFont);
@@ -336,10 +425,22 @@ public class LogPanel {
 				/////////////////////////////////////////
 				// Cannon/burst
 				// name, count, loot, cannonballsUsed, deathsUsed, chaosUsed, waterUsed, priceOfBalls, priceOfRunes, profit, time
-				DefaultTableModel cannonBurstModel = new DefaultTableModel(); 
+				DefaultTableModel cannonBurstModel = new DefaultTableModel(){
+					@Override
+                    public Class<?> getColumnClass(int column) {
+                        switch (column) {
+                            case 0:
+                                return String.class;
+                            case 12:
+                                return Float.class;
+                            default:
+                                return Integer.class;
+                        }
+                    }
+                };
 				cannonBurstModel.addColumn("Monster"); 
 				cannonBurstModel.addColumn("Amount"); 
-				cannonBurstModel.addColumn("Loot");
+				cannonBurstModel.addColumn("Net Profit");
 				cannonBurstModel.addColumn("Cbs Used");
 				cannonBurstModel.addColumn("Deaths Used");
 				cannonBurstModel.addColumn("Chaos Used");
@@ -359,12 +460,33 @@ public class LogPanel {
             			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
             			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
             			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-            			cannonBurstModel.addRow(new Object[] {array[0],array[1],array[2],array[3],array[4],array[5],array[6],array[7],array[8],array[9],array[10],exp,String.format("%.2f", expPerMin)});
+            			cannonBurstModel.addRow(new Object[] {
+            					array[0],
+            					Integer.parseInt(array[1]),
+            					Integer.parseInt(array[2]),
+            					Integer.parseInt(array[3]),
+            					Integer.parseInt(array[4]),
+            					Integer.parseInt(array[5]),
+            					Integer.parseInt(array[6]),
+            					Integer.parseInt(array[7]),
+            					Integer.parseInt(array[8]),
+            					Integer.parseInt(array[9]),
+            					array[10],
+            					exp,
+            					Float.parseFloat(String.format("%.2f", expPerMin))
+            					});
         			}
 				}
 				cannonBurstTable = new JTable(cannonBurstModel);
 				cannonBurstTable.setFillsViewportHeight(true);
 				cannonBurstTable.setDefaultRenderer(Object.class, colourCells());
+				cannonBurstTable.setDefaultRenderer(String.class, colourCells());
+				cannonBurstTable.setDefaultRenderer(Integer.class, colourCells());
+				cannonBurstTable.setDefaultRenderer(Float.class, colourCells());
+				cannonBurstTable.setAutoCreateRowSorter(true);
+				cannonBurstTable.setEnabled(false);
+				cannonBurstTable.setRowSelectionAllowed(false);
+				cannonBurstTable.setShowVerticalLines(false);
 				cannonBurstTable.setBackground(Globals.panelBackground);
 				cannonBurstTable.setForeground(Globals.buttonForground);
 				cannonBurstTable.setFont(Globals.mainFont);
@@ -406,16 +528,43 @@ public class LogPanel {
 				int absoluteTotalLoot = 0;
 				int absoluteAmountOfKills = 0;
 				int count = 0;
-				for(ArrayList<String[]>logs : log) {
-					for(String[] row: logs) {						
-						if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
-							break;
-						}
-						amountOfKills[count] += Integer.parseInt(row[1]);
-						totalLoot[count] += Integer.parseInt(row[2]);
+				
+				// Normal slayer
+				for(String[] row: log.get(0)) {						
+					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
+						break;
 					}
-					count++;
+					amountOfKills[count] += Integer.parseInt(row[1]);
+					totalLoot[count] += Integer.parseInt(row[2]);
 				}
+				count++;
+				// Cannon
+				for(String[] row: log.get(1)) {						
+					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
+						break;
+					}
+					amountOfKills[count] += Integer.parseInt(row[1]);
+					totalLoot[count] += Integer.parseInt(row[6]);
+				}
+				count++;
+				// burst
+				for(String[] row: log.get(2)) {						
+					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
+						break;
+					}
+					amountOfKills[count] += Integer.parseInt(row[1]);
+					totalLoot[count] += Integer.parseInt(row[7]);
+				}
+				count++;
+				// cannon&burst
+				for(String[] row: log.get(3)) {						
+					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
+						break;
+					}
+					amountOfKills[count] += Integer.parseInt(row[1]);
+					totalLoot[count] += Integer.parseInt(row[9]);
+				}
+				
 				for(int i = 0; i<totalLoot.length;i++) {
 					absoluteTotalLoot += totalLoot[i];
 					absoluteAmountOfKills += amountOfKills[i];
@@ -455,12 +604,12 @@ public class LogPanel {
 		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
 
 		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
-		        
+
 		        setHorizontalAlignment(JLabel.RIGHT);
+		        row = table.convertRowIndexToModel(row);
 		        String status = (String)table.getModel().getValueAt(row, 0);
 		        
 		        Object[] monster = Monsters.getMonster(status);
-		        
 		        if (monster != null) {
 		            setBackground((Color) monster[3]);
 		            setForeground((Color) monster[4]);
@@ -468,9 +617,10 @@ public class LogPanel {
 		            setBackground(Globals.panelBackground);
 		            setForeground(Globals.buttonForground);
 		            
-		        }       
+		        }    
 		        return this;
 		    }   
 		};
 	}
+	
 }

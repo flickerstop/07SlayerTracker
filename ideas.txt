@@ -1,16 +1,11 @@
 - Settings panel
 	- Different sounds for alarm
-	- Change layout of buttons
 	
 - Logs
 	- show icons of monster
 	- ability to edit/save
-	- fix the lot of logs uses the profit column instead of the loot
 
 - farm timer
 	- ability to close timer and save time
-	- Save farm run to log
 	
 - Monster panel
-	- Asks how you're going to do the task
-	- find a way to add more trips
