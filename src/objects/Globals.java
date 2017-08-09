@@ -14,7 +14,7 @@ public class Globals {
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
 	public static boolean isSafeEdit = false;
-	public static String versionNumber = "0.7.1";
+	public static String versionNumber = "0.7.2";
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
@@ -65,6 +65,16 @@ public class Globals {
 	public static Color otherInfoBackground = new Color(0, 204, 255);
 	
 	
+	public static String[] herbTypes = {
+			"Snapdragon",
+			"Ranarr",
+			"Torstol",
+			"Irit",
+			"Kwuarm",
+			"Cadantine",
+			"Avantoe"
+	};
+	
 	public static boolean isDarkMode = false;
 
 	//////////////////////
@@ -73,6 +83,7 @@ public class Globals {
 	public static int resurrectprice = 5561;
 	public static int numberOfPatches = 7;
 	public static int seedPrice = 45874;
+	public static String herbType = "Snapdragon";
 	/////////////////////
 	// Runes
 	public static int deathPrice = 258; // prices on 30/07/2017
@@ -80,6 +91,21 @@ public class Globals {
 	public static int waterPrice = 5;
 	
 	public static void reload() {
+		if(herbType.equals("Ranarr")) {
+			herbPrice = GEPrices.getItem("Ranarr weed").getSellPrice();
+		}else if(herbType.equals("Irit")) {
+			herbPrice = GEPrices.getItem("Irit leaf").getSellPrice();
+		}else{
+			herbPrice = GEPrices.getItem(herbType).getSellPrice();
+		}
+		seedPrice = GEPrices.getItem(herbType+" seed").getBuyPrice();
+
+		resurrectprice = (
+				(GEPrices.getItem("Soul rune").getBuyPrice()*8)+
+				(GEPrices.getItem("nature rune").getBuyPrice()*12)+
+				(GEPrices.getItem("blood rune").getBuyPrice()*8)+
+				(GEPrices.getItem("earth rune").getBuyPrice()*25)
+				);
 		width = scale(640);
 		height = scale(550);
 		topMenuBarHeight = scale(25);
@@ -143,7 +169,8 @@ public class Globals {
 				seedPrice,
 				deathPrice,
 				chaosPrice,
-				waterPrice};
+				waterPrice,
+				herbType};
 		String output = "";
 		for(int i = 0; i <toSave.length;i++) {
 			output += toSave[i];
@@ -162,6 +189,23 @@ public class Globals {
 	}
 	
 	public static void load() {
+		GEPrices.getPrices();
+		if(herbType.equals("Ranarr")) {
+			herbPrice = GEPrices.getItem("Ranarr weed").getSellPrice();
+		}else if(herbType.equals("Irit")) {
+			herbPrice = GEPrices.getItem("Irit leaf").getSellPrice();
+		}else {
+			herbPrice = GEPrices.getItem(herbType).getSellPrice();
+		}
+		seedPrice = GEPrices.getItem(herbType+" seed").getBuyPrice();
+
+		resurrectprice = (
+				(GEPrices.getItem("Soul rune").getBuyPrice()*8)+
+				(GEPrices.getItem("nature rune").getBuyPrice()*12)+
+				(GEPrices.getItem("blood rune").getBuyPrice()*8)+
+				(GEPrices.getItem("earth rune").getBuyPrice()*25)
+				);
+		
 		if(isSafeEdit) {
 			savePath = "player.sav";
 			settingsFile = "settings.sav";
@@ -191,13 +235,14 @@ public class Globals {
 			tripsBackground = new Color(Integer.parseInt(temp[4]));
 			otherInfoBackground = new Color(Integer.parseInt(temp[5]));
 			isDarkMode = Boolean.parseBoolean(temp[6]);
-			herbPrice = Integer.parseInt(temp[7]);
-			resurrectprice = Integer.parseInt(temp[8]);
+			//herbPrice = Integer.parseInt(temp[7]);
+			//resurrectprice = Integer.parseInt(temp[8]);
 			numberOfPatches = Integer.parseInt(temp[9]);
-			seedPrice = Integer.parseInt(temp[10]);
+			//seedPrice = Integer.parseInt(temp[10]);
 			deathPrice = Integer.parseInt(temp[11]);
 			chaosPrice = Integer.parseInt(temp[12]);
 			waterPrice = Integer.parseInt(temp[13]);
+			herbType = temp[14];
 		}catch(ArrayIndexOutOfBoundsException e) {
 			save();
 			load();

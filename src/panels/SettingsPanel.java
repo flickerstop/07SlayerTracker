@@ -36,13 +36,6 @@ public class SettingsPanel {
 	
 	public SettingsPanel() {
 		mainFrame = new JFrame("Test");
-		
-		
-		
-		
-		
-		
-		
 	}
 	public void build() {
 		/**
@@ -53,12 +46,12 @@ public class SettingsPanel {
 	        @Override
 	        public void run()
 	        {
+	        	JComboBox<String> herbTypeComboBox = new JComboBox<String>(Globals.herbTypes);
 	        	ArrayList<JComboBox<String>> monstersList = new ArrayList<JComboBox<String>>();
 	        	int width = Globals.scale(900);
 	        	int panelWidth = width/2;
 	    		int height = Globals.scale(520);
 	    		JSpinner farmPatchCountSpinner = new JSpinner();
-	    		ArrayList<JFormattedTextField> inputs = new ArrayList<JFormattedTextField>();
 	        	mainFrame.getContentPane().setBackground(Globals.black);
 	        	mainFrame.setUndecorated(true);
 	        	mainFrame.setResizable(false);
@@ -147,17 +140,12 @@ public class SettingsPanel {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
         				mainFrame.setVisible(false);
-        				Globals.deathPrice = Integer.parseInt(inputs.get(0).getText());
-        				Globals.chaosPrice = Integer.parseInt(inputs.get(1).getText());
-        				Globals.waterPrice = Integer.parseInt(inputs.get(2).getText());
-        				Globals.herbPrice = Integer.parseInt(inputs.get(3).getText());
-        				Globals.seedPrice = Integer.parseInt(inputs.get(4).getText());
-        				Globals.numberOfPatches = (int)farmPatchCountSpinner.getValue();
+        				Globals.herbType = (String)herbTypeComboBox.getSelectedItem();
         				
         				int i = 0;
         				for(JComboBox<String> box : monstersList) {
         					Globals.prefMonsters[i] = Monsters.getMonster((String)box.getSelectedItem());
-        					System.out.println(Globals.prefMonsters[i][0]);
+        					//System.out.println(Globals.prefMonsters[i][0]);
         					i++;
         				}
         				SlayerTrackerUI.reload();
@@ -241,72 +229,28 @@ public class SettingsPanel {
 				//////////////////////////////////////////////////////////////////////////////
 				// Prices
 				
-				JLabel pricesLabel = new JLabel();
-				pricesLabel.setText("Prices");
-				pricesLabel.setFont(Globals.boldFont);
-				pricesLabel.setForeground(Globals.white);
-				pricesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-				pricesLabel.setBounds(0,Globals.scale(150),panelWidth,Globals.scale(30));
-	    		mainFrame.getContentPane().add(pricesLabel);
 				
 				
-	    		String[] labelText = {
-	    				"Death Rune:", 
-	    				"Chaos Rune:", 
-	    				"Water Rune:", 
-	    				"Herb:",
-	    				"Seed:"
-	    				};
-	    		String[] tooltips = {
-	    				"The current price of Death Runes",
-	    				"The current price of Chaos Runes",
-	    				"The current price of Water Runes",
-	    				"The current price of Herb you are planting",
-	    				"The current price of Seeds of the herb you are planting"
-	    		};
-	    		String[] text = {
-	    				Globals.deathPrice+"",
-	    				Globals.chaosPrice+"",
-	    				Globals.waterPrice+"",
-	    				Globals.herbPrice+"",
-	    				Globals.seedPrice+"",
-	    		};
-	    		for(int i = 0; i < 5; i++) {
-	    			JFormattedTextField textField = new JFormattedTextField(formatter);
-	    			JLabel label = new JLabel();
-	    			int y = Globals.scale(25*i)+Globals.scale(190);
-	    			
-	    			label.setFont(Globals.mainFont);
-	    			label.setForeground(Globals.buttonForground);
-	    			label.setHorizontalAlignment(SwingConstants.RIGHT);
-	    			label.setText(labelText[i]);
-	    			label.setBounds(Globals.scale(10),y,(panelWidth/2)-Globals.scale(20),Globals.scale(25));
-	    			label.setToolTipText(tooltips[i]);
-	    			
-	    			textField.setFont(Globals.mainFont);
-	    			textField.setBounds(panelWidth/2+Globals.scale(10),y,Globals.scale(80),Globals.scale(25));
-	    			textField.setToolTipText(tooltips[i]);
-	    			textField.setText(text[i]);
-	    			
-	    			mainFrame.getContentPane().add(label);
-	    			mainFrame.getContentPane().add(textField);
-	    			inputs.add(textField);
-	    		}
-				//////////////////////////////////////////////////////////////////////////////
-				JSeparator separator2 = new JSeparator();
-				separator2.setBounds(0,Globals.scale(340),panelWidth,Globals.scale(10));
-				separator2.setBackground(Globals.yellow);
-				separator2.setForeground(Globals.yellow);
-				mainFrame.getContentPane().add(separator2);
-				//////////////////////////////////////////////////////////////////////////////
 				
 				JLabel farmLabel = new JLabel();
 				farmLabel.setText("Farm Info");
 				farmLabel.setFont(Globals.boldFont);
 				farmLabel.setForeground(Globals.white);
 				farmLabel.setHorizontalAlignment(SwingConstants.CENTER);
-				farmLabel.setBounds(0,Globals.scale(350),panelWidth,Globals.scale(30));
+				farmLabel.setBounds(0,Globals.scale(150),panelWidth,Globals.scale(30));
 	    		mainFrame.getContentPane().add(farmLabel);
+	    		
+	    		JLabel herbTypeLabel = new JLabel("Planting: ");
+				herbTypeLabel.setBounds(Globals.scale(10),Globals.scale(230),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
+				herbTypeLabel.setFont(Globals.mainFont);
+				herbTypeLabel.setForeground(Globals.buttonForground);
+				herbTypeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+				
+				herbTypeComboBox.setFont(Globals.mainFont);
+				herbTypeComboBox.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(230),Globals.scale(150),Globals.scale(25));
+				herbTypeComboBox.setSelectedItem(Globals.herbType);
+				mainFrame.getContentPane().add(herbTypeComboBox);
+				mainFrame.getContentPane().add(herbTypeLabel);
 				
 				
 				JLabel numOfPatchesLabel = new JLabel();
@@ -315,16 +259,26 @@ public class SettingsPanel {
     			numOfPatchesLabel.setForeground(Globals.buttonForground);
     			numOfPatchesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
     			numOfPatchesLabel.setText("How many patches do you run:");
-    			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(380),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
+    			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(260),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
     			mainFrame.getContentPane().add(numOfPatchesLabel);
     			
     			
     			farmPatchCountSpinner.setForeground(Globals.buttonForground);
     			farmPatchCountSpinner.setBackground(Globals.buttonBackground);
     			farmPatchCountSpinner.setModel(new SpinnerNumberModel(Globals.numberOfPatches, 1, 7, 1));
-    			farmPatchCountSpinner.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(380),Globals.scale(80),Globals.scale(25));
+    			farmPatchCountSpinner.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(260),Globals.scale(150),Globals.scale(25));
     			farmPatchCountSpinner.setFont(Globals.mainFont);
     			mainFrame.getContentPane().add(farmPatchCountSpinner);
+    			
+//				//////////////////////////////////////////////////////////////////////////////
+//				JSeparator separator2 = new JSeparator();
+//				separator2.setBounds(0,Globals.scale(340),panelWidth,Globals.scale(10));
+//				separator2.setBackground(Globals.yellow);
+//				separator2.setForeground(Globals.yellow);
+//				mainFrame.getContentPane().add(separator2);
+//				//////////////////////////////////////////////////////////////////////////////
+				
+				
 	    		
 				//////////////////////////////////////////////////////////////////////////////
 				JSeparator separator3 = new JSeparator();
@@ -383,7 +337,7 @@ public class SettingsPanel {
 				int firstCol = (int) Math.floor((float)Globals.numberOfMonsters/2.0f);
 				int secondCol = (int) Math.ceil((float)Globals.numberOfMonsters/2.0f);
 				int monsterCount = 1;
-				System.out.println(firstCol+","+secondCol);
+				//System.out.println(firstCol+","+secondCol);
 				for(int i = 0; i < firstCol; i++) {
 					JLabel tempLabel = new JLabel("#"+monsterCount+":");
 					tempLabel.setBounds(panelWidth+Globals.scale(20),Globals.scale((25*i)+35),Globals.scale(150),Globals.scale(25));
