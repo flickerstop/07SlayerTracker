@@ -8,12 +8,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
+import javax.sound.sampled.Clip;
+
 public class Globals {
 	
 	/////////////////////////////
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
-	public static boolean isSafeEdit = false;
+	public static boolean isSafeEdit = true;
 	public static String versionNumber = "0.7.5";
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
@@ -21,6 +23,7 @@ public class Globals {
 	public static String settingsFile = path+"\\settings.sav";
 	public static String herbRunFile = path+"\\herbRun.csv";
 	public static String errorFile = path+"\\error.log";
+	public static String outputFile = path+"\\output.log";
 	public static String monstersFile = path+"\\monsters.csv";
 	///////
 	
@@ -52,6 +55,7 @@ public class Globals {
 	public static Color white = new Color(255,255,255);
 	public static Color green = new Color(46, 204, 113);
 	public static Color grey = new Color(150, 150, 150);
+	public static Color iconGrey = new Color(103, 103, 103);
 	public static Color blue = new Color(68,187,255);
 	public static Color red = new Color(231, 76, 60);
 	public static Color yellow = new Color(241, 196, 15);
@@ -64,6 +68,10 @@ public class Globals {
 	public static Color tripsBackground = new Color(255, 51, 51);
 	public static Color otherInfoBackground = new Color(0, 204, 255);
 	
+	public static long farmTimerStart;
+	public static long farmTimerStop;
+	
+	public static Clip clip;
 	
 	public static String[] herbTypes = {
 			"Snapdragon",
@@ -156,6 +164,7 @@ public class Globals {
 	
 	public static void save() {
 		savePrefMonsters();
+		
 		Object[] toSave = {scale,
 				buttonBackground.getRGB(),
 				panelBackground.getRGB(),
@@ -170,7 +179,10 @@ public class Globals {
 				deathPrice,
 				chaosPrice,
 				waterPrice,
-				herbType};
+				herbType,
+				farmTimerStart,
+				farmTimerStop
+				};
 		String output = "";
 		for(int i = 0; i <toSave.length;i++) {
 			output += toSave[i];
@@ -243,6 +255,9 @@ public class Globals {
 			chaosPrice = Integer.parseInt(temp[12]);
 			waterPrice = Integer.parseInt(temp[13]);
 			herbType = temp[14];
+			farmTimerStart = Long.parseLong(temp[15]);
+			farmTimerStop = Long.parseLong(temp[16]);
+			System.out.println(farmTimerStart);
 		}catch(ArrayIndexOutOfBoundsException e) {
 			save();
 			load();

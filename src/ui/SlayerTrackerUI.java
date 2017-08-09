@@ -12,6 +12,8 @@ import java.awt.Cursor;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -24,7 +26,11 @@ import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.text.NumberFormatter;
 
@@ -41,6 +47,7 @@ import java.awt.Frame;
 
 import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Toolkit;
 
@@ -69,8 +76,10 @@ public class SlayerTrackerUI {
 		try {
 			PrintStream logFile = new PrintStream(new FileOutputStream(Globals.errorFile, true));
 			logFile.println("---------------\n"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+"\n---------------");
+			PrintStream outFile = new PrintStream(new FileOutputStream(Globals.outputFile, true));
+			outFile.println("---------------\n"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+"\n---------------");
 			if(!Globals.isSafeEdit) {
-				System.setOut(logFile);
+				System.setOut(outFile);
 				System.setErr(logFile);
 			}
 		} catch (IOException e) {
@@ -134,6 +143,7 @@ public class SlayerTrackerUI {
 		    public void windowClosing(WindowEvent e)
 		    {
 		        player.save();
+		        Globals.save();
 		    }
 		});
 		
@@ -253,7 +263,11 @@ public class SlayerTrackerUI {
 		farmButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			FarmRunPanel.build(false);
+    			if(!FarmRunPanel.isInit()) {
+    				FarmRunPanel.build(false);
+    			}else {
+    				FarmRunPanel.makeVisible();
+    			}
     		}
 		});
 		topBar.add(farmButton);
@@ -266,6 +280,14 @@ public class SlayerTrackerUI {
 		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		titleLabel.setFont(Globals.mainFont);
 		topBar.add(titleLabel);
+		
+		JLabel farmRunLabel = new JLabel();
+		farmRunLabel.setBounds(0,0,panelWidth,Globals.scale(25));
+		farmRunLabel.setText("00:00:00");
+		farmRunLabel.setForeground(Globals.iconGrey);
+		farmRunLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		farmRunLabel.setFont(Globals.mainFont);
+		topBar.add(farmRunLabel);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Panels
 
@@ -359,21 +381,7 @@ public class SlayerTrackerUI {
 			}
 		}
 	
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Farm Run);
-		
-//		JButton startFarmRunButton = new JButton("Farm Run Timer");
-//		startFarmRunButton.setForeground(Globals.buttonForground);
-//		startFarmRunButton.setBackground(Globals.buttonBackground);
-//		startFarmRunButton.setFont(Globals.mainFont);
-//		startFarmRunButton.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent arg0) {
-//				FarmRunPanel.build(false);
-//			}
-//		});
-//		startFarmRunButton.setBounds(panelWidth-Globals.scale(150), Globals.scale(60), Globals.scale(150), Globals.scale(25));
-//		mainPanel.add(startFarmRunButton);
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Cannonballs
 		updateCannonballs();
@@ -586,12 +594,50 @@ public class SlayerTrackerUI {
 					mainPanel.setVisible(true);
 					addRunesPanel.setVisible(false);
 				}
+				
 			}
 		});
 		acceptChangeRunesButton.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(250), Globals.scale(150), Globals.scale(25));
 		addRunesPanel.add(acceptChangeRunesButton);
-
 		
+		try {  
+    		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(SlayerTrackerUI.class.getResource("/sounds/alarm.wav"));
+    		if(Globals.clip == null) {
+        		Globals.clip = AudioSystem.getClip();
+        		Globals.clip.open(audioInputStream);
+    		}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		////////////
+		// Farming timer
+		final Timer timer = new Timer(500, new ActionListener() {
+    		@Override
+    		public void actionPerformed(final ActionEvent e) {
+    			
+    			// If timer End
+    			if(System.currentTimeMillis() > Globals.farmTimerStop && Globals.farmTimerStop != 0) {
+    				if(!Globals.clip.isRunning()) {
+    					Globals.clip.loop(Clip.LOOP_CONTINUOUSLY);
+    				}
+    				farmRunLabel.setText("00:00:00");
+    				
+    			}else if(Globals.farmTimerStart > 0 && Globals.farmTimerStop != 0) { // if timer started
+    				long millis = Globals.farmTimerStop - System.currentTimeMillis();
+    			    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+    			            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+    			            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+    			    farmRunLabel.setText(hms);
+    			}
+    			if(Globals.farmTimerStart == 0 || Globals.farmTimerStop == 0) {
+    				farmRunLabel.setText("00:00:00");
+    			}
+    			
+    		}
+    		
+		});
+		timer.start();
 	}
 	public void updateCannonballs() {
 		txtpnCannonballs.setText("Cannonballs: "+player.getCannonballs());
@@ -611,14 +657,6 @@ public class SlayerTrackerUI {
 		if(count == 0) {
 			monsterCountSpinner.setBackground(new Color(255, 0, 0));
 		}else {
-			// This if fixes the issue of unlimited panes being created
-			// TODO FIXME Find a way to fix this damn issue
-			// if this is commented out, unlimited panels are made
-			// BUT going from a monsterpane to add cannonballs causes it
-			// to delete the cannonball pane
-//			if(mainFrame.getContentPane().getComponentCount() > 3) {
-//				mainFrame.getContentPane().remove(mainFrame.getContentPane().getComponentCount()-1);
-//			}
 			monsterCountSpinner.setBackground(Globals.buttonBackground);
 			mainPanel.setVisible(false);
 			if(monsterPanel== null) {

@@ -33,12 +33,11 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 
 public class FarmRunPanel {
-	private static long timerStart;
-	private static long timerStop;
-	private static JTextField timerTextField;
-	private static Clip clip;
-	private static JLabel endTimeLabel;
 	
+	private static JTextField timerTextField;
+	
+	private static JLabel endTimeLabel;
+	private static JFrame mainFrame;
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -55,7 +54,7 @@ public class FarmRunPanel {
         		int panelWidth = width;
         		int panelHeight = height;
         		
-            	JFrame mainFrame = new JFrame("Test");
+        		mainFrame = new JFrame("Test");
             	mainFrame.setUndecorated(true);
             	mainFrame.getContentPane().setBackground(Globals.panelBackground);
             	mainFrame.setResizable(false);
@@ -219,12 +218,14 @@ public class FarmRunPanel {
         		public void actionPerformed(final ActionEvent e) {
         			
         			// If timer End
-        			if(System.currentTimeMillis() > timerStop && timerStop != 0) {
-        				clip.loop(Clip.LOOP_CONTINUOUSLY);
+        			if(System.currentTimeMillis() > Globals.farmTimerStop && Globals.farmTimerStop != 0) {
+        				if(!Globals.clip.isRunning()) {
+        					Globals.clip.loop(Clip.LOOP_CONTINUOUSLY);
+        				}
         				stopTimerButton.setEnabled(true);
         				timerTextField.setText("00:00:00");
-        			}else if(timerStart > 0 && timerStop != 0) { // if timer started
-        				long millis = timerStop - System.currentTimeMillis();
+        			}else if(Globals.farmTimerStart > 0 && Globals.farmTimerStop != 0) { // if timer started
+        				long millis = Globals.farmTimerStop - System.currentTimeMillis();
         			    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
         			            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
         			            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
@@ -235,19 +236,28 @@ public class FarmRunPanel {
         		
         		});
         		
-        		try {  
-	        		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(SlayerTrackerUI.class.getResource("/sounds/alarm.wav"));
-	        		clip = AudioSystem.getClip();
-	        		clip.open(audioInputStream);
-        		}catch(Exception e) {
-        			e.printStackTrace();
+        		if(Globals.farmTimerStop > 0) {
+        			ZonedDateTime startOfToday = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
+        			long todayMillis1 = startOfToday.toEpochSecond() * 1000;
+        			long millis = Globals.farmTimerStop - todayMillis1;
+        			if(millis > (3600000*12)) {
+        				millis -= (3600000*12);
+        			}
+        		    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+        		            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+        		            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        		    endTimeLabel.setText("Farm run at "+hms);
+        		    stopTimerButton.setEnabled(true);
+        		    startTimerButton.setEnabled(false);
+        		}else {
+        			stopTimerButton.setEnabled(false);
+        			startTimerButton.setEnabled(true);
         		}
         		
         		mainFrame.setLocationByPlatform(true);
                 mainFrame.setVisible(true);
                 mainFrame.setResizable(false);
-                stopTimerButton.setEnabled(false);
-    			startTimerButton.setEnabled(true);
+                
     			
     			
     			FrameDragListener frameDragListener = new FrameDragListener(mainFrame);
@@ -261,8 +271,8 @@ public class FarmRunPanel {
 	}
 	public static void startTimer() {
 		int timerLength = 4800000; //4800000;
-		timerStart = System.currentTimeMillis();
-		timerStop = System.currentTimeMillis() + timerLength;
+		Globals.farmTimerStart = System.currentTimeMillis();
+		Globals.farmTimerStop = System.currentTimeMillis() + timerLength;
 		ZonedDateTime startOfToday = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
 		long todayMillis1 = startOfToday.toEpochSecond() * 1000;
 		long millis = (System.currentTimeMillis() - todayMillis1)+timerLength;
@@ -276,8 +286,8 @@ public class FarmRunPanel {
 	}
 	public static void startTimer(int length) {
 		int timerLength = length; //4800000;
-		timerStart = System.currentTimeMillis();
-		timerStop = System.currentTimeMillis() + timerLength;
+		Globals.farmTimerStart = System.currentTimeMillis();
+		Globals.farmTimerStop = System.currentTimeMillis() + timerLength;
 		ZonedDateTime startOfToday = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
 		long todayMillis1 = startOfToday.toEpochSecond() * 1000;
 		long millis = (System.currentTimeMillis() - todayMillis1)+timerLength;
@@ -290,9 +300,9 @@ public class FarmRunPanel {
 	    endTimeLabel.setText("Farm run at "+hms);
 	}
 	public static void stopTimer() {
-		timerStop = 0;
-		timerStart = 0;
-		clip.stop();
+		Globals.farmTimerStop = 0;
+		Globals.farmTimerStart = 0;
+		Globals.clip.stop();
 		timerTextField.setText("00:00:00");
 		endTimeLabel.setText("Start the timer!");
 	}
@@ -322,6 +332,23 @@ public class FarmRunPanel {
 	
 	private static void openSaveFarmRun() {
 		SaveFarmRun.build();
-		
+	}
+	
+	public static void makeVisible() {
+		mainFrame.setVisible(true);
+		mainFrame.setState(Frame.NORMAL);
+	}
+	public static void makeInvisible() {
+		mainFrame.setVisible(false);
+	}
+	public static boolean isVisible() {
+		return mainFrame.isVisible();
+	}
+	public static boolean isInit() {
+		if(mainFrame == null) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 }

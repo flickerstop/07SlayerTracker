@@ -176,17 +176,31 @@ public class MonsterPanel{
 				time = 0;
 			}
 			time += pauseTime;
-			//System.out.println(time);
-			// If valid end
-			/////////////////////////////
-			// 3 = task without cannon
-			// 5 = cannon 
-			// 7 = burst 
-			// 8 = cannon/burst
+
 			
 			// player.finishCannonTask(name, count, profit, cannonballLeft);
 			if(profit != 0) {
 				//System.out.println("pong");
+				if(!Globals.isSafeEdit) {
+					System.out.println("~~~~~~~~~~~~~~~~~~~");
+					System.out.println(count+" "+name);
+					System.out.println("time : "+ time);
+					System.out.println("profit : "+ profit);
+					System.out.println("cannonballs : "+ player.getCannonballs());
+					System.out.println("cannonballLeft : "+ cannonballLeft);
+					System.out.println("deaths : "+ player.getDeathRunes());
+					System.out.println("deathRunesLeft : "+ deathRunesLeft);
+					System.out.println("chaos : "+ player.getChaosRunes());
+					System.out.println("chaosRunesLeft : "+ chaosRunesLeft);
+					System.out.println("waters : "+ player.getWaterRunes());
+					System.out.println("waterRunesLeft : "+ waterRunesLeft);
+				}
+				int tripNum = 0;
+				for(JFormattedTextField trip : trips) {
+					System.out.println("Trip #"+tripNum+": "+ trip.getText());
+					tripNum++;
+				}
+				
 				if(name != "Aberrant Spectres") {
 					for(JFormattedTextField trip : trips) {
 						trip.setBackground(Globals.white);
@@ -568,6 +582,7 @@ public class MonsterPanel{
 		panel.setVisible(true);
 		for(JFormattedTextField trip : trips) {
 			trip.setText("");
+			trip.setValue(null);
 		}
 		r1.setSelected(true);
         isCannon = false;
