@@ -346,7 +346,7 @@ public class SlayerTrackerUI {
 		startFarmRunButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				FarmRunPanel.build(player,false);
+				FarmRunPanel.build(false);
 			}
 		});
 		startFarmRunButton.setBounds(panelWidth-Globals.scale(150), Globals.scale(60), Globals.scale(150), Globals.scale(25));

@@ -42,7 +42,7 @@ public class FarmRunPanel {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public static void build(Player player,boolean isStandAlone) {
+	public static void build(boolean isStandAlone) {
 		EventQueue.invokeLater(new Runnable()
         {
             @Override
