@@ -252,22 +252,22 @@ public class LogPanel {
         			if(temp == null) {
         				//System.err.println("Error in slayerLog with:"+array[0]);
         				temp = Monsters.getMonster(array[0].substring(0, array[0].length() - 1));
-        				if(temp == null) {
-            				System.err.println("Error in slayerLog with:"+array[0]);
-        				}
-        			}else {
-        				String[] time = array[3].split(":");
-            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
-            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
-            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-        				normalModel.addRow(new Object[]{
-        						array[0],
-        						Integer.parseInt(array[1]),
-        						Integer.parseInt(array[2]),
-        						array[3],
-        						exp,
-        						Float.parseFloat(String.format("%.2f", expPerMin))
-        						});
+        			}
+    				if(temp == null) {
+        				System.err.println("Error in slayerLog with:"+array[0]);
+    				} else {
+    				String[] time = array[3].split(":");
+        			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
+        			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
+        			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
+    				normalModel.addRow(new Object[]{
+    						array[0],
+    						Integer.parseInt(array[1]),
+    						Integer.parseInt(array[2]),
+    						array[3],
+    						exp,
+    						Float.parseFloat(String.format("%.2f", expPerMin))
+    						});
         			}
         		}
         		normalTable = new JTable(normalModel);
@@ -612,10 +612,15 @@ public class LogPanel {
 		        String status = (String)table.getModel().getValueAt(row, 0);
 		        
 		        Object[] monster = Monsters.getMonster(status);
+		        // Attempt to knock off the last letter
+		        if(monster == null) {
+		        	monster = Monsters.getMonster(status.substring(0, status.length() - 1));
+		        }
 		        if (monster != null) {
 		            setBackground((Color) monster[3]);
 		            setForeground((Color) monster[4]);
 		        } else {
+		        	
 		            setBackground(Globals.panelBackground);
 		            setForeground(Globals.buttonForground);
 		            
