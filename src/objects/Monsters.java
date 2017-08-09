@@ -20,6 +20,7 @@ public class Monsters {
 			{"Blue Dragons",107,"Blue_dragon.png",new Color(15, 47, 255),new Color(255,255,255)},
 			{"Brine rat",50,"Brine_rat.png",new Color(151,122,121),new Color(255,255,255)},
 			{"Brutal Black Dragon",347,"Brutal_black_dragon.png",new Color(28,25,25),new Color(255,255,255)},
+			{"Brutal Red Dragon",306,"Brutal_red_dragon.png",new Color(255,0,0),new Color(0,0,0)},
 			{"Callisto",312,"Callisto.png",new Color(93,87,87),new Color(255,255,255)},
 			{"Cave Horror",55,"Cave_horror.png",new Color(103,103,96),new Color(255,255,255)},
 			{"Cave Kraken",125,"Cave_kraken.png",new Color(153,123,39),new Color(255,255,255)},
@@ -71,7 +72,7 @@ public class Monsters {
 			{"Venenatis",389,"Venenatis.png",new Color(131,44,40),new Color(255,255,255)},
 			{"Vet'ion",312,"Vet'ion.png",new Color(120,28,118),new Color(255,255,255)},
 			{"Waterfiend",128,"Waterfiend.png",new Color(91,155,146),new Color(255,255,255)},
-			{"Wyverns",210,"Skeletal_Wyvern.png",new Color(163, 239, 139),new Color(255,255,255)},
+			{"Wyverns",210,"Skeletal_Wyvern.png",new Color(216, 231, 255),new Color(0,0,0)},
 			{"Zulrah",500,"Zulrah.png",new Color(187,207,61),new Color(255,255,255)},
 			{"Zygomite",70,"Zygomite_(lv_86).png",new Color(173,87,53),new Color(255,255,255)}
 			

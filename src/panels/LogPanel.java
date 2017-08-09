@@ -250,7 +250,11 @@ public class LogPanel {
         		for(String[] array : log.get(0)) {
         			Object[] temp = Monsters.getMonster(array[0]);
         			if(temp == null) {
-        				System.err.println("Error in slayerLog with:"+array[0]);
+        				//System.err.println("Error in slayerLog with:"+array[0]);
+        				temp = Monsters.getMonster(array[0].substring(0, array[0].length() - 1));
+        				if(temp == null) {
+            				System.err.println("Error in slayerLog with:"+array[0]);
+        				}
         			}else {
         				String[] time = array[3].split(":");
             			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
