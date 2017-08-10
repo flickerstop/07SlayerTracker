@@ -1,0 +1,11 @@
+- Settings panel
+	- Different sounds for alarm
+	
+- Logs
+	- show icons of monster
+	- ability to edit/save
+
+- farm timer
+	- ability to close timer and save time
+	
+- Monster panel

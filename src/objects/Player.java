@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class Player {
 	/////////////////////////////
 	// SAVE EDIT MODE
-	private static boolean isSafeEdit = false;
+	// Is it safe to edit the cannonballs/runes
+	private static boolean isSafeEdit = Globals.isSafeEdit; 
 	//////////////////////////////
 	private static int cannonballs;
 	private static int waterRunes;
@@ -17,11 +18,7 @@ public class Player {
 	private static int deathRunes;
 	private static float avgCannonballPrice;
 	private static CsvExport csv;
-	private static int deathPrice = 258; // prices on 30/07/2017
-	private static int chaosPrice = 101;
-	private static int waterPrice = 5;
-	private static String path = System.getenv("APPDATA")+"\\SlayerTracker";
-	private static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
+
 	/***
 	 * Constructor for player object
 	 */
@@ -33,9 +30,9 @@ public class Player {
 		avgCannonballPrice = 0;
 		if(isSafeEdit) {
 			csv = new CsvExport();
-			savePath = "player.sav";
+			Globals.savePath = "player.sav";
 		}else {
-			csv = new CsvExport(path);
+			csv = new CsvExport(Globals.path);
 		}
 
 	}
@@ -98,6 +95,10 @@ public class Player {
 	public int getDeathRunes() {
 		return deathRunes;
 	}
+	
+	public boolean isSafeEdit() {
+		return isSafeEdit;
+	}
 
 	/**
 	 * Set the amount of death runes
@@ -114,7 +115,7 @@ public class Player {
 		String output = cannonballs + "," + waterRunes + "," + chaosRunes + "," + deathRunes+","+avgCannonballPrice;
 		//System.out.println(output);
 		try {
-			PrintWriter out = new PrintWriter(savePath);
+			PrintWriter out = new PrintWriter(Globals.savePath);
 			out.println(output);
 			out.close();
 		}catch(Exception e) {
@@ -129,7 +130,7 @@ public class Player {
 //		System.out.println(savePath);
 		try {
 			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(savePath));
+			BufferedReader br = new BufferedReader(new FileReader(Globals.savePath));
 		    line = br.readLine();
 		    
 		    br.close();
@@ -142,7 +143,7 @@ public class Player {
 		    avgCannonballPrice = Float.parseFloat(data[4]);
 		    
 		} catch (FileNotFoundException e){
-			new File(path).mkdir();
+			new File(Globals.path).mkdir();
 			save();
 		}catch (Exception e){
 			e.printStackTrace();
@@ -203,7 +204,7 @@ public class Player {
 		}else if(data.length == 7) {
 			// burst
 			// name, count, profit, deathLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterPrice,time
-			Object[] temp = {data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice,data[6]};
+			Object[] temp = {data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[6]};
 			toSend = temp;
 			deathRunes = (int)data[3];
 			chaosRunes = (int)data[4];
@@ -212,7 +213,7 @@ public class Player {
 		else if(data.length == 8) {
 			// burst/cannon
 			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballs Used, deathsLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterprice,time
-			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,deathPrice,chaosPrice,waterPrice,data[7]};
+			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[7]};
 			toSend = temp;
 			deathRunes = (int)data[4];
 			chaosRunes = (int)data[5];
@@ -222,8 +223,8 @@ public class Player {
 		csv.saveLog(toSend);
 	}
 
-	public ArrayList<ArrayList<String[]>> getCannonLog() {
-		return csv.getCannonLog();
+	public ArrayList<ArrayList<String[]>> getLogs() {
+		return csv.getLogs();
 	}
 	
 }

@@ -169,7 +169,7 @@ public class CsvExport {
 		
 	}
 
-	public ArrayList<ArrayList<String[]>> getCannonLog() {
+	public ArrayList<ArrayList<String[]>> getLogs() {
 		ArrayList<ArrayList<String[]>> toSend = new ArrayList<ArrayList<String[]>>();
 		
 		// Get Normal Log
@@ -185,7 +185,7 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			normalLog.add(new String[] {"No Normal log"});
+			normalLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -204,13 +204,13 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			cannonLog.add(new String[] {"No Cannon log"});
+			cannonLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 		toSend.add(cannonLog);
 		
-		// Get Cannon Log
+		// Get Burst Log
 		ArrayList<String[]> burstLog = new ArrayList<String[]>();
 		try {
 			String line = "";
@@ -223,13 +223,13 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			burstLog.add(new String[] {"No Burst log"});
+			burstLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 		toSend.add(burstLog);
 		
-		// Get Cannon Log
+		// Get CannonBurst
 		ArrayList<String[]> cannonBurstLog = new ArrayList<String[]>();
 		try {
 			String line = "";
@@ -242,11 +242,33 @@ public class CsvExport {
 
 		    br.close();
 		}catch(FileNotFoundException e) {
-			cannonBurstLog.add(new String[] {"No Cannon/Burst log"});
+			cannonBurstLog.add(new String[] {"Nothing"});
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		
 		toSend.add(cannonBurstLog);
+		
+		// Get Cannonball
+		ArrayList<String[]> cannonballLog = new ArrayList<String[]>();
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(cannonballFile));  
+			line = br.readLine();
+		    while (line != null) {
+		    	cannonballLog.add(line.split(","));
+		        line = br.readLine();
+		    }
+
+		    br.close();
+		}catch(FileNotFoundException e) {
+			cannonballLog.add(new String[] {"Nothing"});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		toSend.add(cannonballLog);
+
 				
 		return toSend;
 	}
