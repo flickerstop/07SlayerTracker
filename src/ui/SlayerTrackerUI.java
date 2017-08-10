@@ -218,6 +218,7 @@ public class SlayerTrackerUI {
 		}
 		settingsButton.setBounds(panelWidth-Globals.scale(80), 0, Globals.scale(25), Globals.scale(25));
 		settingsButton.setToolTipText("Settings");
+		settingsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		settingsButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
