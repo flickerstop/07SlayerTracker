@@ -16,7 +16,7 @@ public class Globals {
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
 	public static boolean isSafeEdit = true;
-	public static String versionNumber = "0.7.6";
+	public static String versionNumber = "0.7.9";
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
@@ -71,6 +71,8 @@ public class Globals {
 	public static long farmTimerStart;
 	public static long farmTimerStop;
 	
+	public static String magicType = "Ice Burst";
+	
 	public static Clip clip;
 	
 	public static String[] herbTypes = {
@@ -82,6 +84,17 @@ public class Globals {
 			"Cadantine",
 			"Avantoe"
 	};
+	
+	public static String[] magicTypes = {
+			"Ice Burst",
+			"Ice Barrage"
+	};
+	
+	public static String[][] runeCosts = {
+			{"Death Runes", "Chaos Runes", "Water Runes"},
+			{"Death Runes", "Blood Runes", "Water Runes"}
+	};
+	
 	
 	public static boolean isDarkMode = false;
 
@@ -97,6 +110,7 @@ public class Globals {
 	public static int deathPrice = 258; // prices on 30/07/2017
 	public static int chaosPrice = 101;
 	public static int waterPrice = 5;
+	public static int bloodPrice = 0;
 	
 	public static void reload() {
 		if(herbType.equals("Ranarr")) {
@@ -181,7 +195,8 @@ public class Globals {
 				waterPrice,
 				herbType,
 				farmTimerStart,
-				farmTimerStop
+				farmTimerStop,
+				magicType
 				};
 		String output = "";
 		for(int i = 0; i <toSave.length;i++) {
@@ -217,6 +232,12 @@ public class Globals {
 				(GEPrices.getItem("blood rune").getBuyPrice()*8)+
 				(GEPrices.getItem("earth rune").getBuyPrice()*25)
 				);
+		
+		bloodPrice = GEPrices.getItem("blood rune").getBuyPrice();
+		chaosPrice = GEPrices.getItem("chaos rune").getBuyPrice();
+		deathPrice = GEPrices.getItem("death rune").getBuyPrice();
+		waterPrice = GEPrices.getItem("water rune").getBuyPrice();
+		
 		
 		if(isSafeEdit) {
 			savePath = "player.sav";
@@ -257,12 +278,13 @@ public class Globals {
 			herbType = temp[14];
 			farmTimerStart = Long.parseLong(temp[15]);
 			farmTimerStop = Long.parseLong(temp[16]);
-			System.out.println(farmTimerStart);
+			magicType = temp[17];
+			//System.out.println(farmTimerStart);
 		}catch(ArrayIndexOutOfBoundsException e) {
 			save();
 			load();
 		}
-		
+
 		reload();
 	}
 	
@@ -304,5 +326,23 @@ public class Globals {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static String[] getRuneTypes() {
+		int count = 0;
+		for(String i:magicTypes) {
+			if(i.equals(magicType)) {
+				return runeCosts[count];
+			}
+			count++;
+		}
+		return null;
+	}
+	
+	public static boolean isBurst() {
+		return magicTypes[0]==magicType;
+	}
+	public static boolean isBarrage() {
+		return magicTypes[1]==magicType;
 	}
 }

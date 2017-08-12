@@ -30,13 +30,13 @@ public class MonsterPanel{
 	private int count;
 	
 	private JFormattedTextField cannonballsLeftTextField;
-	private JFormattedTextField deathRunesLeftTextField;
-	private JFormattedTextField chaosRunesLeftTextField;
-	private JFormattedTextField waterRunesLeftTextField;
+	private JFormattedTextField rune1LeftTextField;
+	private JFormattedTextField rune2LeftTextField;
+	private JFormattedTextField rune3LeftTextField;
 	JLabel cannonballsLeftLabel = new JLabel("Cannonballs Left");
-	JLabel deathRunesLeftLabel = new JLabel("Death Runes Left");
-	JLabel chaosRunesLeftLabel = new JLabel("Chaos Runes Left");
-	JLabel waterRunesLeftLabel = new JLabel("Water Runes Left");
+	JLabel rune1Label = new JLabel();
+	JLabel rune2Label = new JLabel();
+	JLabel rune3Label = new JLabel();
 	JRadioButton r1 = new JRadioButton("Normal");
 	JRadioButton r2 = new JRadioButton("Cannon");
 	JRadioButton r3 = new JRadioButton("Burst");
@@ -53,7 +53,7 @@ public class MonsterPanel{
 	JPanel panel;
 	
 	boolean isCannon = false;
-	boolean isBurst = false;
+	boolean isMagic = false;
 	
 	public MonsterPanel() {
 		name = "";
@@ -111,9 +111,9 @@ public class MonsterPanel{
 			int profit = 0;
 			int cannonballLeft = -1;
 			long time = 0;
-			int deathRunesLeft = -1;
-			int chaosRunesLeft = -1;
-			int waterRunesLeft = -1;
+			int runes1Left = -1;
+			int runes2Left = -1;
+			int runes3Left = -1;
 
 			////////////////
 			// Get loot
@@ -138,31 +138,31 @@ public class MonsterPanel{
 					return;
 				}
 			}
-			if(isBurst) {
+			if(isMagic) {
 				///////////////
 				// Get cannonballs left
-				if(deathRunesLeftTextField.getText().length() != 0) {
-					deathRunesLeft = Integer.parseInt(deathRunesLeftTextField.getText().replaceAll(",", ""));
-					deathRunesLeftTextField.setBackground(new Color(255, 255,255));
+				if(rune1LeftTextField.getText().length() != 0) {
+					runes1Left = Integer.parseInt(rune1LeftTextField.getText().replaceAll(",", ""));
+					rune1LeftTextField.setBackground(new Color(255, 255,255));
 				}else {
 					// If nothing was entered where cannonballs are left
-					deathRunesLeftTextField.setBackground(new Color(255, 0, 0));
+					rune1LeftTextField.setBackground(new Color(255, 0, 0));
 					return;
 				}
-				if(chaosRunesLeftTextField.getText().length() != 0) {
-					chaosRunesLeft = Integer.parseInt(chaosRunesLeftTextField.getText().replaceAll(",", ""));
-					chaosRunesLeftTextField.setBackground(new Color(255, 255,255));
+				if(rune2LeftTextField.getText().length() != 0) {
+					runes2Left = Integer.parseInt(rune2LeftTextField.getText().replaceAll(",", ""));
+					rune2LeftTextField.setBackground(new Color(255, 255,255));
 				}else {
 					// If nothing was entered where cannonballs are left
-					chaosRunesLeftTextField.setBackground(new Color(255, 0, 0));
+					rune2LeftTextField.setBackground(new Color(255, 0, 0));
 					return;
 				}
-				if(waterRunesLeftTextField.getText().length() != 0) {
-					waterRunesLeft = Integer.parseInt(waterRunesLeftTextField.getText().replaceAll(",", ""));
-					waterRunesLeftTextField.setBackground(new Color(255, 255,255));
+				if(rune3LeftTextField.getText().length() != 0) {
+					runes3Left = Integer.parseInt(rune3LeftTextField.getText().replaceAll(",", ""));
+					rune3LeftTextField.setBackground(new Color(255, 255,255));
 				}else {
 					// If nothing was entered where cannonballs are left
-					waterRunesLeftTextField.setBackground(new Color(255, 0, 0));
+					rune3LeftTextField.setBackground(new Color(255, 0, 0));
 					return;
 				}
 			}
@@ -181,20 +181,6 @@ public class MonsterPanel{
 			// player.finishCannonTask(name, count, profit, cannonballLeft);
 			if(profit != 0) {
 				//System.out.println("pong");
-				if(!Globals.isSafeEdit) {
-					System.out.println("~~~~~~~~~~~~~~~~~~~");
-					System.out.println(count+" "+name);
-					System.out.println("time : "+ time);
-					System.out.println("profit : "+ profit);
-					System.out.println("cannonballs : "+ player.getCannonballs());
-					System.out.println("cannonballLeft : "+ cannonballLeft);
-					System.out.println("deaths : "+ player.getDeathRunes());
-					System.out.println("deathRunesLeft : "+ deathRunesLeft);
-					System.out.println("chaos : "+ player.getChaosRunes());
-					System.out.println("chaosRunesLeft : "+ chaosRunesLeft);
-					System.out.println("waters : "+ player.getWaterRunes());
-					System.out.println("waterRunesLeft : "+ waterRunesLeft);
-				}
 				int tripNum = 0;
 				for(JFormattedTextField trip : trips) {
 					System.out.println("Trip #"+tripNum+": "+ trip.getText());
@@ -206,23 +192,22 @@ public class MonsterPanel{
 						trip.setBackground(Globals.white);
 					}
 				}
-				if(isCannon && !isBurst) {
+				if(isCannon && !isMagic) {
 					Object[] toSend = {name, count, profit, cannonballLeft, time};
 					player.finishTask(toSend);
-				}else if(!isCannon && isBurst) {
-					Object[] toSend = {name,count, profit, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time};
+				}else if(!isCannon && isMagic) {
+					Object[] toSend = {name,count, profit, runes1Left, runes2Left, runes3Left, time};
 					player.finishTask(toSend);
-				}else if(!isCannon && !isBurst) {
+				}else if(!isCannon && !isMagic) {
 					Object[] toSend = {name, count, profit,time};
 					player.finishTask(toSend);
-				}else if(isCannon && isBurst) {
-					Object[] toSend = {name,count, profit, cannonballLeft, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time};
+				}else if(isCannon && isMagic) {
+					Object[] toSend = {name,count, profit, cannonballLeft, runes1Left, runes2Left, runes3Left, time};
 					player.finishTask(toSend);
 				}
 				panel.setVisible(false);
 				mainPanel.setVisible(true);
 			}else {
-				System.out.println("ping");
 				for(JFormattedTextField trip : trips) {
 					trip.setBackground(Globals.red);
 				}
@@ -309,10 +294,10 @@ public class MonsterPanel{
 		otherInfoPanel.add(otherInfoLabel);
 		
 		
-		r1.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30), (infowidth/2)-Globals.scale(15), rowHeight);    
-		r2.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30)+Globals.scale(20), (infowidth/2)-Globals.scale(15), rowHeight); 
-		r3.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30)+Globals.scale(20*2), (infowidth/2)-Globals.scale(15), rowHeight); 
-		r4.setBounds(infowidth/2-Globals.scale(40), Globals.scale(30)+Globals.scale(20*3), (infowidth/2)-Globals.scale(15), rowHeight); 
+		r1.setBounds(infowidth/2-Globals.scale(80), Globals.scale(30), infowidth, rowHeight);    
+		r2.setBounds(infowidth/2-Globals.scale(80), Globals.scale(30)+Globals.scale(20), infowidth, rowHeight); 
+		r3.setBounds(infowidth/2-Globals.scale(80), Globals.scale(30)+Globals.scale(20*2), infowidth, rowHeight); 
+		r4.setBounds(infowidth/2-Globals.scale(80), Globals.scale(30)+Globals.scale(20*3), infowidth, rowHeight); 
 		r1.setBackground(Globals.otherInfoBackground);
 		r2.setBackground(Globals.otherInfoBackground);
 		r3.setBackground(Globals.otherInfoBackground);
@@ -321,65 +306,67 @@ public class MonsterPanel{
 		r2.setForeground(Globals.buttonForground);
 		r3.setForeground(Globals.buttonForground);
 		r4.setForeground(Globals.buttonForground);
+		r3.setText(Globals.magicType);
+		r4.setText(Globals.magicType+"/Cannon");
 		r1.setSelected(true);
 		r1.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            isCannon = false;
-	            isBurst = false;
+	            isMagic = false;
 	            cannonballsLeftTextField.setVisible(false);
-	            deathRunesLeftTextField.setVisible(false);
-	            chaosRunesLeftTextField.setVisible(false);
-	            waterRunesLeftTextField.setVisible(false);
+	            rune1LeftTextField.setVisible(false);
+	            rune2LeftTextField.setVisible(false);
+	            rune3LeftTextField.setVisible(false);
 	            cannonballsLeftLabel.setVisible(false);
-	            deathRunesLeftLabel.setVisible(false);
-	            chaosRunesLeftLabel.setVisible(false);
-	            waterRunesLeftLabel.setVisible(false);
+	            rune1Label.setVisible(false);
+	            rune2Label.setVisible(false);
+	            rune3Label.setVisible(false);
 	        }
 	    });
 		r2.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            isCannon = true;
-	            isBurst = false;
+	            isMagic = false;
 	            cannonballsLeftTextField.setVisible(true);
-	            deathRunesLeftTextField.setVisible(false);
-	            chaosRunesLeftTextField.setVisible(false);
-	            waterRunesLeftTextField.setVisible(false);
+	            rune1LeftTextField.setVisible(false);
+	            rune2LeftTextField.setVisible(false);
+	            rune3LeftTextField.setVisible(false);
 	            cannonballsLeftLabel.setVisible(true);
-	            deathRunesLeftLabel.setVisible(false);
-	            chaosRunesLeftLabel.setVisible(false);
-	            waterRunesLeftLabel.setVisible(false);
+	            rune1Label.setVisible(false);
+	            rune2Label.setVisible(false);
+	            rune3Label.setVisible(false);
 	        }
 	    });
 		r3.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            isCannon = false;
-	            isBurst = true;
+	            isMagic = true;
 	            cannonballsLeftTextField.setVisible(false);
-	            deathRunesLeftTextField.setVisible(true);
-	            chaosRunesLeftTextField.setVisible(true);
-	            waterRunesLeftTextField.setVisible(true);
+	            rune1LeftTextField.setVisible(true);
+	            rune2LeftTextField.setVisible(true);
+	            rune3LeftTextField.setVisible(true);
 	            cannonballsLeftLabel.setVisible(false);
-	            deathRunesLeftLabel.setVisible(true);
-	            chaosRunesLeftLabel.setVisible(true);
-	            waterRunesLeftLabel.setVisible(true);
+	            rune1Label.setVisible(true);
+	            rune2Label.setVisible(true);
+	            rune3Label.setVisible(true);
 	        }
 	    });
 		r4.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            isCannon = true;
-	            isBurst = true;
+	            isMagic = true;
 	            cannonballsLeftTextField.setVisible(true);
-	            deathRunesLeftTextField.setVisible(true);
-	            chaosRunesLeftTextField.setVisible(true);
-	            waterRunesLeftTextField.setVisible(true);
+	            rune1LeftTextField.setVisible(true);
+	            rune2LeftTextField.setVisible(true);
+	            rune3LeftTextField.setVisible(true);
 	            cannonballsLeftLabel.setVisible(true);
-	            deathRunesLeftLabel.setVisible(true);
-	            chaosRunesLeftLabel.setVisible(true);
-	            waterRunesLeftLabel.setVisible(true);
+	            rune1Label.setVisible(true);
+	            rune2Label.setVisible(true);
+	            rune3Label.setVisible(true);
 	        }
 	    });
 		ButtonGroup bg = new ButtonGroup();    
@@ -408,46 +395,50 @@ public class MonsterPanel{
 		cannonballsLeftTextField.setVisible(false);
 		
 		
-		deathRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		deathRunesLeftLabel.setFont(Globals.mainFont);
-		deathRunesLeftLabel.setForeground(Globals.buttonForground);
-		deathRunesLeftLabel.setBounds(0, Globals.scale(120)+rowHeight, infowidth/2, rowHeight);
-		deathRunesLeftLabel.setVisible(false);
-		otherInfoPanel.add(deathRunesLeftLabel);
-		deathRunesLeftTextField = new JFormattedTextField(formatter);
-		deathRunesLeftTextField.setFont(Globals.mainFont);
-		deathRunesLeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight, (infowidth/2)-Globals.scale(15), rowHeight);
-		otherInfoPanel.add(deathRunesLeftTextField);
-		deathRunesLeftTextField.setColumns(10);
-		deathRunesLeftTextField.setVisible(false);
+		rune1Label.setHorizontalAlignment(SwingConstants.CENTER);
+		rune1Label.setFont(Globals.mainFont);
+		rune1Label.setForeground(Globals.buttonForground);
+		rune1Label.setBounds(0, Globals.scale(120)+rowHeight, infowidth/2, rowHeight);
+		rune1Label.setVisible(false);
+		otherInfoPanel.add(rune1Label);
+		rune1LeftTextField = new JFormattedTextField(formatter);
+		rune1LeftTextField.setFont(Globals.mainFont);
+		rune1LeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight, (infowidth/2)-Globals.scale(15), rowHeight);
+		otherInfoPanel.add(rune1LeftTextField);
+		rune1LeftTextField.setColumns(10);
+		rune1LeftTextField.setVisible(false);
 		
 		
-		chaosRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		chaosRunesLeftLabel.setFont(Globals.mainFont);
-		chaosRunesLeftLabel.setForeground(Globals.buttonForground);
-		chaosRunesLeftLabel.setBounds(0, Globals.scale(120)+rowHeight*2, infowidth/2, rowHeight);
-		chaosRunesLeftLabel.setVisible(false);
-		otherInfoPanel.add(chaosRunesLeftLabel);
-		chaosRunesLeftTextField = new JFormattedTextField(formatter);
-		chaosRunesLeftTextField.setFont(Globals.mainFont);
-		chaosRunesLeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight*2, (infowidth/2)-Globals.scale(15), rowHeight);
-		otherInfoPanel.add(chaosRunesLeftTextField);
-		chaosRunesLeftTextField.setColumns(10);
-		chaosRunesLeftTextField.setVisible(false);
+		rune2Label.setHorizontalAlignment(SwingConstants.CENTER);
+		rune2Label.setFont(Globals.mainFont);
+		rune2Label.setForeground(Globals.buttonForground);
+		rune2Label.setBounds(0, Globals.scale(120)+rowHeight*2, infowidth/2, rowHeight);
+		rune2Label.setVisible(false);
+		otherInfoPanel.add(rune2Label);
+		rune2LeftTextField = new JFormattedTextField(formatter);
+		rune2LeftTextField.setFont(Globals.mainFont);
+		rune2LeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight*2, (infowidth/2)-Globals.scale(15), rowHeight);
+		otherInfoPanel.add(rune2LeftTextField);
+		rune2LeftTextField.setColumns(10);
+		rune2LeftTextField.setVisible(false);
 		
 		
-		waterRunesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		waterRunesLeftLabel.setFont(Globals.mainFont);
-		waterRunesLeftLabel.setForeground(Globals.buttonForground);
-		waterRunesLeftLabel.setVisible(false);
-		waterRunesLeftLabel.setBounds(0, Globals.scale(120)+rowHeight*3, infowidth/2, rowHeight);
-		otherInfoPanel.add(waterRunesLeftLabel);
-		waterRunesLeftTextField = new JFormattedTextField(formatter);
-		waterRunesLeftTextField.setFont(Globals.mainFont);
-		waterRunesLeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight*3, (infowidth/2)-Globals.scale(15), rowHeight);
-		otherInfoPanel.add(waterRunesLeftTextField);
-		waterRunesLeftTextField.setColumns(10);
-		waterRunesLeftTextField.setVisible(false);
+		rune3Label.setHorizontalAlignment(SwingConstants.CENTER);
+		rune3Label.setFont(Globals.mainFont);
+		rune3Label.setForeground(Globals.buttonForground);
+		rune3Label.setVisible(false);
+		rune3Label.setBounds(0, Globals.scale(120)+rowHeight*3, infowidth/2, rowHeight);
+		otherInfoPanel.add(rune3Label);
+		rune3LeftTextField = new JFormattedTextField(formatter);
+		rune3LeftTextField.setFont(Globals.mainFont);
+		rune3LeftTextField.setBounds(infowidth/2, Globals.scale(120)+rowHeight*3, (infowidth/2)-Globals.scale(15), rowHeight);
+		otherInfoPanel.add(rune3LeftTextField);
+		rune3LeftTextField.setColumns(10);
+		rune3LeftTextField.setVisible(false);
+		
+		rune1Label.setText(Globals.getRuneTypes()[0]);
+		rune2Label.setText(Globals.getRuneTypes()[1]);
+		rune3Label.setText(Globals.getRuneTypes()[2]);
 		
 		//////////////
 		// Timer
@@ -586,15 +577,15 @@ public class MonsterPanel{
 		}
 		r1.setSelected(true);
         isCannon = false;
-        isBurst = false;
+        isMagic = false;
         cannonballsLeftTextField.setVisible(false);
-        deathRunesLeftTextField.setVisible(false);
-        chaosRunesLeftTextField.setVisible(false);
-        waterRunesLeftTextField.setVisible(false);
+        rune1LeftTextField.setVisible(false);
+        rune2LeftTextField.setVisible(false);
+        rune3LeftTextField.setVisible(false);
         cannonballsLeftLabel.setVisible(false);
-        deathRunesLeftLabel.setVisible(false);
-        chaosRunesLeftLabel.setVisible(false);
-        waterRunesLeftLabel.setVisible(false);
+        rune1Label.setVisible(false);
+        rune2Label.setVisible(false);
+        rune3Label.setVisible(false);
         monsterNameLabel.setText(count + " " +monsterName);
         name = monsterName;
         this.count = count;
@@ -607,9 +598,9 @@ public class MonsterPanel{
         }
     	restartTimer();
     	cannonballsLeftTextField.setText("");
-    	deathRunesLeftTextField.setText("");
-    	chaosRunesLeftTextField.setText("");
-    	waterRunesLeftTextField.setText("");
+    	rune1LeftTextField.setText("");
+    	rune2LeftTextField.setText("");
+    	rune3LeftTextField.setText("");
     	HerbPanel.resetFields();
 	}
 	

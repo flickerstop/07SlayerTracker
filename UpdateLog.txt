@@ -1,0 +1,7 @@
+Update 0.7.9
+
+- Can now change spell to barrage or burst
+- Barrage log added
+- Simple colour change on settings menu
+- Can now view update notes
+- Removed 3 columns from cannon&magic log

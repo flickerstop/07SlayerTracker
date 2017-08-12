@@ -11,6 +11,7 @@ public class CsvExport {
 	
 	private String cannonFile = "slayerLogCannon.csv";
 	private String burstFile = "slayerLogBurst.csv";
+	private String barrageFile = "slayerLogBarrage.csv";
 	private String cannonBurstFile = "slayerLogCannonBurst.csv";
 	private String cannonballFile = "cannonballLog.csv";
 	private String slayerFile = "slayerLog.csv";
@@ -27,6 +28,7 @@ public class CsvExport {
 	public CsvExport(String newOutputPath) {
 		cannonFile = newOutputPath + "\\" +cannonFile;
 		burstFile = newOutputPath + "\\" + burstFile;
+		barrageFile = newOutputPath + "\\" + barrageFile;
 		cannonballFile = newOutputPath+ "\\" + cannonballFile;
 		slayerFile = newOutputPath+ "\\" + slayerFile;
 		cannonBurstFile = newOutputPath + "\\"+ cannonBurstFile;
@@ -37,9 +39,9 @@ public class CsvExport {
 	 * @param data array of data to save, must follow specific sizes and guidelines
 	 */
 	public void saveLog(Object[] data) {
-		int deathsUsed;
-		int chaosUsed;
-		int watersUsed;
+		int runes1Used;
+		int runes2Used;
+		int runes3Used;
 		int runeCost;
 		int priceOfBalls;
 		int profit;
@@ -60,28 +62,33 @@ public class CsvExport {
 			toSave = new Object[] {data[0],data[1],data[2],data[4],data[5],priceOfBalls,profit,hms};
 			exportFile = cannonFile;
 			//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
-		}else if(data.length == 13) { // burst
+		}else if(data.length == 13) { // magic
 			//	0		1		2		3		4			5			6				7			8				9			10			11		12	
 			// name, count, profit, deathLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterPrice,time
-			deathsUsed = (int)data[6]- (int)data[3];
-			chaosUsed = (int)data[7]- (int)data[4];
-			watersUsed = (int)data[8]- (int)data[5];
-			runeCost = (deathsUsed*(int)data[9])+(chaosUsed*(int)data[10])+(watersUsed*(int)data[11]);
+			runes1Used = (int)data[6]- (int)data[3];
+			runes2Used = (int)data[7]- (int)data[4];
+			runes3Used = (int)data[8]- (int)data[5];
+			runeCost = (runes1Used*(int)data[9])+(runes2Used*(int)data[10])+(runes3Used*(int)data[11]);
 			profit = (int)data[2]-runeCost;
-			toSave = new Object[] {data[0],data[1],data[2],deathsUsed,chaosUsed,watersUsed,runeCost,profit,hms};
-			exportFile = burstFile;
+			toSave = new Object[] {data[0],data[1],data[2],runes1Used,runes2Used,runes3Used,runeCost,profit,hms};
+			if(Globals.isBurst()) {
+				exportFile = burstFile;
+			}else {
+				exportFile = barrageFile;
+			}
+			
 			// monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit
 		}else if(data.length == 16) {
 			//	0		1		2			3				4				5				6			7		8			9				10			11				12			13			14		15
 			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballsUsed, deathsLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterprice,time
 			priceOfBalls = Math.round((int)data[5]*(float)data[3]);
-			deathsUsed = (int)data[9]- (int)data[6];
-			chaosUsed = (int)data[10]- (int)data[7];
-			watersUsed = (int)data[11]- (int)data[8];
-			runeCost = (deathsUsed*(int)data[12])+(chaosUsed*(int)data[13])+(watersUsed*(int)data[14]);
+			runes1Used = (int)data[9]- (int)data[6];
+			runes2Used = (int)data[10]- (int)data[7];
+			runes3Used = (int)data[11]- (int)data[8];
+			runeCost = (runes1Used*(int)data[12])+(runes2Used*(int)data[13])+(runes3Used*(int)data[14]);
 			profit = (int)data[2] - priceOfBalls - runeCost;
 			exportFile = cannonBurstFile;
-			toSave = new Object[] {data[0],data[1],data[2], data[5], deathsUsed, chaosUsed, watersUsed, priceOfBalls, runeCost, profit, hms};
+			toSave = new Object[] {data[0],data[1],data[2], data[5], runes1Used, runes2Used, runes3Used, priceOfBalls, runeCost, profit, hms};
 			// name, count, loot, cannonballsUsed, deathsUsed, chaosUsed, waterUsed, priceOfBalls, priceOfRunes, profit, time
 		}
 		
@@ -269,6 +276,24 @@ public class CsvExport {
 		
 		toSend.add(cannonballLog);
 
+		// Get Burst Log
+		ArrayList<String[]> barrageLog = new ArrayList<String[]>();
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(barrageFile));  
+			line = br.readLine();
+		    while (line != null) {
+		    	barrageLog.add(line.split(","));
+		        line = br.readLine();
+		    }
+
+		    br.close();
+		}catch(FileNotFoundException e) {
+			barrageLog.add(new String[] {"Nothing"});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		toSend.add(barrageLog);
 				
 		return toSend;
 	}

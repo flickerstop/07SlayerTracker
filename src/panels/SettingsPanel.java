@@ -54,6 +54,7 @@ public class SettingsPanel {
 	        	int panelWidth = width/2;
 	    		int height = Globals.scale(520);
 	    		JSpinner farmPatchCountSpinner = new JSpinner();
+	    		JComboBox<String> magicTypeBox = new JComboBox<String>(Globals.magicTypes);
 	        	mainFrame.getContentPane().setBackground(Globals.black);
 	        	mainFrame.setUndecorated(true);
 	        	mainFrame.setResizable(false);
@@ -139,6 +140,7 @@ public class SettingsPanel {
 	    		mainFrame.getContentPane().add(currentScaleLabel);
 	    		///////////////////////////////////
 	    		// Accept button
+	    		// TODO accept button
 	    		
 	    		JButton acceptChangesButton = new JButton();
 	    		acceptChangesButton.setText("Accept Changes");
@@ -151,7 +153,8 @@ public class SettingsPanel {
 	        		public void mouseClicked(MouseEvent arg0) {
         				mainFrame.setVisible(false);
         				Globals.herbType = (String)herbTypeComboBox.getSelectedItem();
-        				
+        				Globals.magicType = (String)magicTypeBox.getSelectedItem();
+        				System.out.println(Globals.magicType);
         				int i = 0;
         				for(JComboBox<String> box : monstersList) {
         					Globals.prefMonsters[i] = Monsters.getMonster((String)box.getSelectedItem());
@@ -233,8 +236,8 @@ public class SettingsPanel {
 				//////////////////////////////////////////////////////////////////////////////
 				JSeparator separator = new JSeparator();
 				separator.setBounds(0,Globals.scale(140),panelWidth,Globals.scale(10));
-				separator.setBackground(Globals.yellow);
-				separator.setForeground(Globals.yellow);
+				separator.setBackground(Globals.iconGrey);
+				separator.setForeground(Globals.iconGrey);
 				mainFrame.getContentPane().add(separator);
 				//////////////////////////////////////////////////////////////////////////////
 				// Prices
@@ -251,13 +254,13 @@ public class SettingsPanel {
 	    		mainFrame.getContentPane().add(farmLabel);
 	    		
 	    		JLabel herbTypeLabel = new JLabel("Planting: ");
-				herbTypeLabel.setBounds(Globals.scale(10),Globals.scale(230),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
+				herbTypeLabel.setBounds(Globals.scale(10),Globals.scale(180),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
 				herbTypeLabel.setFont(Globals.mainFont);
 				herbTypeLabel.setForeground(Globals.white);
 				herbTypeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 				
 				herbTypeComboBox.setFont(Globals.mainFont);
-				herbTypeComboBox.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(230),Globals.scale(150),Globals.scale(25));
+				herbTypeComboBox.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(180),Globals.scale(150),Globals.scale(25));
 				herbTypeComboBox.setSelectedItem(Globals.herbType);
 				mainFrame.getContentPane().add(herbTypeComboBox);
 				mainFrame.getContentPane().add(herbTypeLabel);
@@ -269,22 +272,45 @@ public class SettingsPanel {
     			numOfPatchesLabel.setForeground(Globals.white);
     			numOfPatchesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
     			numOfPatchesLabel.setText("How many patches do you run:");
-    			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(260),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
+    			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(205),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
     			mainFrame.getContentPane().add(numOfPatchesLabel);
     			
     			
     			farmPatchCountSpinner.setForeground(Globals.white);
     			farmPatchCountSpinner.setBackground(Globals.buttonBackground);
     			farmPatchCountSpinner.setModel(new SpinnerNumberModel(Globals.numberOfPatches, 1, 7, 1));
-    			farmPatchCountSpinner.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(260),Globals.scale(150),Globals.scale(25));
+    			farmPatchCountSpinner.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(205),Globals.scale(150),Globals.scale(25));
     			farmPatchCountSpinner.setFont(Globals.mainFont);
     			mainFrame.getContentPane().add(farmPatchCountSpinner);
+    			
+    			JLabel otherInfo = new JLabel();
+    			otherInfo.setText("Other Info");
+    			otherInfo.setFont(Globals.boldFont);
+    			otherInfo.setForeground(Globals.white);
+    			otherInfo.setHorizontalAlignment(SwingConstants.CENTER);
+    			otherInfo.setBounds(0,Globals.scale(250),panelWidth,Globals.scale(30));
+	    		mainFrame.getContentPane().add(otherInfo);
+	    		
+	    		JLabel magicTypeLabel = new JLabel();
+	    		magicTypeLabel.setFont(Globals.mainFont);
+	    		magicTypeLabel.setForeground(Globals.white);
+	    		magicTypeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+	    		magicTypeLabel.setText("Type of spell:");
+	    		magicTypeLabel.setBounds(Globals.scale(10),Globals.scale(280),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
+    			mainFrame.getContentPane().add(magicTypeLabel);
+    			
+    			// TODO work here
+    			
+    			magicTypeBox.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(280),Globals.scale(150),Globals.scale(25));
+    			magicTypeBox.setFont(Globals.mainFont);
+    			magicTypeBox.setSelectedItem(Globals.magicType);
+    			mainFrame.getContentPane().add(magicTypeBox);
     			
 //				//////////////////////////////////////////////////////////////////////////////
 //				JSeparator separator2 = new JSeparator();
 //				separator2.setBounds(0,Globals.scale(340),panelWidth,Globals.scale(10));
-//				separator2.setBackground(Globals.yellow);
-//				separator2.setForeground(Globals.yellow);
+//				separator2.setBackground(Globals.iconGrey);
+//				separator2.setForeground(Globals.iconGrey);
 //				mainFrame.getContentPane().add(separator2);
 //				//////////////////////////////////////////////////////////////////////////////
 				
@@ -293,8 +319,8 @@ public class SettingsPanel {
 				//////////////////////////////////////////////////////////////////////////////
 				JSeparator separator3 = new JSeparator();
 				separator3.setBounds(0,Globals.scale(350),panelWidth,Globals.scale(10));
-				separator3.setBackground(Globals.yellow);
-				separator3.setForeground(Globals.yellow);
+				separator3.setBackground(Globals.iconGrey);
+				separator3.setForeground(Globals.iconGrey);
 				mainFrame.getContentPane().add(separator3);
 				//////////////////////////////////////////////////////////////////////////////
 				
@@ -313,7 +339,7 @@ public class SettingsPanel {
 							try {
 								Desktop.getDesktop().browse(new URI("https://discord.gg/MA5BFcb"));
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
+							
 								System.err.println(e.getMessage());
 							}
 						}
@@ -377,9 +403,9 @@ public class SettingsPanel {
 				//////////////////////////////////////////////////////////////////////////////
 				JSeparator separator4 = new JSeparator();
 				separator4.setBounds(panelWidth,Globals.scale(30),Globals.scale(10),height-Globals.scale(30));
-				separator4.setBackground(Globals.yellow);
+				separator4.setBackground(Globals.iconGrey);
 				separator4.setOrientation(SwingConstants.VERTICAL);
-				separator4.setForeground(Globals.yellow);
+				separator4.setForeground(Globals.iconGrey);
 				mainFrame.getContentPane().add(separator4);
 				//////////////////////////////////////////////////////////////////////////////
 				

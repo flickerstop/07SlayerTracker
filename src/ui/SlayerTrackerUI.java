@@ -26,6 +26,7 @@ import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.AudioInputStream;
@@ -40,6 +41,7 @@ import panels.FarmRunPanel;
 import panels.LogPanel;
 import panels.MonsterPanel;
 import panels.SettingsPanel;
+import panels.UpdatesPanel;
 
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
@@ -59,6 +61,7 @@ public class SlayerTrackerUI {
 	JTextPane deathRuneTextPane;
 	JTextPane chaosRuneTextPane;
 	JTextPane waterRuneTextPane;
+	JTextPane bloodRuneTextPane;
 	private JPanel mainPanel;
 	private JSpinner monsterCountSpinner;
 	static SlayerTrackerUI window;
@@ -239,7 +242,7 @@ public class SlayerTrackerUI {
 			
 			logsButton.setIcon(imageIcon);
 		}
-		logsButton.setBounds(panelWidth-Globals.scale(115), 0, Globals.scale(25), Globals.scale(25));
+		logsButton.setBounds(panelWidth-Globals.scale(150), 0, Globals.scale(25), Globals.scale(25));
 		logsButton.setToolTipText("Settings");
 		logsButton.addMouseListener(new MouseAdapter() {
     		@Override
@@ -259,7 +262,7 @@ public class SlayerTrackerUI {
 			
 			farmButton.setIcon(imageIcon);
 		}
-		farmButton.setBounds(panelWidth-Globals.scale(150), 0, Globals.scale(25), Globals.scale(25));
+		farmButton.setBounds(panelWidth-Globals.scale(185), 0, Globals.scale(25), Globals.scale(25));
 		farmButton.setToolTipText("Farm Run");
 		farmButton.addMouseListener(new MouseAdapter() {
     		@Override
@@ -272,6 +275,30 @@ public class SlayerTrackerUI {
     		}
 		});
 		topBar.add(farmButton);
+		
+		JLabel updateButton = new JLabel();
+		updateButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		{
+			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/update_icon.png")); // load the image to a imageIcon
+			Image image = imageIcon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			imageIcon = new ImageIcon(newimg);  // transform it back
+			
+			updateButton.setIcon(imageIcon);
+		}
+		updateButton.setBounds(panelWidth-Globals.scale(115), 0, Globals.scale(25), Globals.scale(25));
+		updateButton.setToolTipText("Farm Run");
+		updateButton.addMouseListener(new MouseAdapter() {
+    		@Override
+    		public void mouseClicked(MouseEvent arg0) {
+    			if(!FarmRunPanel.isInit()) {
+    				UpdatesPanel.build();
+    			}else {
+    				UpdatesPanel.makeVisible();
+    			}
+    		}
+		});
+		topBar.add(updateButton);
 		
 		
 		JLabel titleLabel = new JLabel();
@@ -494,27 +521,51 @@ public class SlayerTrackerUI {
 		
 		
 		////////////////////////////////////////////////////
-		// Rune lables
-		deathRuneTextPane = new JTextPane();
-		deathRuneTextPane.setFont(Globals.mainFont);
-		deathRuneTextPane.setBounds(Globals.scale(10), Globals.scale(5), Globals.scale(140), Globals.scale(25));
-		deathRuneTextPane.setEditable(false);
-		deathRuneTextPane.setText("Death Runes: ");
-		mainPanel.add(deathRuneTextPane);
-		
-		chaosRuneTextPane = new JTextPane();
-		chaosRuneTextPane.setFont(Globals.mainFont);
-		chaosRuneTextPane.setEditable(false);
-		chaosRuneTextPane.setBounds(Globals.scale(10), Globals.scale(30), Globals.scale(140), Globals.scale(25));
-		chaosRuneTextPane.setText("Chaos Runes: ");
-		mainPanel.add(chaosRuneTextPane);
-		
-		waterRuneTextPane = new JTextPane();
-		waterRuneTextPane.setEditable(false);
-		waterRuneTextPane.setFont(Globals.mainFont);
-		waterRuneTextPane.setBounds(Globals.scale(10), Globals.scale(55), Globals.scale(140), Globals.scale(25));
-		waterRuneTextPane.setText("Water Runes: ");
-		mainPanel.add(waterRuneTextPane);
+		// Rune lables TODO
+		// Ice burst
+		if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[0])) {
+			deathRuneTextPane = new JTextPane();
+			deathRuneTextPane.setFont(Globals.mainFont);
+			deathRuneTextPane.setBounds(Globals.scale(10), Globals.scale(5), Globals.scale(140), Globals.scale(25));
+			deathRuneTextPane.setEditable(false);
+			deathRuneTextPane.setText("Death Runes: ");
+			mainPanel.add(deathRuneTextPane);
+			
+			chaosRuneTextPane = new JTextPane();
+			chaosRuneTextPane.setFont(Globals.mainFont);
+			chaosRuneTextPane.setEditable(false);
+			chaosRuneTextPane.setBounds(Globals.scale(10), Globals.scale(30), Globals.scale(140), Globals.scale(25));
+			chaosRuneTextPane.setText("Chaos Runes: ");
+			mainPanel.add(chaosRuneTextPane);
+			
+			waterRuneTextPane = new JTextPane();
+			waterRuneTextPane.setEditable(false);
+			waterRuneTextPane.setFont(Globals.mainFont);
+			waterRuneTextPane.setBounds(Globals.scale(10), Globals.scale(55), Globals.scale(140), Globals.scale(25));
+			waterRuneTextPane.setText("Water Runes: ");
+			mainPanel.add(waterRuneTextPane);
+		}else if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[1])) {
+			deathRuneTextPane = new JTextPane();
+			deathRuneTextPane.setFont(Globals.mainFont);
+			deathRuneTextPane.setBounds(Globals.scale(10), Globals.scale(5), Globals.scale(140), Globals.scale(25));
+			deathRuneTextPane.setEditable(false);
+			deathRuneTextPane.setText("Death Runes: ");
+			mainPanel.add(deathRuneTextPane);
+			
+			bloodRuneTextPane = new JTextPane();
+			bloodRuneTextPane.setFont(Globals.mainFont);
+			bloodRuneTextPane.setEditable(false);
+			bloodRuneTextPane.setBounds(Globals.scale(10), Globals.scale(30), Globals.scale(140), Globals.scale(25));
+			bloodRuneTextPane.setText("Blood Runes: ");
+			mainPanel.add(bloodRuneTextPane);
+			
+			waterRuneTextPane = new JTextPane();
+			waterRuneTextPane.setEditable(false);
+			waterRuneTextPane.setFont(Globals.mainFont);
+			waterRuneTextPane.setBounds(Globals.scale(10), Globals.scale(55), Globals.scale(140), Globals.scale(25));
+			waterRuneTextPane.setText("Water Runes: ");
+			mainPanel.add(waterRuneTextPane);
+		}
 		
 		updateRunes();
 		
@@ -536,47 +587,40 @@ public class SlayerTrackerUI {
 		//////////////////////////////////////////////////////
 		// Change Runes Panel
 		
-		JLabel addDeathRunesLabel = new JLabel("Amount of Death Runes");
-		addDeathRunesLabel.setForeground(Globals.buttonForground);
-		addDeathRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addDeathRunesLabel.setFont(Globals.mainFont);
-		addDeathRunesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(100), Globals.scale(150), Globals.scale(25));
-		addRunesPanel.add(addDeathRunesLabel);
 		
-		JFormattedTextField addDeathRunesTextField = new JFormattedTextField(formatter);
-		addDeathRunesTextField.setText(player.getDeathRunes()+"");
-		addDeathRunesTextField.setFont(Globals.mainFont);
-		addDeathRunesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(125), Globals.scale(150), Globals.scale(25));
-		addRunesPanel.add(addDeathRunesTextField);
-		addDeathRunesTextField.setColumns(10);
-		
-		JLabel addChaosRunesLabel = new JLabel("Amount of Chaos Runes");
-		addChaosRunesLabel.setForeground(Globals.buttonForground);
-		addChaosRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addChaosRunesLabel.setFont(Globals.mainFont);
-		addChaosRunesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(150), Globals.scale(150), Globals.scale(25));
-		addRunesPanel.add(addChaosRunesLabel);
-		
-		JFormattedTextField addChaosRunesTextField = new JFormattedTextField(formatter);
-		addChaosRunesTextField.setText(player.getChaosRunes()+"");
-		addChaosRunesTextField.setFont(Globals.mainFont);
-		addChaosRunesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(175), Globals.scale(150), Globals.scale(25));
-		addRunesPanel.add(addChaosRunesTextField);
-		addChaosRunesTextField.setColumns(10);
-		
-		JLabel addWaterRunesLabel = new JLabel("Amount of Water Runes");
-		addWaterRunesLabel.setForeground(Globals.buttonForground);
-		addWaterRunesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		addWaterRunesLabel.setFont(Globals.mainFont);
-		addWaterRunesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(200), Globals.scale(150), Globals.scale(25));
-		addRunesPanel.add(addWaterRunesLabel);
-		
-		JFormattedTextField addWaterRunesTextField = new JFormattedTextField(formatter);
-		addWaterRunesTextField.setText(player.getWaterRunes()+"");
-		addWaterRunesTextField.setFont(Globals.mainFont);
-		addWaterRunesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(225), Globals.scale(150), Globals.scale(25));
-		addRunesPanel.add(addWaterRunesTextField);
-		addWaterRunesTextField.setColumns(10);
+		ArrayList<JFormattedTextField> inputs = new ArrayList<JFormattedTextField>();
+		int typeOfRunes; // Used for runeCosts array
+		if(Globals.magicType.equals(Globals.magicTypes[0])) {
+			typeOfRunes = 0; // if burst
+		}else {
+			typeOfRunes = 1; // if barrage
+		}
+		for (int i = 0; i < 3; i++) {
+			JLabel runesLabel = new JLabel("Amount of "+Globals.runeCosts[typeOfRunes][i]);
+			runesLabel.setForeground(Globals.buttonForground);
+			runesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			runesLabel.setFont(Globals.mainFont);
+			runesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(100+(i*50)), Globals.scale(150), Globals.scale(25));
+			addRunesPanel.add(runesLabel);
+			
+			JFormattedTextField runesTextField = new JFormattedTextField(formatter);
+			if(i == 0) {
+				runesTextField.setText(player.getDeathRunes()+"");
+			}else if (i == 1) {
+				if(typeOfRunes == 0) {
+					runesTextField.setText(player.getChaosRunes()+"");
+				}else {
+					runesTextField.setText(player.getBloodRunes()+"");
+				}
+			}else if (i == 2) {
+				runesTextField.setText(player.getWaterRunes()+"");
+			}
+			runesTextField.setFont(Globals.mainFont);
+			runesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(125+(i*50)), Globals.scale(150), Globals.scale(25));
+			addRunesPanel.add(runesTextField);
+			runesTextField.setColumns(10);
+			inputs.add(runesTextField);
+		}
 		
 		JButton acceptChangeRunesButton = new JButton("Change Runes");
 		acceptChangeRunesButton.setForeground(Globals.buttonForground);
@@ -585,17 +629,30 @@ public class SlayerTrackerUI {
 		acceptChangeRunesButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(addDeathRunesTextField.getText().length() > 0 &&
-						addChaosRunesTextField.getText().length() > 0 &&
-						addWaterRunesTextField.getText().length() > 0) {
-					player.setDeathRunes(Integer.parseInt(addDeathRunesTextField.getText().replaceAll(",", "")));
-					player.setChaosRunes(Integer.parseInt(addChaosRunesTextField.getText().replaceAll(",", "")));
-					player.setWaterRunes(Integer.parseInt(addWaterRunesTextField.getText().replaceAll(",", "")));
+				
+				for(JFormattedTextField i : inputs) {
+					if(i.getText().length() == 0) {
+						i.setBackground(Globals.red);
+						return;
+					}else {
+						i.setBackground(Globals.white);
+					}
+				}
+				if(typeOfRunes == 0) {
+					player.setDeathRunes(Integer.parseInt(inputs.get(0).getText().replaceAll(",", "")));
+					player.setChaosRunes(Integer.parseInt(inputs.get(1).getText().replaceAll(",", "")));
+					player.setWaterRunes(Integer.parseInt(inputs.get(2).getText().replaceAll(",", "")));
+					updateRunes();
+					mainPanel.setVisible(true);
+					addRunesPanel.setVisible(false);
+				}else {
+					player.setDeathRunes(Integer.parseInt(inputs.get(0).getText().replaceAll(",", "")));
+					player.setBloodRunes(Integer.parseInt(inputs.get(1).getText().replaceAll(",", "")));
+					player.setWaterRunes(Integer.parseInt(inputs.get(2).getText().replaceAll(",", "")));
 					updateRunes();
 					mainPanel.setVisible(true);
 					addRunesPanel.setVisible(false);
 				}
-				
 			}
 		});
 		acceptChangeRunesButton.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(250), Globals.scale(150), Globals.scale(25));
@@ -646,9 +703,17 @@ public class SlayerTrackerUI {
 	}
 	
 	public void updateRunes() {
-		deathRuneTextPane.setText("Death Runes: "+player.getDeathRunes());
-		chaosRuneTextPane.setText("Chaos Runes: "+player.getChaosRunes());
-		waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
+		// Ice burst
+		if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[0])) {
+			deathRuneTextPane.setText("Death Runes: "+player.getDeathRunes());
+			chaosRuneTextPane.setText("Chaos Runes: "+player.getChaosRunes());
+			waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
+		}else if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[1])) {
+			// Barrage TODO
+			deathRuneTextPane.setText("Death Runes: "+player.getDeathRunes());
+			bloodRuneTextPane.setText("Blood Runes: "+player.getBloodRunes());
+			waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
+		}
 	}
 	
 

@@ -16,6 +16,7 @@ public class Player {
 	private static int waterRunes;
 	private static int chaosRunes;
 	private static int deathRunes;
+	private static int bloodRunes;
 	private static float avgCannonballPrice;
 	private static CsvExport csv;
 
@@ -27,6 +28,7 @@ public class Player {
 		waterRunes = 0;
 		chaosRunes = 0;
 		deathRunes = 0;
+		bloodRunes = 0;
 		avgCannonballPrice = 0;
 		if(isSafeEdit) {
 			csv = new CsvExport();
@@ -112,7 +114,7 @@ public class Player {
 	 * Save the player data to file
 	 */
 	public void save(){
-		String output = cannonballs + "," + waterRunes + "," + chaosRunes + "," + deathRunes+","+avgCannonballPrice;
+		String output = cannonballs + "," + waterRunes + "," + chaosRunes + "," + deathRunes+","+avgCannonballPrice+","+bloodRunes;
 		//System.out.println(output);
 		try {
 			PrintWriter out = new PrintWriter(Globals.savePath);
@@ -141,6 +143,7 @@ public class Player {
 		    chaosRunes = Integer.parseInt(data[2]);
 		    deathRunes = Integer.parseInt(data[3]);
 		    avgCannonballPrice = Float.parseFloat(data[4]);
+		    bloodRunes = Integer.parseInt(data[5]);
 		    
 		} catch (FileNotFoundException e){
 			new File(Globals.path).mkdir();
@@ -149,7 +152,6 @@ public class Player {
 			e.printStackTrace();
 			save();
 		}
-		
 		
 		//output();
 	}
@@ -202,22 +204,40 @@ public class Player {
 			toSend = temp;
 			cannonballs = (int)data[3];
 		}else if(data.length == 7) {
-			// burst
+			Object[] temp;
+			// magic
 			// name, count, profit, deathLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterPrice,time
-			Object[] temp = {data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[6]};
+			if(Globals.isBurst()) {
+				temp = new Object[]{data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[6]};
+				deathRunes = (int)data[3];
+				chaosRunes = (int)data[4];
+				waterRunes = (int)data[5];
+			}else {
+				temp = new Object[]{data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, bloodRunes, waterRunes,Globals.deathPrice,Globals.bloodPrice,Globals.waterPrice,data[6]};
+				deathRunes = (int)data[3];
+				bloodRunes = (int)data[4];
+				waterRunes = (int)data[5];
+			}
 			toSend = temp;
-			deathRunes = (int)data[3];
-			chaosRunes = (int)data[4];
-			waterRunes = (int)data[5];
+			
 		}
 		else if(data.length == 8) {
 			// burst/cannon
 			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballs Used, deathsLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterprice,time
-			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[7]};
+			Object[] temp;
+			if(Globals.isBurst()) {
+				temp = new Object[]{data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[7]};
+				deathRunes = (int)data[4];
+				chaosRunes = (int)data[5];
+				waterRunes = (int)data[6];
+			}else{
+				temp = new Object[]{data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, bloodRunes, waterRunes,Globals.deathPrice,Globals.bloodPrice,Globals.waterPrice,data[7]};
+				deathRunes = (int)data[4];
+				bloodRunes = (int)data[5];
+				waterRunes = (int)data[6];
+			}
 			toSend = temp;
-			deathRunes = (int)data[4];
-			chaosRunes = (int)data[5];
-			waterRunes = (int)data[6];
+			
 			cannonballs = (int)data[3];
 		}
 		csv.saveLog(toSend);
@@ -225,6 +245,14 @@ public class Player {
 
 	public ArrayList<ArrayList<String[]>> getLogs() {
 		return csv.getLogs();
+	}
+
+	public int getBloodRunes() {
+		return bloodRunes;
+	}
+
+	public void setBloodRunes(int bloodRunes) {
+		Player.bloodRunes = bloodRunes;
 	}
 	
 }
