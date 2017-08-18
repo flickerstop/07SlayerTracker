@@ -25,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
 
 import objects.Globals;
 import objects.Monsters;
-import objects.Player;
 import ui.SlayerTrackerUI;
 import ui.SlayerTrackerUI.FrameDragListener;
 
@@ -35,22 +34,43 @@ public class LogPanel {
 	private static JTable cannonTable;
 	private static JTable burstTable;
 	private static JTable barrageTable;
+	private static JTable tridentTable;
 	private static JTable normalTable;
 	private static JTable cannonBurstTable;
 	private static JTable cannonballTable;
 	private static JTable logTable;
+	
+	
+	static boolean hasCannonLog = true;
+	static boolean hasNormalLog = true;
+	static boolean hasBurstLog = true;
+	static boolean hasBarrageLog = true;
+	static boolean hasTridentLog = true;
+	static boolean hasCannonMagicLog = true;
+	static boolean hasCannonballLog = true;
+	
+	static JButton cannonLogButton;
+	static JButton normalLogButton;
+	static JButton burstLogButton;
+	static JButton barrageLogButton;
+	static JButton tridentLogButton;
+	static JButton cannonBurstLogButton;
+	static JButton cannonballLogButton;
+	static JButton logButton;
+	
+	static int width = Globals.scale(1250);
+	static int height = Globals.scale(550);
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public static void build(Player player) {
+	public static void build() {
 		EventQueue.invokeLater(new Runnable()
         {
             @Override
             public void run()
             {
-            	ArrayList<ArrayList<String[]>> log = player.getLogs();
-            	int width = Globals.scale(1250);
-        		int height = Globals.scale(550);
+            	ArrayList<ArrayList<String[]>> log = Globals.getLogs();
+            	
         		int panelHeight = height-Globals.topMenuBarHeight;
         		
             	JFrame mainFrame = new JFrame("Test");
@@ -136,107 +156,6 @@ public class LogPanel {
         		
         		
         		
-        		//////////////////////////////
-        		// change log buttons
-        		JButton normalLogButton = new JButton("Normal Slayer Logs");
-        		normalLogButton.setFont(Globals.mainFont);
-        		normalLogButton.setMargin(new Insets(0, 0, 0, 0));
-        		normalLogButton.setForeground(Globals.buttonForground);
-        		normalLogButton.setBackground(Globals.buttonBackground);
-        		normalLogButton.addMouseListener(new MouseAdapter() {
-        			@Override
-        			public void mouseClicked(MouseEvent arg0) {
-        				scrollPane.setViewportView(normalTable);
-        			}
-        		});
-        		normalLogButton.setBounds(Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-        		mainFrame.getContentPane().add(normalLogButton);
-        		
-        		
-        		JButton cannonLogButton = new JButton("Cannon Slayer Logs");
-        		cannonLogButton.setFont(Globals.mainFont);
-        		cannonLogButton.setMargin(new Insets(0, 0, 0, 0));
-        		cannonLogButton.setForeground(Globals.buttonForground);
-        		cannonLogButton.setBackground(Globals.buttonBackground);
-        		cannonLogButton.addMouseListener(new MouseAdapter() {
-        			@Override
-        			public void mouseClicked(MouseEvent arg0) {
-        				scrollPane.setViewportView(cannonTable);
-        			}
-        		});
-        		cannonLogButton.setBounds(((width-Globals.scale(10))/7)*1+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-        		mainFrame.getContentPane().add(cannonLogButton);
-        		
-        		
-        		JButton burstLogButton = new JButton("Burst Slayer Logs");
-        		burstLogButton.setFont(Globals.mainFont);
-        		burstLogButton.setMargin(new Insets(0, 0, 0, 0));
-        		burstLogButton.setForeground(Globals.buttonForground);
-        		burstLogButton.setBackground(Globals.buttonBackground);
-        		burstLogButton.addMouseListener(new MouseAdapter() {
-        			@Override
-        			public void mouseClicked(MouseEvent arg0) {
-        				scrollPane.setViewportView(burstTable);
-        			}
-        		});
-        		burstLogButton.setBounds(((width-Globals.scale(10))/7)*2+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-        		mainFrame.getContentPane().add(burstLogButton);
-        		
-        		JButton barrageLogButton = new JButton("Barrage Slayer Logs");
-        		barrageLogButton.setFont(Globals.mainFont);
-        		barrageLogButton.setMargin(new Insets(0, 0, 0, 0));
-        		barrageLogButton.setForeground(Globals.buttonForground);
-        		barrageLogButton.setBackground(Globals.buttonBackground);
-        		barrageLogButton.addMouseListener(new MouseAdapter() {
-        			@Override
-        			public void mouseClicked(MouseEvent arg0) {
-        				scrollPane.setViewportView(barrageTable);
-        			}
-        		});
-        		barrageLogButton.setBounds(((width-Globals.scale(10))/7)*3+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-        		mainFrame.getContentPane().add(barrageLogButton);
-        		
-        		JButton cannonBurstLogButton = new JButton("Cannon/Magic Slayer Logs");
-        		cannonBurstLogButton.setFont(Globals.mainFont);
-        		cannonBurstLogButton.setMargin(new Insets(0, 0, 0, 0));
-        		cannonBurstLogButton.setForeground(Globals.buttonForground);
-        		cannonBurstLogButton.setBackground(Globals.buttonBackground);
-        		cannonBurstLogButton.addMouseListener(new MouseAdapter() {
-        			@Override
-        			public void mouseClicked(MouseEvent arg0) {
-        				scrollPane.setViewportView(cannonBurstTable);
-        			}
-        		});
-        		cannonBurstLogButton.setBounds(((width-Globals.scale(10))/7)*4+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-        		mainFrame.getContentPane().add(cannonBurstLogButton);
-        		
-        		JButton cannonballLogButton = new JButton("Cannonball Purchase Logs");
-        		cannonballLogButton.setFont(Globals.mainFont);
-        		cannonballLogButton.setMargin(new Insets(0, 0, 0, 0));
-        		cannonballLogButton.setForeground(Globals.buttonForground);
-        		cannonballLogButton.setBackground(Globals.buttonBackground);
-        		cannonballLogButton.addMouseListener(new MouseAdapter() {
-        			@Override
-        			public void mouseClicked(MouseEvent arg0) {
-        				scrollPane.setViewportView(cannonballTable);
-        			}
-        		});
-        		cannonballLogButton.setBounds(((width-Globals.scale(10))/7)*5+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-        		mainFrame.getContentPane().add(cannonballLogButton);
-        		
-        		JButton logButton = new JButton("Log of the Logs");
-        		logButton.setFont(Globals.mainFont);
-        		logButton.setMargin(new Insets(0, 0, 0, 0));
-        		logButton.setForeground(Globals.buttonForground);
-        		logButton.setBackground(Globals.buttonBackground);
-        		logButton.addMouseListener(new MouseAdapter() {
-        			@Override
-        			public void mouseClicked(MouseEvent arg0) {
-        				scrollPane.setViewportView(logTable);
-        			}
-        		});
-        		logButton.setBounds(((width-Globals.scale(10))/7)*6+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-        		mainFrame.getContentPane().add(logButton);
         		
         		/////////////////////////////////////////
         		// Normal Slayer
@@ -263,6 +182,9 @@ public class LogPanel {
         		normalModel.addColumn("Slayer Exp");
         		normalModel.addColumn("Exp/min");
         		for(String[] array : log.get(0)) {
+        			if(array[0].equals("Nothing")) {
+						hasNormalLog = false;
+					}
         			Object[] temp = Monsters.getMonster(array[0]);
         			if(temp == null) {
         				//System.err.println("Error in slayerLog with:"+array[0]);
@@ -332,6 +254,9 @@ public class LogPanel {
 				cannonModel.addColumn("Exp/Min");
 				
 				for(String[] array : log.get(1)) {
+					if(array[0].equals("Nothing")) {
+						hasCannonLog = false;
+					}
 					Object[] temp = Monsters.getMonster(array[0]);
         			if(temp == null) {
         				System.err.println("Error in cannonLog with:"+array[0]);
@@ -399,6 +324,9 @@ public class LogPanel {
 				burstModel.addColumn("Slayer Exp");
 				burstModel.addColumn("Exp/Min");
 				for(String[] array : log.get(2)) {
+					if(array[0].equals("Nothing")) {
+						hasBurstLog = false;
+					}
 					Object[] temp = Monsters.getMonster(array[0]);
 					if(temp == null) {
         				System.err.println("Error in burstLog with:"+array[0]);
@@ -440,7 +368,7 @@ public class LogPanel {
 				burstTable.getTableHeader().setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(burstTable);
 				/////////////////////////////////////////
-				// Burst
+				// barrage
 				// monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit,time
 				DefaultTableModel barrageModel = new DefaultTableModel(){
 				@Override
@@ -467,6 +395,9 @@ public class LogPanel {
 				barrageModel.addColumn("Slayer Exp");
 				barrageModel.addColumn("Exp/Min");
 				for(String[] array : log.get(5)) {
+					if(array[0].equals("Nothing")) {
+						hasBarrageLog = false;
+					}
 					Object[] temp = Monsters.getMonster(array[0]);
 					if(temp == null) {
 						System.err.println("Error in barrageLog with:"+array[0]);
@@ -508,6 +439,73 @@ public class LogPanel {
 				barrageTable.getTableHeader().setForeground(Globals.buttonForground);
 				scrollPane.setViewportView(barrageTable);
 				/////////////////////////////////////////
+				// trident
+				// name, count, net profit, charges used, price of charges, profit, time
+				DefaultTableModel tridentModel = new DefaultTableModel(){
+					@Override
+					public Class<?> getColumnClass(int column) {
+						switch (column) {
+						case 0:
+							return String.class;
+						case 10:
+							return Float.class;
+						default:
+							return Integer.class;
+						}
+					}
+				};
+				tridentModel.addColumn("Monster"); 
+				tridentModel.addColumn("Amount"); 
+				tridentModel.addColumn("Net Profit");
+				tridentModel.addColumn("Charges Used");
+				tridentModel.addColumn("Cost of Charges");
+				tridentModel.addColumn("Profit");
+				tridentModel.addColumn("Time");
+				tridentModel.addColumn("Slayer Exp");
+				tridentModel.addColumn("Exp/Min");
+				for(String[] array : log.get(6)) {
+					if(array[0].equals("Nothing")) {
+						hasTridentLog = false;
+					}
+					Object[] temp = Monsters.getMonster(array[0]);
+					if(temp == null) {
+						System.err.println("Error in tridentLog with:"+array[0]);
+					}else {
+						String[] time = array[6].split(":");
+						long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
+						int exp = (Integer.parseInt(array[1])*(int)temp[1]);
+						float expPerMin = ((float)exp/((float)timeInMilli))*60000;
+						tridentModel.addRow(new Object[] {
+								array[0],
+								Integer.parseInt(array[1]),
+								Integer.parseInt(array[2]),
+								Integer.parseInt(array[3]),
+								Integer.parseInt(array[4]),
+								Integer.parseInt(array[5]),
+								array[6],
+								exp,
+								Float.parseFloat(String.format("%.2f", expPerMin))
+								});
+					}
+				}
+				tridentTable = new JTable(tridentModel);
+				tridentTable.setFillsViewportHeight(true);
+				tridentTable.setDefaultRenderer(Object.class, colourCells());
+				tridentTable.setDefaultRenderer(String.class, colourCells());
+				tridentTable.setDefaultRenderer(Integer.class, colourCells());
+				tridentTable.setDefaultRenderer(Float.class, colourCells());
+				tridentTable.setAutoCreateRowSorter(true);
+				tridentTable.setEnabled(false);
+				tridentTable.setRowSelectionAllowed(false);
+				tridentTable.setShowVerticalLines(false);
+				tridentTable.setBackground(Globals.panelBackground);
+				tridentTable.setForeground(Globals.buttonForground);
+				tridentTable.setFont(Globals.mainFont);
+				tridentTable.getTableHeader().setFont(Globals.mainFont);
+				tridentTable.getTableHeader().setBackground(Globals.panelBackground);
+				tridentTable.getTableHeader().setForeground(Globals.buttonForground);
+				scrollPane.setViewportView(tridentTable);
+				/////////////////////////////////////////
 				// Cannon/burst
 				// name, count, loot, cannonballsUsed, deathsUsed, chaosUsed, waterUsed, priceOfBalls, priceOfRunes, profit, time
 				DefaultTableModel cannonMagicModel = new DefaultTableModel(){
@@ -537,6 +535,9 @@ public class LogPanel {
 				cannonMagicModel.addColumn("Slayer Exp");
 				cannonMagicModel.addColumn("Exp/Min");
 				for(String[] array : log.get(3)) {
+					if(array[0].equals("Nothing")) {
+						hasCannonMagicLog = false;
+					}
 					Object[] temp = Monsters.getMonster(array[0]);
 					if(temp == null) {
         				System.err.println("Error in cannonBurstLog with:"+array[0]);
@@ -608,8 +609,8 @@ public class LogPanel {
 				logModel.addColumn("Amount of Kills"); 
 				logModel.addColumn("Total Profit"); 
 
-				int[] amountOfKills = {0,0,0,0,0};
-				int[] totalLoot = {0,0,0,0,0};
+				int[] amountOfKills = {0,0,0,0,0,0,0};
+				int[] totalLoot = {0,0,0,0,0,0,0};
 				int absoluteTotalLoot = 0;
 				int absoluteAmountOfKills = 0;
 				int count = 0;
@@ -641,6 +642,24 @@ public class LogPanel {
 					totalLoot[count] += Integer.parseInt(row[7]);
 				}
 				count++;
+				// Barrage
+				for(String[] row: log.get(5)) {						
+					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
+						break;
+					}
+					amountOfKills[count] += Integer.parseInt(row[1]);
+					totalLoot[count] += Integer.parseInt(row[7]);
+				}
+				count++;
+				// Trident
+				for(String[] row: log.get(6)) {						
+					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
+						break;
+					}
+					amountOfKills[count] += Integer.parseInt(row[1]);
+					totalLoot[count] += Integer.parseInt(row[5]);
+				}
+				count++;
 				// cannon&burst
 				for(String[] row: log.get(3)) {						
 					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
@@ -658,7 +677,9 @@ public class LogPanel {
 				logModel.addRow(new Object[] {"Normal Tasks",amountOfKills[0],totalLoot[0]});
 				logModel.addRow(new Object[] {"Cannon Tasks",amountOfKills[1],totalLoot[1]});
 				logModel.addRow(new Object[] {"Burst Tasks",amountOfKills[2],totalLoot[2]});
-				logModel.addRow(new Object[] {"Burst/Magic Tasks",amountOfKills[3],totalLoot[3]});
+				logModel.addRow(new Object[] {"Barrage Tasks",amountOfKills[3],totalLoot[3]});
+				logModel.addRow(new Object[] {"Trident Tasks",amountOfKills[4],totalLoot[4]});
+				logModel.addRow(new Object[] {"Cannon & Magic Tasks",amountOfKills[5],totalLoot[5]});
 				logModel.addRow(new Object[] {"All Tasks",absoluteAmountOfKills,absoluteTotalLoot});
 				
 				logTable = new JTable(logModel);
@@ -670,8 +691,116 @@ public class LogPanel {
 				logTable.getTableHeader().setBackground(Globals.panelBackground);
 				logTable.getTableHeader().setForeground(Globals.buttonForground);
 				
-			
+				//////////////////////////////
+				// change log buttons
+				normalLogButton = new JButton("Normal Slayer Logs");
+				normalLogButton.setFont(Globals.mainFont);
+				normalLogButton.setMargin(new Insets(0, 0, 0, 0));
+				normalLogButton.setForeground(Globals.buttonForground);
+				normalLogButton.setBackground(Globals.buttonBackground);
+				normalLogButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(normalTable);
+					}
+				});
+				mainFrame.getContentPane().add(normalLogButton);
 				
+				
+				cannonLogButton = new JButton("Cannon Slayer Logs");
+				cannonLogButton.setFont(Globals.mainFont);
+				cannonLogButton.setMargin(new Insets(0, 0, 0, 0));
+				cannonLogButton.setForeground(Globals.buttonForground);
+				cannonLogButton.setBackground(Globals.buttonBackground);
+				cannonLogButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(cannonTable);
+					}
+				});
+				mainFrame.getContentPane().add(cannonLogButton);
+				
+				
+				burstLogButton = new JButton("Burst Slayer Logs");
+				burstLogButton.setFont(Globals.mainFont);
+				burstLogButton.setMargin(new Insets(0, 0, 0, 0));
+				burstLogButton.setForeground(Globals.buttonForground);
+				burstLogButton.setBackground(Globals.buttonBackground);
+				burstLogButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(burstTable);
+					}
+				});
+				mainFrame.getContentPane().add(burstLogButton);
+				
+				barrageLogButton = new JButton("Barrage Slayer Logs");
+				barrageLogButton.setFont(Globals.mainFont);
+				barrageLogButton.setMargin(new Insets(0, 0, 0, 0));
+				barrageLogButton.setForeground(Globals.buttonForground);
+				barrageLogButton.setBackground(Globals.buttonBackground);
+				barrageLogButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(barrageTable);
+					}
+				});
+				mainFrame.getContentPane().add(barrageLogButton);
+				
+				tridentLogButton = new JButton("Trident Slayer Logs");
+				tridentLogButton.setFont(Globals.mainFont);
+				tridentLogButton.setMargin(new Insets(0, 0, 0, 0));
+				tridentLogButton.setForeground(Globals.buttonForground);
+				tridentLogButton.setBackground(Globals.buttonBackground);
+				tridentLogButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(tridentTable);
+					}
+				});
+				mainFrame.getContentPane().add(tridentLogButton);
+				
+				cannonBurstLogButton = new JButton("Cannon/Magic Slayer Logs");
+				cannonBurstLogButton.setFont(Globals.mainFont);
+				cannonBurstLogButton.setMargin(new Insets(0, 0, 0, 0));
+				cannonBurstLogButton.setForeground(Globals.buttonForground);
+				cannonBurstLogButton.setBackground(Globals.buttonBackground);
+				cannonBurstLogButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(cannonBurstTable);
+					}
+				});
+				mainFrame.getContentPane().add(cannonBurstLogButton);
+				
+				cannonballLogButton = new JButton("Cannonball Purchase Logs");
+				cannonballLogButton.setFont(Globals.mainFont);
+				cannonballLogButton.setMargin(new Insets(0, 0, 0, 0));
+				cannonballLogButton.setForeground(Globals.buttonForground);
+				cannonballLogButton.setBackground(Globals.buttonBackground);
+				cannonballLogButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(cannonballTable);
+					}
+				});
+				mainFrame.getContentPane().add(cannonballLogButton);
+				
+				logButton = new JButton("Log of the Logs");
+				logButton.setFont(Globals.mainFont);
+				logButton.setMargin(new Insets(0, 0, 0, 0));
+				logButton.setForeground(Globals.buttonForground);
+				logButton.setBackground(Globals.buttonBackground);
+				logButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						scrollPane.setViewportView(logTable);
+					}
+				});
+				logButton.setBounds(((width-Globals.scale(10))/7)*6+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
+				mainFrame.getContentPane().add(logButton);
+				/////////////////////////////////////////
+				setButtons();
                 mainFrame.setLocationByPlatform(true);
 				mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				mainFrame.setVisible(true);
@@ -713,4 +842,59 @@ public class LogPanel {
 		};
 	}
 	
+	public static void setButtons() {
+		int count = 2;
+		int i = 0;
+		if(hasNormalLog) {
+			count++;
+		}
+		if(hasCannonLog) {
+			count++;
+		}
+		if(hasBurstLog) {
+			count++;
+		}
+		if(hasBarrageLog) {
+			count++;
+		}
+		if(hasCannonMagicLog) {
+			count++;
+		}
+		if(hasTridentLog) {
+			count++;
+		}
+
+		int buttonSize = (width-Globals.scale(10))/count;
+		
+		
+		if(hasNormalLog) {
+			normalLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+			i++;
+		}
+		if(hasCannonLog) {
+			cannonLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+			i++;
+		}
+		if(hasBurstLog) {
+			burstLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+			i++;
+		}
+		if(hasBarrageLog) {
+			barrageLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+			i++;
+		}
+		if(hasTridentLog) {
+			tridentLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+			i++;
+		}
+		if(hasCannonMagicLog) {
+			cannonBurstLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+			i++;
+		}
+		cannonballLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+		i++;
+		logButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+		i++;
+
+	}
 }

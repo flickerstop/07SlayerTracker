@@ -36,7 +36,6 @@ import javax.swing.ImageIcon;
 import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
-import objects.Player;
 import panels.FarmRunPanel;
 import panels.LogPanel;
 import panels.MonsterPanel;
@@ -58,14 +57,14 @@ public class SlayerTrackerUI {
 	int cannonballs = 0;
 	private JFormattedTextField amountOfCannonballsBought;
 	private JFormattedTextField pricePaidForCannonballs;
-	JTextPane deathRuneTextPane;
-	JTextPane chaosRuneTextPane;
-	JTextPane waterRuneTextPane;
+	JTextPane runes1TextPane;
+	JTextPane runes2TextPane;
+	JTextPane runes3TextPane;
 	JTextPane bloodRuneTextPane;
+	JTextPane tridentChargeTextPane;
 	private JPanel mainPanel;
 	private JSpinner monsterCountSpinner;
 	static SlayerTrackerUI window;
-	Player player = new Player();
 	MonsterPanel monsterPanel;
 	
 	JTextPane txtpnCannonballs = new JTextPane();
@@ -114,8 +113,6 @@ public class SlayerTrackerUI {
 	 */
 	private void initialize() {
 		
-		player.load();
-		
 		int width = Globals.width;
 		
 		int height = Globals.height;
@@ -131,7 +128,7 @@ public class SlayerTrackerUI {
 		mainFrame = new JFrame();
 		mainFrame.setUndecorated(true);
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/slayerIcon.png")));
-		if(player.isSafeEdit()) {
+		if(Globals.isSafeEdit) {
 			title = "Jr2254's Slayer Tracker "+Globals.versionNumber+" - SAFE EDIT MODE\r\n";
 		}else {
 			title = "Jr2254's Slayer Tracker "+Globals.versionNumber+"\r\n";
@@ -145,7 +142,6 @@ public class SlayerTrackerUI {
 		{
 		    public void windowClosing(WindowEvent e)
 		    {
-		        player.save();
 		        Globals.save();
 		    }
 		});
@@ -247,7 +243,7 @@ public class SlayerTrackerUI {
 		logsButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			LogPanel.build(player);
+    			LogPanel.build();
     		}
 		});
 		topBar.add(logsButton);
@@ -291,7 +287,7 @@ public class SlayerTrackerUI {
 		updateButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			if(!FarmRunPanel.isInit()) {
+    			if(!UpdatesPanel.isInit()) {
     				UpdatesPanel.build();
     			}else {
     				UpdatesPanel.makeVisible();
@@ -331,7 +327,7 @@ public class SlayerTrackerUI {
 	        {
 	            updateCannonballs();
 	            updateRunes();
-	            player.save();
+	            Globals.save();
 	            monsterCountSpinner.setValue(0);
 	        }
 
@@ -494,7 +490,7 @@ public class SlayerTrackerUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(amountOfCannonballsBought.getText().length() > 0 && pricePaidForCannonballs.getText().length() > 0) {
-					player.updateCannonbals(Integer.parseInt(amountOfCannonballsBought.getText().replaceAll(",", "")), Integer.parseInt(pricePaidForCannonballs.getText().replaceAll(",", "")));
+					Globals.updateCannonbals(Integer.parseInt(amountOfCannonballsBought.getText().replaceAll(",", "")), Integer.parseInt(pricePaidForCannonballs.getText().replaceAll(",", "")));
 					updateCannonballs();
 					mainPanel.setVisible(true);
 					addCannonballsPanel.setVisible(false);
@@ -523,48 +519,33 @@ public class SlayerTrackerUI {
 		////////////////////////////////////////////////////
 		// Rune lables TODO
 		// Ice burst
-		if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[0])) {
-			deathRuneTextPane = new JTextPane();
-			deathRuneTextPane.setFont(Globals.mainFont);
-			deathRuneTextPane.setBounds(Globals.scale(10), Globals.scale(5), Globals.scale(140), Globals.scale(25));
-			deathRuneTextPane.setEditable(false);
-			deathRuneTextPane.setText("Death Runes: ");
-			mainPanel.add(deathRuneTextPane);
-			
-			chaosRuneTextPane = new JTextPane();
-			chaosRuneTextPane.setFont(Globals.mainFont);
-			chaosRuneTextPane.setEditable(false);
-			chaosRuneTextPane.setBounds(Globals.scale(10), Globals.scale(30), Globals.scale(140), Globals.scale(25));
-			chaosRuneTextPane.setText("Chaos Runes: ");
-			mainPanel.add(chaosRuneTextPane);
-			
-			waterRuneTextPane = new JTextPane();
-			waterRuneTextPane.setEditable(false);
-			waterRuneTextPane.setFont(Globals.mainFont);
-			waterRuneTextPane.setBounds(Globals.scale(10), Globals.scale(55), Globals.scale(140), Globals.scale(25));
-			waterRuneTextPane.setText("Water Runes: ");
-			mainPanel.add(waterRuneTextPane);
-		}else if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[1])) {
-			deathRuneTextPane = new JTextPane();
-			deathRuneTextPane.setFont(Globals.mainFont);
-			deathRuneTextPane.setBounds(Globals.scale(10), Globals.scale(5), Globals.scale(140), Globals.scale(25));
-			deathRuneTextPane.setEditable(false);
-			deathRuneTextPane.setText("Death Runes: ");
-			mainPanel.add(deathRuneTextPane);
-			
-			bloodRuneTextPane = new JTextPane();
-			bloodRuneTextPane.setFont(Globals.mainFont);
-			bloodRuneTextPane.setEditable(false);
-			bloodRuneTextPane.setBounds(Globals.scale(10), Globals.scale(30), Globals.scale(140), Globals.scale(25));
-			bloodRuneTextPane.setText("Blood Runes: ");
-			mainPanel.add(bloodRuneTextPane);
-			
-			waterRuneTextPane = new JTextPane();
-			waterRuneTextPane.setEditable(false);
-			waterRuneTextPane.setFont(Globals.mainFont);
-			waterRuneTextPane.setBounds(Globals.scale(10), Globals.scale(55), Globals.scale(140), Globals.scale(25));
-			waterRuneTextPane.setText("Water Runes: ");
-			mainPanel.add(waterRuneTextPane);
+		
+		runes1TextPane = new JTextPane();
+		runes1TextPane.setFont(Globals.mainFont);
+		runes1TextPane.setBounds(Globals.scale(10), Globals.scale(5), Globals.scale(140), Globals.scale(25));
+		runes1TextPane.setEditable(false);
+		runes1TextPane.setText(Globals.getRuneTypes()[0]);
+		mainPanel.add(runes1TextPane);
+		
+		runes2TextPane = new JTextPane();
+		runes2TextPane.setFont(Globals.mainFont);
+		runes2TextPane.setEditable(false);
+		runes2TextPane.setBounds(Globals.scale(10), Globals.scale(30), Globals.scale(140), Globals.scale(25));
+		runes2TextPane.setText(Globals.getRuneTypes()[1]);
+		mainPanel.add(runes2TextPane);
+		
+		runes3TextPane = new JTextPane();
+		runes3TextPane.setEditable(false);
+		runes3TextPane.setFont(Globals.mainFont);
+		runes3TextPane.setBounds(Globals.scale(10), Globals.scale(55), Globals.scale(140), Globals.scale(25));
+		runes3TextPane.setText(Globals.getRuneTypes()[2]);
+		mainPanel.add(runes3TextPane);
+
+		if(Globals.getRuneTypes()[1] == null) {
+			runes2TextPane.setVisible(false);
+		}
+		if(Globals.getRuneTypes()[2] == null) {
+			runes3TextPane.setVisible(false);
 		}
 		
 		updateRunes();
@@ -589,14 +570,10 @@ public class SlayerTrackerUI {
 		
 		
 		ArrayList<JFormattedTextField> inputs = new ArrayList<JFormattedTextField>();
-		int typeOfRunes; // Used for runeCosts array
-		if(Globals.magicType.equals(Globals.magicTypes[0])) {
-			typeOfRunes = 0; // if burst
-		}else {
-			typeOfRunes = 1; // if barrage
-		}
+
+		// Loop for the 3 different rune types
 		for (int i = 0; i < 3; i++) {
-			JLabel runesLabel = new JLabel("Amount of "+Globals.runeCosts[typeOfRunes][i]);
+			JLabel runesLabel = new JLabel("Amount of "+Globals.getRuneTypes()[i]);
 			runesLabel.setForeground(Globals.buttonForground);
 			runesLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			runesLabel.setFont(Globals.mainFont);
@@ -604,22 +581,20 @@ public class SlayerTrackerUI {
 			addRunesPanel.add(runesLabel);
 			
 			JFormattedTextField runesTextField = new JFormattedTextField(formatter);
-			if(i == 0) {
-				runesTextField.setText(player.getDeathRunes()+"");
-			}else if (i == 1) {
-				if(typeOfRunes == 0) {
-					runesTextField.setText(player.getChaosRunes()+"");
-				}else {
-					runesTextField.setText(player.getBloodRunes()+"");
-				}
-			}else if (i == 2) {
-				runesTextField.setText(player.getWaterRunes()+"");
-			}
+			// Death runes
+			
+			runesTextField.setText(Globals.runeAmounts[i]+"");
+			
 			runesTextField.setFont(Globals.mainFont);
 			runesTextField.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(125+(i*50)), Globals.scale(150), Globals.scale(25));
 			addRunesPanel.add(runesTextField);
 			runesTextField.setColumns(10);
 			inputs.add(runesTextField);
+			
+			if(Globals.getRuneTypes()[i] == null) {
+				runesLabel.setVisible(false);
+				runesTextField.setVisible(false);
+			}
 		}
 		
 		JButton acceptChangeRunesButton = new JButton("Change Runes");
@@ -638,21 +613,16 @@ public class SlayerTrackerUI {
 						i.setBackground(Globals.white);
 					}
 				}
-				if(typeOfRunes == 0) {
-					player.setDeathRunes(Integer.parseInt(inputs.get(0).getText().replaceAll(",", "")));
-					player.setChaosRunes(Integer.parseInt(inputs.get(1).getText().replaceAll(",", "")));
-					player.setWaterRunes(Integer.parseInt(inputs.get(2).getText().replaceAll(",", "")));
-					updateRunes();
-					mainPanel.setVisible(true);
-					addRunesPanel.setVisible(false);
-				}else {
-					player.setDeathRunes(Integer.parseInt(inputs.get(0).getText().replaceAll(",", "")));
-					player.setBloodRunes(Integer.parseInt(inputs.get(1).getText().replaceAll(",", "")));
-					player.setWaterRunes(Integer.parseInt(inputs.get(2).getText().replaceAll(",", "")));
-					updateRunes();
-					mainPanel.setVisible(true);
-					addRunesPanel.setVisible(false);
-				}
+				
+				int[] temp = {Integer.parseInt(inputs.get(0).getText().replaceAll(",", "")),
+						Integer.parseInt(inputs.get(1).getText().replaceAll(",", "")),
+						Integer.parseInt(inputs.get(2).getText().replaceAll(",", ""))
+				};
+				Globals.updateRuneNumbers(temp);
+				updateRunes();
+				mainPanel.setVisible(true);
+				addRunesPanel.setVisible(false);
+
 			}
 		});
 		acceptChangeRunesButton.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(250), Globals.scale(150), Globals.scale(25));
@@ -698,21 +668,22 @@ public class SlayerTrackerUI {
 		timer.start();
 	}
 	public void updateCannonballs() {
-		txtpnCannonballs.setText("Cannonballs: "+player.getCannonballs());
+		txtpnCannonballs.setText("Cannonballs: "+Globals.cannonballs);
 		//System.out.println(cannonballs);
 	}
 	
 	public void updateRunes() {
-		// Ice burst
-		if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[0])) {
-			deathRuneTextPane.setText("Death Runes: "+player.getDeathRunes());
-			chaosRuneTextPane.setText("Chaos Runes: "+player.getChaosRunes());
-			waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
-		}else if(Globals.magicType.equalsIgnoreCase(Globals.magicTypes[1])) {
-			// Barrage TODO
-			deathRuneTextPane.setText("Death Runes: "+player.getDeathRunes());
-			bloodRuneTextPane.setText("Blood Runes: "+player.getBloodRunes());
-			waterRuneTextPane.setText("Water Runes: "+player.getWaterRunes());
+		Globals.loadRuneAmounts();
+		runes1TextPane.setText(Globals.getRuneTypes()[0]+": "+Globals.runeAmounts[0]);
+		runes2TextPane.setText(Globals.getRuneTypes()[1]+": "+Globals.runeAmounts[1]);
+		runes3TextPane.setText(Globals.getRuneTypes()[2]+": "+Globals.runeAmounts[2]);
+		runes2TextPane.setVisible(true);
+		runes3TextPane.setVisible(true);
+		if(Globals.getRuneTypes()[1] == null) {
+			runes2TextPane.setVisible(false);
+		}
+		if(Globals.getRuneTypes()[2] == null) {
+			runes3TextPane.setVisible(false);
 		}
 	}
 	
@@ -726,10 +697,10 @@ public class SlayerTrackerUI {
 			monsterCountSpinner.setBackground(Globals.buttonBackground);
 			mainPanel.setVisible(false);
 			if(monsterPanel== null) {
-				monsterPanel = new MonsterPanel(monsterName, null, count, player);
+				monsterPanel = new MonsterPanel(monsterName, null, count);
 				mainFrame.getContentPane().add(monsterPanel.build(mainPanel));
 			}else {
-				monsterPanel.reset(monsterName,count, player);
+				monsterPanel.reset(monsterName,count);
 			}
 		}
 	}
@@ -758,7 +729,7 @@ public class SlayerTrackerUI {
 	
 	public static void reload() {
 		SlayerTrackerUI.mainFrame.setVisible(false);
-		Globals.reload();
+		Globals.reInitData();
 		window = new SlayerTrackerUI();
 		SlayerTrackerUI.mainFrame.setVisible(true);
 	}

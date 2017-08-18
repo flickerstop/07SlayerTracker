@@ -12,14 +12,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import objects.Globals;
+import javax.swing.JScrollPane;
 
 public class UpdatesPanel {
 	
-	private static JFrame mainFrame = new JFrame("Test");
+	private static JFrame mainFrame;
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -30,7 +30,8 @@ public class UpdatesPanel {
 	        @Override
 	        public void run()
 	        {
-	        	String updateText = "Update 0.7.9\n\n- Can now change spell to barrage or burst\n- Barrage log added\n- Simple colour change on settings menu\n- Can now view update notes\n- Removed 3 columns from cannon&magic log\n";
+	        	mainFrame = new JFrame("Test");
+	        	String updateText = "Update 0.7.10\n\n- Moved all data from player object to Globals\n- Completely removed the player object\n- Redid the code for different spells so I can add more easily\n- Log buttons dont show if you dont have a log of that type\n- Added the ability to use a trident\n- Added trident to the logs\n- Fixed an issue where you couldn't enter 0 profit on a task\n\nUpdate 0.7.9\n\n- Can now change spell to barrage or burst\n- Barrage log added\n- Simple colour change on settings menu\n- Can now view update notes\n- Removed 3 columns from cannon&magic log\n";
 	        	int width = Globals.scale(400);
 	    		int height = Globals.scale(200);
 	    		
@@ -71,8 +72,13 @@ public class UpdatesPanel {
 	    		text.setForeground(Globals.buttonForground);
 	    		text.setFont(Globals.mainFont);
 	    		//text.setEnabled(false);
-	    		text.setBounds(Globals.scale(10),Globals.scale(30),width-Globals.scale(20),height-Globals.scale(40));
-	    		mainFrame.getContentPane().add(text);
+	    		//text.setBounds(Globals.scale(10),Globals.scale(30),width-Globals.scale(20),height-Globals.scale(40));
+	    		//mainFrame.getContentPane().add(text);
+	    		
+	    		JScrollPane scrollPane = new JScrollPane();
+	    		scrollPane.setBounds(Globals.scale(10),Globals.scale(30),width-Globals.scale(20),height-Globals.scale(40));
+	    		mainFrame.getContentPane().add(scrollPane);
+	    		scrollPane.setViewportView(text);
 	    		
 	    		mainFrame.setLocationByPlatform(true);
 	            mainFrame.setVisible(true);
@@ -82,7 +88,7 @@ public class UpdatesPanel {
 				FrameDragListener frameDragListener = new FrameDragListener(mainFrame);
 				mainFrame.addMouseListener(frameDragListener);
 				mainFrame.addMouseMotionListener(frameDragListener);
-				
+				scrollPane.getVerticalScrollBar().setValue(0);
 				
 			}
 	    });
@@ -113,5 +119,13 @@ public class UpdatesPanel {
 
 	public static void makeVisible() {
 		mainFrame.setVisible(true);
+	}
+	
+	public static boolean isInit() {
+		if(mainFrame == null) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 }

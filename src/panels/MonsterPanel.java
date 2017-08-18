@@ -22,7 +22,7 @@ import javax.swing.Timer;
 import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
-import objects.Player;
+
 
 public class MonsterPanel{
 	private String name = "";
@@ -47,7 +47,6 @@ public class MonsterPanel{
 	long pauseTime = 0;
 	JLabel monsterNameLabel;
 	private JTextField timerTextField;
-	private Player player;
 	private JPanel tripsPanel = new JPanel();
 	private JPanel herbPanel;
 	JPanel panel;
@@ -61,8 +60,7 @@ public class MonsterPanel{
 		count = 0;
 	}
 	
-	public MonsterPanel(String monsterName, ImageIcon icon, int count, Player player) {
-		this.player = player;
+	public MonsterPanel(String monsterName, ImageIcon icon, int count) {
 		name = monsterName;
 		this.count = count;
 	}
@@ -114,6 +112,7 @@ public class MonsterPanel{
 			int runes1Left = -1;
 			int runes2Left = -1;
 			int runes3Left = -1;
+			boolean hasTripBeenEntered = false;
 
 			////////////////
 			// Get loot
@@ -123,6 +122,7 @@ public class MonsterPanel{
 				for(JFormattedTextField trip : trips) {
 					if(trip.getText().length() != 0) {
 						profit += Integer.parseInt(trip.getText().replaceAll(",", ""));
+						hasTripBeenEntered = true;
 					}
 				}
 			}
@@ -152,6 +152,8 @@ public class MonsterPanel{
 				if(rune2LeftTextField.getText().length() != 0) {
 					runes2Left = Integer.parseInt(rune2LeftTextField.getText().replaceAll(",", ""));
 					rune2LeftTextField.setBackground(new Color(255, 255,255));
+				}else if(Globals.getRuneTypes()[1] == null){
+					runes2Left = -1;
 				}else {
 					// If nothing was entered where cannonballs are left
 					rune2LeftTextField.setBackground(new Color(255, 0, 0));
@@ -160,6 +162,8 @@ public class MonsterPanel{
 				if(rune3LeftTextField.getText().length() != 0) {
 					runes3Left = Integer.parseInt(rune3LeftTextField.getText().replaceAll(",", ""));
 					rune3LeftTextField.setBackground(new Color(255, 255,255));
+				}else if(Globals.getRuneTypes()[2] == null){
+					runes3Left = -1;
 				}else {
 					// If nothing was entered where cannonballs are left
 					rune3LeftTextField.setBackground(new Color(255, 0, 0));
@@ -179,7 +183,7 @@ public class MonsterPanel{
 
 			
 			// player.finishCannonTask(name, count, profit, cannonballLeft);
-			if(profit != 0) {
+			if(hasTripBeenEntered) {
 				//System.out.println("pong");
 				int tripNum = 0;
 				for(JFormattedTextField trip : trips) {
@@ -194,16 +198,16 @@ public class MonsterPanel{
 				}
 				if(isCannon && !isMagic) {
 					Object[] toSend = {name, count, profit, cannonballLeft, time};
-					player.finishTask(toSend);
+					Globals.finishTask(toSend);
 				}else if(!isCannon && isMagic) {
 					Object[] toSend = {name,count, profit, runes1Left, runes2Left, runes3Left, time};
-					player.finishTask(toSend);
+					Globals.finishTask(toSend);
 				}else if(!isCannon && !isMagic) {
 					Object[] toSend = {name, count, profit,time};
-					player.finishTask(toSend);
+					Globals.finishTask(toSend);
 				}else if(isCannon && isMagic) {
 					Object[] toSend = {name,count, profit, cannonballLeft, runes1Left, runes2Left, runes3Left, time};
-					player.finishTask(toSend);
+					Globals.finishTask(toSend);
 				}
 				panel.setVisible(false);
 				mainPanel.setVisible(true);
@@ -309,6 +313,7 @@ public class MonsterPanel{
 		r3.setText(Globals.magicType);
 		r4.setText(Globals.magicType+"/Cannon");
 		r1.setSelected(true);
+		// Normal
 		r1.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
@@ -324,6 +329,7 @@ public class MonsterPanel{
 	            rune3Label.setVisible(false);
 	        }
 	    });
+		// Cannon
 		r2.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
@@ -339,6 +345,7 @@ public class MonsterPanel{
 	            rune3Label.setVisible(false);
 	        }
 	    });
+		// Magic
 		r3.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
@@ -352,8 +359,17 @@ public class MonsterPanel{
 	            rune1Label.setVisible(true);
 	            rune2Label.setVisible(true);
 	            rune3Label.setVisible(true);
+	            if(Globals.getRuneTypes()[1] == null) {
+	            	rune2Label.setVisible(false);
+	            	rune2LeftTextField.setVisible(false);
+	            }
+	            if(Globals.getRuneTypes()[2] == null) {
+	            	rune3Label.setVisible(false);
+	            	rune3LeftTextField.setVisible(false);
+	            }
 	        }
 	    });
+		// Cannon/magic
 		r4.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
@@ -367,6 +383,14 @@ public class MonsterPanel{
 	            rune1Label.setVisible(true);
 	            rune2Label.setVisible(true);
 	            rune3Label.setVisible(true);
+	            if(Globals.getRuneTypes()[1] == null) {
+	            	rune2Label.setVisible(false);
+	            	rune2LeftTextField.setVisible(false);
+	            }
+	            if(Globals.getRuneTypes()[2] == null) {
+	            	rune3Label.setVisible(false);
+	            	rune3LeftTextField.setVisible(false);
+	            }
 	        }
 	    });
 		ButtonGroup bg = new ButtonGroup();    
@@ -569,7 +593,7 @@ public class MonsterPanel{
 		timerTextField.setText("00:00:00");
 	}
 
-	public void reset(String monsterName, int count, Player player2) {
+	public void reset(String monsterName, int count) {
 		panel.setVisible(true);
 		for(JFormattedTextField trip : trips) {
 			trip.setText("");

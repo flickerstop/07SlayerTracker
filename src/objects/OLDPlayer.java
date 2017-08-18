@@ -6,7 +6,8 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class Player {
+
+public class OLDPlayer {
 	/////////////////////////////
 	// SAVE EDIT MODE
 	// Is it safe to edit the cannonballs/runes
@@ -17,26 +18,27 @@ public class Player {
 	private static int chaosRunes;
 	private static int deathRunes;
 	private static int bloodRunes;
+	private static int triCharges;
 	private static float avgCannonballPrice;
 	private static CsvExport csv;
 
 	/***
 	 * Constructor for player object
 	 */
-	public Player() {
+	public OLDPlayer() {
 		cannonballs = 0;
 		waterRunes = 0;
 		chaosRunes = 0;
 		deathRunes = 0;
 		bloodRunes = 0;
+		setTridentCharges(0);
 		avgCannonballPrice = 0;
 		if(isSafeEdit) {
 			csv = new CsvExport();
-			Globals.savePath = "player.sav";
+			Globals.savePath = "OLDPlayer.sav";
 		}else {
 			csv = new CsvExport(Globals.path);
 		}
-
 	}
 
 	/***
@@ -54,8 +56,8 @@ public class Player {
 	 */
 	public void updateCannonbals(int amountToAdd, int price) {
 		csv.updateCannonballLog(amountToAdd, price);
-		Player.cannonballs += amountToAdd;
-		Player.avgCannonballPrice = csv.getAvgCannonballPrice();
+		OLDPlayer.cannonballs += amountToAdd;
+		OLDPlayer.avgCannonballPrice = csv.getAvgCannonballPrice();
 	}
 
 	/***
@@ -71,7 +73,7 @@ public class Player {
 	 * @param waterRunes amount of water runes
 	 */
 	public void setWaterRunes(int waterRunes) {
-		Player.waterRunes = waterRunes;
+		OLDPlayer.waterRunes = waterRunes;
 	}
 
 	/***
@@ -87,7 +89,7 @@ public class Player {
 	 * @param chaosRunes amount of chaos runes
 	 */
 	public void setChaosRunes(int chaosRunes) {
-		Player.chaosRunes = chaosRunes;
+		OLDPlayer.chaosRunes = chaosRunes;
 	}
 
 	/**
@@ -107,14 +109,20 @@ public class Player {
 	 * @param deathRunes amount of death runes
 	 */
 	public void setDeathRunes(int deathRunes) {
-		Player.deathRunes = deathRunes;
+		OLDPlayer.deathRunes = deathRunes;
 	}
 	
 	/**
 	 * Save the player data to file
 	 */
 	public void save(){
-		String output = cannonballs + "," + waterRunes + "," + chaosRunes + "," + deathRunes+","+avgCannonballPrice+","+bloodRunes;
+		String output = cannonballs + "," + 
+				waterRunes + "," + 
+				chaosRunes + "," + 
+				deathRunes+","+
+				avgCannonballPrice+","+
+				bloodRunes+","+
+				triCharges;
 		//System.out.println(output);
 		try {
 			PrintWriter out = new PrintWriter(Globals.savePath);
@@ -144,6 +152,7 @@ public class Player {
 		    deathRunes = Integer.parseInt(data[3]);
 		    avgCannonballPrice = Float.parseFloat(data[4]);
 		    bloodRunes = Integer.parseInt(data[5]);
+		    triCharges = Integer.parseInt(data[6]);
 		    
 		} catch (FileNotFoundException e){
 			new File(Globals.path).mkdir();
@@ -176,7 +185,7 @@ public class Player {
 	 * @param avgCannonballPrice average price of cannonballs
 	 */
 	public void setAvgCannonballPrice(float avgCannonballPrice) {
-		Player.avgCannonballPrice = avgCannonballPrice;
+		OLDPlayer.avgCannonballPrice = avgCannonballPrice;
 	}
 	
 	/***
@@ -252,7 +261,15 @@ public class Player {
 	}
 
 	public void setBloodRunes(int bloodRunes) {
-		Player.bloodRunes = bloodRunes;
+		OLDPlayer.bloodRunes = bloodRunes;
+	}
+
+	public int getTridentCharges() {
+		return triCharges;
+	}
+
+	public static void setTridentCharges(int triCharges) {
+		OLDPlayer.triCharges = triCharges;
 	}
 	
 }

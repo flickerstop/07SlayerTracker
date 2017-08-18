@@ -3,10 +3,12 @@ package objects;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.sound.sampled.Clip;
 
@@ -15,8 +17,8 @@ public class Globals {
 	/////////////////////////////
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
-	public static boolean isSafeEdit = true;
-	public static String versionNumber = "0.7.9";
+	public static boolean isSafeEdit = false;
+	public static String versionNumber = "0.7.10";
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
@@ -26,7 +28,20 @@ public class Globals {
 	public static String outputFile = path+"\\output.log";
 	public static String monstersFile = path+"\\monsters.csv";
 	///////
+	//////////////////////////////////
+	// From Player
 	
+	public static int cannonballs = 0;
+	public static int waterRunes = 0;
+	public static int chaosRunes = 0;
+	public static int deathRunes = 0;
+	public static int bloodRunes = 0;
+	public static int triCharges = 0;
+	public static float avgCannonballPrice = 0;
+	private static CsvExport csv;
+
+	
+	////////////////////
 	
 	
 	public static Object[][] prefMonsters;
@@ -87,14 +102,17 @@ public class Globals {
 	
 	public static String[] magicTypes = {
 			"Ice Burst",
-			"Ice Barrage"
+			"Ice Barrage",
+			"Trident of the Seas"
 	};
 	
 	public static String[][] runeCosts = {
 			{"Death Runes", "Chaos Runes", "Water Runes"},
-			{"Death Runes", "Blood Runes", "Water Runes"}
+			{"Death Runes", "Blood Runes", "Water Runes"},
+			{"Charges",null,null}
 	};
 	
+	public static int[] runeAmounts;
 	
 	public static boolean isDarkMode = false;
 
@@ -111,8 +129,10 @@ public class Globals {
 	public static int chaosPrice = 101;
 	public static int waterPrice = 5;
 	public static int bloodPrice = 0;
+	public static int chargePrice = 0;
 	
-	public static void reload() {
+	public static void reInitData() {
+		loadRuneAmounts();
 		if(herbType.equals("Ranarr")) {
 			herbPrice = GEPrices.getItem("Ranarr weed").getSellPrice();
 		}else if(herbType.equals("Irit")) {
@@ -178,7 +198,7 @@ public class Globals {
 	
 	public static void save() {
 		savePrefMonsters();
-		
+		savePlayer();
 		Object[] toSave = {scale,
 				buttonBackground.getRGB(),
 				panelBackground.getRGB(),
@@ -216,6 +236,13 @@ public class Globals {
 	}
 	
 	public static void load() {
+		if(isSafeEdit) {
+			csv = new CsvExport();
+			Globals.savePath = "player.sav";
+		}else {
+			csv = new CsvExport(Globals.path);
+		}
+		
 		GEPrices.getPrices();
 		if(herbType.equals("Ranarr")) {
 			herbPrice = GEPrices.getItem("Ranarr weed").getSellPrice();
@@ -237,8 +264,8 @@ public class Globals {
 		chaosPrice = GEPrices.getItem("chaos rune").getBuyPrice();
 		deathPrice = GEPrices.getItem("death rune").getBuyPrice();
 		waterPrice = GEPrices.getItem("water rune").getBuyPrice();
-		
-		
+		chargePrice = deathPrice + chaosPrice + (GEPrices.getItem("fire rune").getBuyPrice() * 5) + 10;
+
 		if(isSafeEdit) {
 			savePath = "player.sav";
 			settingsFile = "settings.sav";
@@ -285,7 +312,8 @@ public class Globals {
 			load();
 		}
 
-		reload();
+		loadPlayer();
+		reInitData();
 	}
 	
 	public static void getPrefMonsters() {
@@ -344,5 +372,173 @@ public class Globals {
 	}
 	public static boolean isBarrage() {
 		return magicTypes[1]==magicType;
+	}
+	public static boolean isTrident() {
+		return magicTypes[2]==magicType;
+	}
+	
+	public static void updateCannonbals(int amountToAdd, int price) {
+		csv.updateCannonballLog(amountToAdd, price);
+		cannonballs += amountToAdd;
+		avgCannonballPrice = csv.getAvgCannonballPrice();
+	}
+	
+	public static void savePlayer(){
+		String output = cannonballs + "," + 
+				waterRunes + "," + 
+				chaosRunes + "," + 
+				deathRunes+","+
+				avgCannonballPrice+","+
+				bloodRunes+","+
+				triCharges;
+		//System.out.println(output);
+		try {
+			PrintWriter out = new PrintWriter(Globals.savePath);
+			out.println(output);
+			out.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void loadPlayer() {
+//		System.out.println(savePath);
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(Globals.savePath));
+		    line = br.readLine();
+		    
+		    br.close();
+		    
+		    String[] data = line.split(",");
+		    cannonballs = Integer.parseInt(data[0]);
+		    waterRunes = Integer.parseInt(data[1]);
+		    chaosRunes = Integer.parseInt(data[2]);
+		    deathRunes = Integer.parseInt(data[3]);
+		    avgCannonballPrice = Float.parseFloat(data[4]);
+		    bloodRunes = Integer.parseInt(data[5]);
+		    triCharges = Integer.parseInt(data[6]);
+		    
+		} catch (FileNotFoundException e){
+			new File(Globals.path).mkdir();
+			save();
+		}catch (Exception e){
+			e.printStackTrace();
+			save();
+		}
+		
+		//output();
+	}
+	
+	public static void finishTask(Object[] data) {
+		// 4 = task without cannon
+			// {name, count, profit,time}
+		// 5 = cannon 
+			// {name, count, profit, cannonballLeft, time}
+		// 7 = burst 
+			// {name, count, profit, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time}
+		// 8 = burst & cannon
+			// {name, count, profit, cannonballLeft, deathRunesLeft, chaosRunesLeft, waterRunesLeft, time}
+		Object[] toSend = null;
+		if(data.length == 4) {
+			// without cannon/burst
+			Object[] temp = {data[0], data[1], data[2],data[3]};
+			toSend = temp;
+		}else if(data.length == 5) {
+			// cannon
+			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballs Used,time
+			Object[] temp = {data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]),data[4]};
+			toSend = temp;
+			cannonballs = (int)data[3];
+		}else if(data.length == 7) {
+			Object[] temp;
+			// magic
+			// name, count, profit, deathLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterPrice,time
+			if(isBurst()) {
+				temp = new Object[]{data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[6]};
+				deathRunes = (int)data[3];
+				chaosRunes = (int)data[4];
+				waterRunes = (int)data[5];
+			}else if(isBarrage()){
+				temp = new Object[]{data[0], data[1], data[2], data[3], data[4], data[5], deathRunes, bloodRunes, waterRunes,Globals.deathPrice,Globals.bloodPrice,Globals.waterPrice,data[6]};
+				deathRunes = (int)data[3];
+				bloodRunes = (int)data[4];
+				waterRunes = (int)data[5];
+			}else {
+				temp = new Object[]{data[0], data[1], data[2], data[3], triCharges,data[6]};
+				triCharges = (int) data[3];
+			}
+			toSend = temp;
+		}
+		else if(data.length == 8) {
+			// burst/cannon
+			// name, count, profit, cannonballPrice, cannonballsLeft, cannonballs Used, deathsLeft, chaosLeft, waterLeft, currentDeath, currentChaos, currentWater, deathPrice, chaosPrice, waterprice,time
+			Object[] temp;
+			if(Globals.isBurst()) {
+				temp = new Object[]{data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, chaosRunes, waterRunes,Globals.deathPrice,Globals.chaosPrice,Globals.waterPrice,data[7]};
+				deathRunes = (int)data[4];
+				chaosRunes = (int)data[5];
+				waterRunes = (int)data[6];
+			}else{
+				temp = new Object[]{data[0], data[1], data[2], avgCannonballPrice, data[3], (cannonballs-(int)data[3]), data[4], data[5], data[6], deathRunes, bloodRunes, waterRunes,Globals.deathPrice,Globals.bloodPrice,Globals.waterPrice,data[7]};
+				deathRunes = (int)data[4];
+				bloodRunes = (int)data[5];
+				waterRunes = (int)data[6];
+			}
+			toSend = temp;
+			
+			cannonballs = (int)data[3];
+		}
+		csv.saveLog(toSend);
+	}
+	
+	public static ArrayList<ArrayList<String[]>> getLogs() {
+		return csv.getLogs();
+	}
+	
+	public static void loadRuneAmounts() {
+		/*
+		 * {"Death Runes", "Chaos Runes", "Water Runes"},
+			{"Death Runes", "Blood Runes", "Water Runes"},
+			{"Charges",null,null}
+		 */
+		
+		// Burst
+		if(magicType.equals(magicTypes[0])) {
+			runeAmounts = new int[] {deathRunes,chaosRunes,waterRunes};
+		}
+		// Blitz
+		else if (magicType.equals(magicTypes[1])) {
+			runeAmounts = new int[] {deathRunes,bloodRunes,waterRunes};
+		}
+		// Trident
+		else if (magicType.equals(magicTypes[2])) {
+			runeAmounts = new int[] {triCharges,-1,-1};
+		}
+	}
+	
+	public static void updateRuneNumbers(int[] runes) {
+		for(int i = 0; i< 3; i++) {
+			if(getRuneTypes()[i] == null) {
+				continue;
+			}
+			switch(getRuneTypes()[i]) {
+			case "Chaos Runes":
+				chaosRunes = runes[i];
+				break;
+			case "Death Runes":
+				deathRunes = runes[i];
+				break;
+			case "Blood Runes":
+				bloodRunes = runes[i];
+				break;
+			case "Water Runes":
+				waterRunes = runes[i];
+				break;
+			case "Charges":
+				triCharges = runes[i];
+				break;
+			}
+		}
 	}
 }

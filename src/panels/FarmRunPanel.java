@@ -16,8 +16,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,7 +25,6 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import objects.Globals;
-import objects.Player;
 import ui.SlayerTrackerUI;
 import java.awt.Color;
 import javax.swing.ImageIcon;

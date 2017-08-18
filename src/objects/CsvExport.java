@@ -15,6 +15,7 @@ public class CsvExport {
 	private String cannonBurstFile = "slayerLogCannonBurst.csv";
 	private String cannonballFile = "cannonballLog.csv";
 	private String slayerFile = "slayerLog.csv";
+	private String tridentFile = "slayerLogTrident.csv";
 	
 	public CsvExport() {
 		
@@ -29,6 +30,7 @@ public class CsvExport {
 		cannonFile = newOutputPath + "\\" +cannonFile;
 		burstFile = newOutputPath + "\\" + burstFile;
 		barrageFile = newOutputPath + "\\" + barrageFile;
+		tridentFile = newOutputPath + "\\" + tridentFile;
 		cannonballFile = newOutputPath+ "\\" + cannonballFile;
 		slayerFile = newOutputPath+ "\\" + slayerFile;
 		cannonBurstFile = newOutputPath + "\\"+ cannonBurstFile;
@@ -39,6 +41,7 @@ public class CsvExport {
 	 * @param data array of data to save, must follow specific sizes and guidelines
 	 */
 	public void saveLog(Object[] data) {
+
 		int runes1Used;
 		int runes2Used;
 		int runes3Used;
@@ -48,6 +51,7 @@ public class CsvExport {
 		String exportFile = "test.csv";
 		Object[] toSave = null;
 		long time = (long)data[data.length-1];
+
 		String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(time),
 	            TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)),
 	            TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)));
@@ -61,6 +65,16 @@ public class CsvExport {
 			profit = (int)data[2]-priceOfBalls;
 			toSave = new Object[] {data[0],data[1],data[2],data[4],data[5],priceOfBalls,profit,hms};
 			exportFile = cannonFile;
+			//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
+		}else if(data.length == 6) { // Trident
+			//	0		1		2			3			4			  5
+			// name, count, profit, Charges left, Current Charges ,  time
+			int chargesUsed = ((int)data[4] - (int)data[3]);
+			int priceOfCharges = Math.round(chargesUsed*Globals.chargePrice);
+			profit = (int)data[2]-priceOfCharges;
+			toSave = new Object[] {data[0],data[1],data[2],chargesUsed,priceOfCharges,profit,hms};
+			// name, count, net profit, charges used, price of charges, profit, time
+			exportFile = tridentFile;
 			//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
 		}else if(data.length == 13) { // magic
 			//	0		1		2		3		4			5			6				7			8				9			10			11		12	
@@ -276,7 +290,7 @@ public class CsvExport {
 		
 		toSend.add(cannonballLog);
 
-		// Get Burst Log
+		// Get barrage Log
 		ArrayList<String[]> barrageLog = new ArrayList<String[]>();
 		try {
 			String line = "";
@@ -294,6 +308,25 @@ public class CsvExport {
 			e.printStackTrace();
 		}
 		toSend.add(barrageLog);
+		
+		// Get trident Log
+		ArrayList<String[]> tridentLog = new ArrayList<String[]>();
+		try {
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(tridentFile));  
+			line = br.readLine();
+		    while (line != null) {
+		    	tridentLog.add(line.split(","));
+		        line = br.readLine();
+		    }
+
+		    br.close();
+		}catch(FileNotFoundException e) {
+			tridentLog.add(new String[] {"Nothing"});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		toSend.add(tridentLog);
 				
 		return toSend;
 	}

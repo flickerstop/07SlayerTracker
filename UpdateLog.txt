@@ -1,3 +1,13 @@
+Update 0.8.0
+
+- Moved all data from player object to Globals
+- Completely removed the player object
+- Redid the code for different spells so I can add more easily
+- Log buttons dont show if you dont have a log of that type
+- Added the ability to use a trident
+- Added trident to the logs
+- Fixed an issue where you couldn't enter 0 profit on a task
+
 Update 0.7.9
 
 - Can now change spell to barrage or burst
