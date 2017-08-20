@@ -31,32 +31,17 @@ import ui.SlayerTrackerUI.FrameDragListener;
 
 public class LogPanel {
 	
-	private static JTable cannonTable;
-	private static JTable burstTable;
-	private static JTable barrageTable;
-	private static JTable tridentTable;
-	private static JTable normalTable;
-	private static JTable cannonBurstTable;
-	private static JTable cannonballTable;
-	private static JTable logTable;
+
+	static JTable[] tables;
+	static JTable logTable;
 	
+	static boolean[] hasLog;
 	
-	static boolean hasCannonLog = true;
-	static boolean hasNormalLog = true;
-	static boolean hasBurstLog = true;
-	static boolean hasBarrageLog = true;
-	static boolean hasTridentLog = true;
-	static boolean hasCannonMagicLog = true;
-	static boolean hasCannonballLog = true;
+	static Object[][][] data;
 	
-	static JButton cannonLogButton;
-	static JButton normalLogButton;
-	static JButton burstLogButton;
-	static JButton barrageLogButton;
-	static JButton tridentLogButton;
-	static JButton cannonBurstLogButton;
-	static JButton cannonballLogButton;
-	static JButton logButton;
+	static JButton[] buttons;
+	
+	static String[] buttonString;
 	
 	static int width = Globals.scale(1250);
 	static int height = Globals.scale(550);
@@ -160,445 +145,154 @@ public class LogPanel {
         		/////////////////////////////////////////
         		// Normal Slayer
         		//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
-        		//TODO
 
-        		DefaultTableModel normalModel = new DefaultTableModel(){
-					@Override
-                    public Class<?> getColumnClass(int column) {
-                        switch (column) {
-                            case 0:
-                                return String.class;
-                            case 5:
-                                return Float.class;
-                            default:
-                                return Integer.class;
-                        }
-                    }
-                };
-        		normalModel.addColumn("Monster"); 
-        		normalModel.addColumn("Amount"); 
-        		normalModel.addColumn("Net Profit");
-        		normalModel.addColumn("Time");
-        		normalModel.addColumn("Slayer Exp");
-        		normalModel.addColumn("Exp/min");
-        		for(String[] array : log.get(0)) {
-        			if(array[0].equals("Nothing")) {
-						hasNormalLog = false;
-					}
-        			Object[] temp = Monsters.getMonster(array[0]);
-        			if(temp == null) {
-        				//System.err.println("Error in slayerLog with:"+array[0]);
-        				temp = Monsters.getMonster(array[0].substring(0, array[0].length() - 1));
-        			}
-    				if(temp == null) {
-        				System.err.println("Error in slayerLog with:"+array[0]);
-    				} else {
-    				String[] time = array[3].split(":");
-        			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
-        			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
-        			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-    				normalModel.addRow(new Object[]{
-    						array[0],
-    						Integer.parseInt(array[1]),
-    						Integer.parseInt(array[2]),
-    						array[3],
-    						exp,
-    						Float.parseFloat(String.format("%.2f", expPerMin))
-    						});
-        			}
-        		}
-        		normalTable = new JTable(normalModel);
-        		//normalTable.setAutoCreateRowSorter(true);
-        		normalTable.setFillsViewportHeight(true);
-        		normalTable.setDefaultRenderer(Object.class, colourCells());
-        		normalTable.setDefaultRenderer(String.class, colourCells());
-        		normalTable.setDefaultRenderer(Integer.class, colourCells());
-        		normalTable.setDefaultRenderer(Float.class, colourCells());
-        		normalTable.setAutoCreateRowSorter(true);
-        		normalTable.setEnabled(false);
-                normalTable.setRowSelectionAllowed(false);
-                normalTable.setShowVerticalLines(false);
-        		normalTable.setBackground(Globals.panelBackground);
-        		normalTable.setForeground(Globals.buttonForground);
-        		normalTable.setFont(Globals.mainFont);
-        		normalTable.getTableHeader().setFont(Globals.mainFont);
-        		normalTable.getTableHeader().setBackground(Globals.panelBackground);
-        		normalTable.getTableHeader().setForeground(Globals.buttonForground);
-        		
-        		scrollPane.setViewportView(normalTable);
-				/////////////////////////////////////////
-				// Cannon
-				//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
-				DefaultTableModel cannonModel = new DefaultTableModel(){
-					@Override
-                    public Class<?> getColumnClass(int column) {
-                        switch (column) {
-                            case 0:
-                                return String.class;
-                            case 9:
-                                return Float.class;
-                            default:
-                                return Integer.class;
-                        }
-                    }
-                };
-				cannonModel.addColumn("Monster"); 
-				cannonModel.addColumn("Amount"); 
-				cannonModel.addColumn("Net Profit");
-				cannonModel.addColumn("Cannonballs Left");
-				cannonModel.addColumn("Cannonballs Used");
-				cannonModel.addColumn("Cost of Cannonballs");
-				cannonModel.addColumn("Profit");
-				cannonModel.addColumn("Time");
-				cannonModel.addColumn("Slayer Exp");
-				cannonModel.addColumn("Exp/Min");
-				
-				for(String[] array : log.get(1)) {
-					if(array[0].equals("Nothing")) {
-						hasCannonLog = false;
-					}
-					Object[] temp = Monsters.getMonster(array[0]);
-        			if(temp == null) {
-        				System.err.println("Error in cannonLog with:"+array[0]);
-        			}else {
-        				String[] time = array[7].split(":");
-            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
-            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
-            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-        				cannonModel.addRow(new Object[] {
-        						array[0],
-        						Integer.parseInt(array[1]),
-        						Integer.parseInt(array[2]),
-        						Integer.parseInt(array[3]),
-        						Integer.parseInt(array[4]),
-        						Integer.parseInt(array[5]),
-        						Integer.parseInt(array[6]),
-        						array[7],
-        						exp,
-        						Float.parseFloat(String.format("%.2f", expPerMin))
-        						});
-        			}
-				}
-				cannonTable = new JTable(cannonModel);
-				cannonTable.setFillsViewportHeight(true);
-				cannonTable.setDefaultRenderer(Object.class, colourCells());
-        		cannonTable.setDefaultRenderer(String.class, colourCells());
-        		cannonTable.setDefaultRenderer(Integer.class, colourCells());
-        		cannonTable.setDefaultRenderer(Float.class, colourCells());
-        		cannonTable.setAutoCreateRowSorter(true);
-        		cannonTable.setEnabled(false);
-        		cannonTable.setRowSelectionAllowed(false);
-                cannonTable.setShowVerticalLines(false);
-				cannonTable.setBackground(Globals.panelBackground);
-				cannonTable.setForeground(Globals.buttonForground);
-				cannonTable.setFont(Globals.mainFont);
-				cannonTable.getTableHeader().setFont(Globals.mainFont);
-				cannonTable.getTableHeader().setBackground(Globals.panelBackground);
-				cannonTable.getTableHeader().setForeground(Globals.buttonForground);
-				scrollPane.setViewportView(cannonTable);
-				/////////////////////////////////////////
-				// Burst
-				// monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit,time
-				DefaultTableModel burstModel = new DefaultTableModel(){
-					@Override
-                    public Class<?> getColumnClass(int column) {
-                        switch (column) {
-                            case 0:
-                                return String.class;
-                            case 10:
-                                return Float.class;
-                            default:
-                                return Integer.class;
-                        }
-                    }
-                };
-				burstModel.addColumn("Monster"); 
-				burstModel.addColumn("Amount"); 
-				burstModel.addColumn("Net Profit");
-				burstModel.addColumn("Deaths Used");
-				burstModel.addColumn("Chaos Used");
-				burstModel.addColumn("Water Used");
-				burstModel.addColumn("Price of Runes");
-				burstModel.addColumn("Profit");
-				burstModel.addColumn("Time");
-				burstModel.addColumn("Slayer Exp");
-				burstModel.addColumn("Exp/Min");
-				for(String[] array : log.get(2)) {
-					if(array[0].equals("Nothing")) {
-						hasBurstLog = false;
-					}
-					Object[] temp = Monsters.getMonster(array[0]);
-					if(temp == null) {
-        				System.err.println("Error in burstLog with:"+array[0]);
-        			}else {
-        				String[] time = array[8].split(":");
-            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
-            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
-            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-            			burstModel.addRow(new Object[] {
-            					array[0],
-            					Integer.parseInt(array[1]),
-            					Integer.parseInt(array[2]),
-            					Integer.parseInt(array[3]),
-            					Integer.parseInt(array[4]),
-            					Integer.parseInt(array[5]),
-            					Integer.parseInt(array[6]),
-            					Integer.parseInt(array[7]),
-            					array[8],
-            					exp,
-            					Float.parseFloat(String.format("%.2f", expPerMin))
-            					});
-        			}
-				}
-				burstTable = new JTable(burstModel);
-				burstTable.setFillsViewportHeight(true);
-				burstTable.setDefaultRenderer(Object.class, colourCells());
-        		burstTable.setDefaultRenderer(String.class, colourCells());
-        		burstTable.setDefaultRenderer(Integer.class, colourCells());
-        		burstTable.setDefaultRenderer(Float.class, colourCells());
-        		burstTable.setAutoCreateRowSorter(true);
-        		burstTable.setEnabled(false);
-        		burstTable.setRowSelectionAllowed(false);
-                burstTable.setShowVerticalLines(false);
-				burstTable.setBackground(Globals.panelBackground);
-				burstTable.setForeground(Globals.buttonForground);
-				burstTable.setFont(Globals.mainFont);
-				burstTable.getTableHeader().setFont(Globals.mainFont);
-				burstTable.getTableHeader().setBackground(Globals.panelBackground);
-				burstTable.getTableHeader().setForeground(Globals.buttonForground);
-				scrollPane.setViewportView(burstTable);
-				/////////////////////////////////////////
-				// barrage
-				// monsterName,count,loot,deathUsed,chaosUsed,waterUsed,priceOfRunes,profit,time
-				DefaultTableModel barrageModel = new DefaultTableModel(){
-				@Override
-				public Class<?> getColumnClass(int column) {
-				switch (column) {
-				    case 0:
-				        return String.class;
-				    case 10:
-				        return Float.class;
-				    default:
-				        return Integer.class;
-				}
-				}
-				};
-				barrageModel.addColumn("Monster"); 
-				barrageModel.addColumn("Amount"); 
-				barrageModel.addColumn("Net Profit");
-				barrageModel.addColumn("Deaths Used");
-				barrageModel.addColumn("Blood Used");
-				barrageModel.addColumn("Water Used");
-				barrageModel.addColumn("Price of Runes");
-				barrageModel.addColumn("Profit");
-				barrageModel.addColumn("Time");
-				barrageModel.addColumn("Slayer Exp");
-				barrageModel.addColumn("Exp/Min");
-				for(String[] array : log.get(5)) {
-					if(array[0].equals("Nothing")) {
-						hasBarrageLog = false;
-					}
-					Object[] temp = Monsters.getMonster(array[0]);
-					if(temp == null) {
-						System.err.println("Error in barrageLog with:"+array[0]);
-					}else {
-						String[] time = array[8].split(":");
-						long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
-						int exp = (Integer.parseInt(array[1])*(int)temp[1]);
-						float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-						barrageModel.addRow(new Object[] {
-								array[0],
-								Integer.parseInt(array[1]),
-								Integer.parseInt(array[2]),
-								Integer.parseInt(array[3]),
-								Integer.parseInt(array[4]),
-								Integer.parseInt(array[5]),
-								Integer.parseInt(array[6]),
-								Integer.parseInt(array[7]),
-								array[8],
-								exp,
-								Float.parseFloat(String.format("%.2f", expPerMin))
-								});
-					}
-				}
-				barrageTable = new JTable(barrageModel);
-				barrageTable.setFillsViewportHeight(true);
-				barrageTable.setDefaultRenderer(Object.class, colourCells());
-				barrageTable.setDefaultRenderer(String.class, colourCells());
-				barrageTable.setDefaultRenderer(Integer.class, colourCells());
-				barrageTable.setDefaultRenderer(Float.class, colourCells());
-				barrageTable.setAutoCreateRowSorter(true);
-				barrageTable.setEnabled(false);
-				barrageTable.setRowSelectionAllowed(false);
-				barrageTable.setShowVerticalLines(false);
-				barrageTable.setBackground(Globals.panelBackground);
-				barrageTable.setForeground(Globals.buttonForground);
-				barrageTable.setFont(Globals.mainFont);
-				barrageTable.getTableHeader().setFont(Globals.mainFont);
-				barrageTable.getTableHeader().setBackground(Globals.panelBackground);
-				barrageTable.getTableHeader().setForeground(Globals.buttonForground);
-				scrollPane.setViewportView(barrageTable);
-				/////////////////////////////////////////
-				// trident
-				// name, count, net profit, charges used, price of charges, profit, time
-				DefaultTableModel tridentModel = new DefaultTableModel(){
-					@Override
-					public Class<?> getColumnClass(int column) {
-						switch (column) {
-						case 0:
-							return String.class;
-						case 10:
-							return Float.class;
-						default:
-							return Integer.class;
+
+        		Object[][] columns = {
+        				//Normal
+	        			{"Monster",
+	        			"Amount",
+	        			"Profit",
+	        			"Time",
+	        			"Slayer Exp",
+	        			"Exp/min"},
+	        			// Cannon
+	        			{"Monster",
+	        			"Amount",
+	        			"Net Profit",
+	        			"Cannonballs Left",
+	        			"Cannonballs Used",
+	        			"Cost of Cannonballs",
+	        			"Profit",
+	        			"Time",
+	        			"Slayer Exp",
+	        			"Exp/Min"},
+	        			// Burst
+	        			{"Monster",
+	        			"Amount",
+	        			"Net Profit",
+	        			"Deaths Used",
+	        			"Chaos Used",
+	        			"Water Used",
+	        			"Price of Runes",
+	        			"Profit",
+	        			"Time",
+	        			"Slayer Exp",
+	        			"Exp/Min"},
+	        			// Magic & Cannon
+	        			{"Monster",
+	        			"Amount",
+	        			"Net Profit",
+	        			"Cbs Used",
+	        			"Rune 1 Used",
+	        			"Rune 2 Used",
+	        			"Rune 3 Used",
+	        			"Cost of Cbs",
+	        			"Cost of Runes",
+	        			"Profit",
+	        			"Time",
+	        			"Slayer Exp",
+	        			"Exp/Min"},
+	        			// Barrage
+	        			{"Monster",
+	        			"Amount",
+	        			"Net Profit",
+	        			"Deaths Used",
+	        			"Blood Used",
+	        			"Water Used",
+	        			"Price of Runes",
+	        			"Profit",
+	        			"Time",
+	        			"Slayer Exp",
+	        			"Exp/Min"},
+	        			// Trident of seas
+	        			{"Monster",
+	        			"Amount",
+	        			"Net Profit",
+	        			"Charges Used",
+	        			"Cost of Charges",
+	        			"Profit",
+	        			"Time",
+	        			"Slayer Exp",
+	        			"Exp/Min"}
+	        			
+        			};
+        		//TODO
+        		hasLog = new boolean[log.size()];
+        		tables = new JTable[log.size()];
+        		data = new Object[log.size()][][];
+        		for(int i = 0; i < log.size(); i++) {
+        			data[i] = new Object[log.get(i).size()][];
+        			int rowNum = 0;
+	        		for(String[] array : log.get(i)) {
+	        			data[i][rowNum] = new Object[array.length];
+	        			if(array[0].equals("Nothing")) {
+							hasLog[i] = false;
+						}else {
+							hasLog[i] = true;
 						}
-					}
-				};
-				tridentModel.addColumn("Monster"); 
-				tridentModel.addColumn("Amount"); 
-				tridentModel.addColumn("Net Profit");
-				tridentModel.addColumn("Charges Used");
-				tridentModel.addColumn("Cost of Charges");
-				tridentModel.addColumn("Profit");
-				tridentModel.addColumn("Time");
-				tridentModel.addColumn("Slayer Exp");
-				tridentModel.addColumn("Exp/Min");
-				for(String[] array : log.get(6)) {
-					if(array[0].equals("Nothing")) {
-						hasTridentLog = false;
-					}
-					Object[] temp = Monsters.getMonster(array[0]);
-					if(temp == null) {
-						System.err.println("Error in tridentLog with:"+array[0]);
-					}else {
-						String[] time = array[6].split(":");
-						long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
-						int exp = (Integer.parseInt(array[1])*(int)temp[1]);
-						float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-						tridentModel.addRow(new Object[] {
-								array[0],
-								Integer.parseInt(array[1]),
-								Integer.parseInt(array[2]),
-								Integer.parseInt(array[3]),
-								Integer.parseInt(array[4]),
-								Integer.parseInt(array[5]),
-								array[6],
-								exp,
-								Float.parseFloat(String.format("%.2f", expPerMin))
-								});
-					}
-				}
-				tridentTable = new JTable(tridentModel);
-				tridentTable.setFillsViewportHeight(true);
-				tridentTable.setDefaultRenderer(Object.class, colourCells());
-				tridentTable.setDefaultRenderer(String.class, colourCells());
-				tridentTable.setDefaultRenderer(Integer.class, colourCells());
-				tridentTable.setDefaultRenderer(Float.class, colourCells());
-				tridentTable.setAutoCreateRowSorter(true);
-				tridentTable.setEnabled(false);
-				tridentTable.setRowSelectionAllowed(false);
-				tridentTable.setShowVerticalLines(false);
-				tridentTable.setBackground(Globals.panelBackground);
-				tridentTable.setForeground(Globals.buttonForground);
-				tridentTable.setFont(Globals.mainFont);
-				tridentTable.getTableHeader().setFont(Globals.mainFont);
-				tridentTable.getTableHeader().setBackground(Globals.panelBackground);
-				tridentTable.getTableHeader().setForeground(Globals.buttonForground);
-				scrollPane.setViewportView(tridentTable);
-				/////////////////////////////////////////
-				// Cannon/burst
-				// name, count, loot, cannonballsUsed, deathsUsed, chaosUsed, waterUsed, priceOfBalls, priceOfRunes, profit, time
-				DefaultTableModel cannonMagicModel = new DefaultTableModel(){
-					@Override
-                    public Class<?> getColumnClass(int column) {
-                        switch (column) {
-                            case 0:
-                                return String.class;
-                            case 12:
-                                return Float.class;
-                            default:
-                                return Integer.class;
-                        }
-                    }
-                };
-				cannonMagicModel.addColumn("Monster"); 
-				cannonMagicModel.addColumn("Amount"); 
-				cannonMagicModel.addColumn("Net Profit");
-				cannonMagicModel.addColumn("Cbs Used");
-//				cannonMagicModel.addColumn("Deaths Used");
-//				cannonMagicModel.addColumn("Chaos Used");
-//				cannonMagicModel.addColumn("Waters Used");
-				cannonMagicModel.addColumn("Cost of Cbs");
-				cannonMagicModel.addColumn("Cost of Runes");
-				cannonMagicModel.addColumn("Profit");
-				cannonMagicModel.addColumn("Time");
-				cannonMagicModel.addColumn("Slayer Exp");
-				cannonMagicModel.addColumn("Exp/Min");
-				for(String[] array : log.get(3)) {
-					if(array[0].equals("Nothing")) {
-						hasCannonMagicLog = false;
-					}
-					Object[] temp = Monsters.getMonster(array[0]);
-					if(temp == null) {
-        				System.err.println("Error in cannonBurstLog with:"+array[0]);
-        			}else {
-        				String[] time = array[10].split(":");
-            			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
-            			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
-            			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
-            			cannonMagicModel.addRow(new Object[] {
-            					array[0],
-            					Integer.parseInt(array[1]),
-            					Integer.parseInt(array[2]),
-            					Integer.parseInt(array[3]),
-//            					Integer.parseInt(array[4]),
-//            					Integer.parseInt(array[5]),
-//            					Integer.parseInt(array[6]),
-            					Integer.parseInt(array[7]),
-            					Integer.parseInt(array[8]),
-            					Integer.parseInt(array[9]),
-            					array[10],
-            					exp,
-            					Float.parseFloat(String.format("%.2f", expPerMin))
-            					});
-        			}
-				}
-				cannonBurstTable = new JTable(cannonMagicModel);
-				cannonBurstTable.setFillsViewportHeight(true);
-				cannonBurstTable.setDefaultRenderer(Object.class, colourCells());
-				cannonBurstTable.setDefaultRenderer(String.class, colourCells());
-				cannonBurstTable.setDefaultRenderer(Integer.class, colourCells());
-				cannonBurstTable.setDefaultRenderer(Float.class, colourCells());
-				cannonBurstTable.setAutoCreateRowSorter(true);
-				cannonBurstTable.setEnabled(false);
-				cannonBurstTable.setRowSelectionAllowed(false);
-				cannonBurstTable.setShowVerticalLines(false);
-				cannonBurstTable.setBackground(Globals.panelBackground);
-				cannonBurstTable.setForeground(Globals.buttonForground);
-				cannonBurstTable.setFont(Globals.mainFont);
-				cannonBurstTable.getTableHeader().setFont(Globals.mainFont);
-				cannonBurstTable.getTableHeader().setBackground(Globals.panelBackground);
-				cannonBurstTable.getTableHeader().setForeground(Globals.buttonForground);
-				scrollPane.setViewportView(cannonBurstTable);
-				/////////////////////////////////////////
-				// Cannonball
-				// name, count, loot, cannonballsUsed, deathsUsed, chaosUsed, waterUsed, priceOfBalls, priceOfRunes, profit, time
-				DefaultTableModel cannonballModel = new DefaultTableModel(); 
-				cannonballModel.addColumn("Total Price"); 
-				cannonballModel.addColumn("Amount of Cannonballs"); 
-				cannonballModel.addColumn("Price per Ball");
-				for(String[] array : log.get(4)) {
-					cannonballModel.addRow(array);
-				}
-				cannonballTable = new JTable(cannonballModel);
-				cannonballTable.setBackground(Globals.panelBackground);
-				cannonballTable.setFillsViewportHeight(true);
-				cannonballTable.setForeground(Globals.buttonForground);
-				cannonballTable.setFont(Globals.mainFont);
-				cannonballTable.getTableHeader().setFont(Globals.mainFont);
-				cannonballTable.getTableHeader().setBackground(Globals.panelBackground);
-				cannonballTable.getTableHeader().setForeground(Globals.buttonForground);
-				scrollPane.setViewportView(cannonballTable);
+	        			Object[] temp = Monsters.getMonster(array[0]);
+	        			// If doesn't return monster, knock off last letter and try again
+	        			// I do this for people who have been using the tracker for a while
+	        			// I originally has s at the end of the monster names
+	        			if(temp == null) {
+	        				temp = Monsters.getMonster(array[0].substring(0, array[0].length() - 1));
+	        			}
+	        			// If doesn't find monster after trying once
+	    				if(temp == null) {
+	    					// Report error in log
+	        				System.err.println("Error in slayerLog with:"+array[0]);
+	        				temp = Monsters.getErrorMonster();
+	    				}
+    					// Find which column is time
+    					String[] time = null;
+    					for(int j = 0; j < array.length; j++) {
+    						if(columns[i][j].equals("Time")) {
+    							time = array[j].split(":");
+    							break;
+    						}
+    					}
+	    				if(time == null) {
+	    					System.err.println("Did not find time for column set "+i);
+	    				}
+	        			long timeInMilli = (Integer.parseInt(time[0])*3600000)+(Integer.parseInt(time[1])*60000)+(Integer.parseInt(time[2])*1000);
+	        			// Safe to assume the 2nd column is always amount
+	        			int exp = (Integer.parseInt(array[1])*(int)temp[1]);
+	        			float expPerMin = ((float)exp/((float)timeInMilli))*60000;
+	        			
+	        			Object[] rowData = new Object[array.length+2];
+	        			
+	        			for(int column = 0; column < array.length; column++) {
+	        				if(column == 0 || columns[i][column].equals("Time")) {
+	        					rowData[column] = array[column];
+	        				}else {
+	        					rowData[column] = Integer.parseInt(array[column]);
+	        				}
+	        			}
+	        			rowData[rowData.length-2] = exp;
+	        			rowData[rowData.length-1] = Float.parseFloat(String.format("%.2f", expPerMin));
+	    				data[i][rowNum] = rowData;
+	        			
+	    				rowNum++;
+	        		}
+	        		JTable table = new JTable(data[i],columns[i]); 
+	        		table.setFillsViewportHeight(true);
+	        		table.setDefaultRenderer(Object.class, colourCells());
+	        		table.setDefaultRenderer(String.class, colourCells());
+	        		table.setDefaultRenderer(Integer.class, colourCells());
+	        		table.setDefaultRenderer(Float.class, colourCells());
+	        		table.setAutoCreateRowSorter(true);
+	        		table.setEnabled(false);
+	        		table.setRowSelectionAllowed(false);
+	        		table.setShowVerticalLines(false);
+	        		table.setBackground(Globals.panelBackground);
+	        		table.setForeground(Globals.buttonForground);
+	        		table.setFont(Globals.mainFont);
+	        		table.getTableHeader().setFont(Globals.mainFont);
+	        		table.getTableHeader().setBackground(Globals.panelBackground);
+	        		table.getTableHeader().setForeground(Globals.buttonForground);
+	        		tables[i] = table;
+        		}
+
         		
         	
 				/////////////////////////////////////////
@@ -609,64 +303,34 @@ public class LogPanel {
 				logModel.addColumn("Amount of Kills"); 
 				logModel.addColumn("Total Profit"); 
 
-				int[] amountOfKills = {0,0,0,0,0,0,0};
-				int[] totalLoot = {0,0,0,0,0,0,0};
+				int[] amountOfKills = new int[log.size()];
+				int[] totalLoot = new int[log.size()];
 				int absoluteTotalLoot = 0;
 				int absoluteAmountOfKills = 0;
-				int count = 0;
 				
-				// Normal slayer
-				for(String[] row: log.get(0)) {						
-					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
-						break;
-					}
-					amountOfKills[count] += Integer.parseInt(row[1]);
-					totalLoot[count] += Integer.parseInt(row[2]);
+				// set kills and loot to 0
+				for(int i =0;i<log.size();i++) {
+					amountOfKills[i] = 0;
+					totalLoot[i] = 0;
 				}
-				count++;
-				// Cannon
-				for(String[] row: log.get(1)) {						
-					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
-						break;
+				
+				for(int i = 0; i < data.length; i++) {
+					for(Object[] row: data[i]) {						
+						if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
+							break;
+						}
+						// get the profit column
+						for(int j = 0; j <row.length; j++) {
+    						if(columns[i][j].equals("Profit")) {
+    							totalLoot[i] += (int)row[j];
+    						}
+    					}
+						amountOfKills[i] += (int)row[1];
+						if(totalLoot[i] == 0) {
+							System.out.println("PONG");
+							System.out.println(row.length);
+						}
 					}
-					amountOfKills[count] += Integer.parseInt(row[1]);
-					totalLoot[count] += Integer.parseInt(row[6]);
-				}
-				count++;
-				// burst
-				for(String[] row: log.get(2)) {						
-					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
-						break;
-					}
-					amountOfKills[count] += Integer.parseInt(row[1]);
-					totalLoot[count] += Integer.parseInt(row[7]);
-				}
-				count++;
-				// Barrage
-				for(String[] row: log.get(5)) {						
-					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
-						break;
-					}
-					amountOfKills[count] += Integer.parseInt(row[1]);
-					totalLoot[count] += Integer.parseInt(row[7]);
-				}
-				count++;
-				// Trident
-				for(String[] row: log.get(6)) {						
-					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
-						break;
-					}
-					amountOfKills[count] += Integer.parseInt(row[1]);
-					totalLoot[count] += Integer.parseInt(row[5]);
-				}
-				count++;
-				// cannon&burst
-				for(String[] row: log.get(3)) {						
-					if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
-						break;
-					}
-					amountOfKills[count] += Integer.parseInt(row[1]);
-					totalLoot[count] += Integer.parseInt(row[9]);
 				}
 				
 				for(int i = 0; i<totalLoot.length;i++) {
@@ -690,115 +354,47 @@ public class LogPanel {
 				logTable.getTableHeader().setFont(Globals.mainFont);
 				logTable.getTableHeader().setBackground(Globals.panelBackground);
 				logTable.getTableHeader().setForeground(Globals.buttonForground);
+				scrollPane.setViewportView(logTable);
 				
 				//////////////////////////////
 				// change log buttons
-				normalLogButton = new JButton("Normal Slayer Logs");
-				normalLogButton.setFont(Globals.mainFont);
-				normalLogButton.setMargin(new Insets(0, 0, 0, 0));
-				normalLogButton.setForeground(Globals.buttonForground);
-				normalLogButton.setBackground(Globals.buttonBackground);
-				normalLogButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(normalTable);
+				// TODO
+				
+				buttonString = new String[]{
+						"Normal Slayer Logs",
+						"Cannon Slayer Logs",
+						"Burst Slayer Logs",
+						"Cannon/Magic Slayer Logs",
+						"Barrage Slayer Logs",
+						"Trident Slayer Logs",
+						"Log of the Logs"
+				};
+				buttons = new JButton[buttonString.length];
+				
+				for(int i = 0; i < buttonString.length; i++) {
+					JButton button = new JButton(buttonString[i]);
+					button.setFont(Globals.mainFont);
+					button.setMargin(new Insets(0, 0, 0, 0));
+					button.setForeground(Globals.buttonForground);
+					button.setBackground(Globals.buttonBackground);
+					JTable table;
+					if(buttonString[i].equals("Log of the Logs")) {
+						table = logTable;
+					}else {
+						table = tables[i];
 					}
-				});
-				mainFrame.getContentPane().add(normalLogButton);
+					button.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent arg0) {
+							scrollPane.setViewportView(table);
+						}
+					});
+					mainFrame.getContentPane().add(button);
+					buttons[i] = button;
+					
+				}
 				
 				
-				cannonLogButton = new JButton("Cannon Slayer Logs");
-				cannonLogButton.setFont(Globals.mainFont);
-				cannonLogButton.setMargin(new Insets(0, 0, 0, 0));
-				cannonLogButton.setForeground(Globals.buttonForground);
-				cannonLogButton.setBackground(Globals.buttonBackground);
-				cannonLogButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(cannonTable);
-					}
-				});
-				mainFrame.getContentPane().add(cannonLogButton);
-				
-				
-				burstLogButton = new JButton("Burst Slayer Logs");
-				burstLogButton.setFont(Globals.mainFont);
-				burstLogButton.setMargin(new Insets(0, 0, 0, 0));
-				burstLogButton.setForeground(Globals.buttonForground);
-				burstLogButton.setBackground(Globals.buttonBackground);
-				burstLogButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(burstTable);
-					}
-				});
-				mainFrame.getContentPane().add(burstLogButton);
-				
-				barrageLogButton = new JButton("Barrage Slayer Logs");
-				barrageLogButton.setFont(Globals.mainFont);
-				barrageLogButton.setMargin(new Insets(0, 0, 0, 0));
-				barrageLogButton.setForeground(Globals.buttonForground);
-				barrageLogButton.setBackground(Globals.buttonBackground);
-				barrageLogButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(barrageTable);
-					}
-				});
-				mainFrame.getContentPane().add(barrageLogButton);
-				
-				tridentLogButton = new JButton("Trident Slayer Logs");
-				tridentLogButton.setFont(Globals.mainFont);
-				tridentLogButton.setMargin(new Insets(0, 0, 0, 0));
-				tridentLogButton.setForeground(Globals.buttonForground);
-				tridentLogButton.setBackground(Globals.buttonBackground);
-				tridentLogButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(tridentTable);
-					}
-				});
-				mainFrame.getContentPane().add(tridentLogButton);
-				
-				cannonBurstLogButton = new JButton("Cannon/Magic Slayer Logs");
-				cannonBurstLogButton.setFont(Globals.mainFont);
-				cannonBurstLogButton.setMargin(new Insets(0, 0, 0, 0));
-				cannonBurstLogButton.setForeground(Globals.buttonForground);
-				cannonBurstLogButton.setBackground(Globals.buttonBackground);
-				cannonBurstLogButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(cannonBurstTable);
-					}
-				});
-				mainFrame.getContentPane().add(cannonBurstLogButton);
-				
-				cannonballLogButton = new JButton("Cannonball Purchase Logs");
-				cannonballLogButton.setFont(Globals.mainFont);
-				cannonballLogButton.setMargin(new Insets(0, 0, 0, 0));
-				cannonballLogButton.setForeground(Globals.buttonForground);
-				cannonballLogButton.setBackground(Globals.buttonBackground);
-				cannonballLogButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(cannonballTable);
-					}
-				});
-				mainFrame.getContentPane().add(cannonballLogButton);
-				
-				logButton = new JButton("Log of the Logs");
-				logButton.setFont(Globals.mainFont);
-				logButton.setMargin(new Insets(0, 0, 0, 0));
-				logButton.setForeground(Globals.buttonForground);
-				logButton.setBackground(Globals.buttonBackground);
-				logButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						scrollPane.setViewportView(logTable);
-					}
-				});
-				logButton.setBounds(((width-Globals.scale(10))/7)*6+Globals.scale(5),height-Globals.scale(25),(width-Globals.scale(10))/7,Globals.scale(20));
-				mainFrame.getContentPane().add(logButton);
 				/////////////////////////////////////////
 				setButtons();
                 mainFrame.setLocationByPlatform(true);
@@ -810,7 +406,6 @@ public class LogPanel {
         });
     }
 	
-	@SuppressWarnings("serial")
 	public static DefaultTableCellRenderer colourCells() {
 		return new DefaultTableCellRenderer(){
 		    @Override
@@ -822,7 +417,6 @@ public class LogPanel {
 		        setHorizontalAlignment(JLabel.RIGHT);
 		        row = table.convertRowIndexToModel(row);
 		        String status = (String)table.getModel().getValueAt(row, 0);
-		        
 		        Object[] monster = Monsters.getMonster(status);
 		        // Attempt to knock off the last letter
 		        if(monster == null) {
@@ -843,58 +437,26 @@ public class LogPanel {
 	}
 	
 	public static void setButtons() {
-		int count = 2;
-		int i = 0;
-		if(hasNormalLog) {
-			count++;
-		}
-		if(hasCannonLog) {
-			count++;
-		}
-		if(hasBurstLog) {
-			count++;
-		}
-		if(hasBarrageLog) {
-			count++;
-		}
-		if(hasCannonMagicLog) {
-			count++;
-		}
-		if(hasTridentLog) {
-			count++;
+		int count = 1;
+		for(int i = 0; i < hasLog.length; i++) {
+			if(hasLog[i]) {
+				System.out.println(buttonString[i]+" : "+hasLog[i]);
+				count++;
+			}
 		}
 
 		int buttonSize = (width-Globals.scale(10))/count;
 		
-		
-		if(hasNormalLog) {
-			normalLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-			i++;
+		for(int i = 0; i < hasLog.length; i++) {
+			if(hasLog[i]) {
+				buttons[i].setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+			}
 		}
-		if(hasCannonLog) {
-			cannonLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-			i++;
-		}
-		if(hasBurstLog) {
-			burstLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-			i++;
-		}
-		if(hasBarrageLog) {
-			barrageLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-			i++;
-		}
-		if(hasTridentLog) {
-			tridentLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-			i++;
-		}
-		if(hasCannonMagicLog) {
-			cannonBurstLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-			i++;
-		}
-		cannonballLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-		i++;
-		logButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-		i++;
+		buttons[buttons.length-1].setBounds(buttonSize*(count-1)+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+//		cannonballLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+//		i++;
+//		logButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+//		i++;
 
 	}
 }

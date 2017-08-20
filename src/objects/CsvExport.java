@@ -270,25 +270,25 @@ public class CsvExport {
 		
 		toSend.add(cannonBurstLog);
 		
-		// Get Cannonball
-		ArrayList<String[]> cannonballLog = new ArrayList<String[]>();
-		try {
-			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(cannonballFile));  
-			line = br.readLine();
-		    while (line != null) {
-		    	cannonballLog.add(line.split(","));
-		        line = br.readLine();
-		    }
-
-		    br.close();
-		}catch(FileNotFoundException e) {
-			cannonballLog.add(new String[] {"Nothing"});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		
-		toSend.add(cannonballLog);
+//		// Get Cannonball
+//		ArrayList<String[]> cannonballLog = new ArrayList<String[]>();
+//		try {
+//			String line = "";
+//			BufferedReader br = new BufferedReader(new FileReader(cannonballFile));  
+//			line = br.readLine();
+//		    while (line != null) {
+//		    	cannonballLog.add(line.split(","));
+//		        line = br.readLine();
+//		    }
+//
+//		    br.close();
+//		}catch(FileNotFoundException e) {
+//			cannonballLog.add(new String[] {"Nothing"});
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		
+//		toSend.add(cannonballLog);
 
 		// Get barrage Log
 		ArrayList<String[]> barrageLog = new ArrayList<String[]>();

@@ -79,6 +79,9 @@ public class Monsters {
 	};
 	
 	
+	public static Object[] getErrorMonster () {
+		return new Object[]{"ERROR",0,"",new Color(255,0,0),new Color(0,0,0)};
+	}
 	
 	public static Object[] getMonster (String monsterName) {
 		int i = 0;
