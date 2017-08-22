@@ -146,7 +146,7 @@ public class LogPanel {
         		// Normal Slayer
         		//monsterName,monsterCount,lootAmount,cannonballsLeft,cannonballsUsed,priceOfBalls,profit,time
 
-
+        		// TODO add new columns for the log
         		Object[][] columns = {
         				//Normal
 	        			{"Monster",
@@ -178,20 +178,6 @@ public class LogPanel {
 	        			"Time",
 	        			"Slayer Exp",
 	        			"Exp/Min"},
-	        			// Magic & Cannon
-	        			{"Monster",
-	        			"Amount",
-	        			"Net Profit",
-	        			"Cbs Used",
-	        			"Rune 1 Used",
-	        			"Rune 2 Used",
-	        			"Rune 3 Used",
-	        			"Cost of Cbs",
-	        			"Cost of Runes",
-	        			"Profit",
-	        			"Time",
-	        			"Slayer Exp",
-	        			"Exp/Min"},
 	        			// Barrage
 	        			{"Monster",
 	        			"Amount",
@@ -213,10 +199,23 @@ public class LogPanel {
 	        			"Profit",
 	        			"Time",
 	        			"Slayer Exp",
+	        			"Exp/Min"},
+	        			// Magic & Cannon
+	        			{"Monster",
+	        			"Amount",
+	        			"Net Profit",
+	        			"Cbs Used",
+	        			"Rune 1 Used",
+	        			"Rune 2 Used",
+	        			"Rune 3 Used",
+	        			"Cost of Cbs",
+	        			"Cost of Runes",
+	        			"Profit",
+	        			"Time",
+	        			"Slayer Exp",
 	        			"Exp/Min"}
 	        			
         			};
-        		//TODO
         		hasLog = new boolean[log.size()];
         		tables = new JTable[log.size()];
         		data = new Object[log.size()][][];
@@ -227,6 +226,7 @@ public class LogPanel {
 	        			data[i][rowNum] = new Object[array.length];
 	        			if(array[0].equals("Nothing")) {
 							hasLog[i] = false;
+							break;
 						}else {
 							hasLog[i] = true;
 						}
@@ -315,6 +315,9 @@ public class LogPanel {
 				}
 				
 				for(int i = 0; i < data.length; i++) {
+					if(!hasLog[i]) {
+						continue;
+					}
 					for(Object[] row: data[i]) {						
 						if(row == null || row.length == 0 || row[0].equals("Nothing") ) {
 							break;
@@ -338,6 +341,7 @@ public class LogPanel {
 					absoluteAmountOfKills += amountOfKills[i];
 				}
 				
+				// TODO add row for the log of logs for the new log
 				logModel.addRow(new Object[] {"Normal Tasks",amountOfKills[0],totalLoot[0]});
 				logModel.addRow(new Object[] {"Cannon Tasks",amountOfKills[1],totalLoot[1]});
 				logModel.addRow(new Object[] {"Burst Tasks",amountOfKills[2],totalLoot[2]});
@@ -358,15 +362,16 @@ public class LogPanel {
 				
 				//////////////////////////////
 				// change log buttons
-				// TODO
+				
+				// TODO add new text for new log
 				
 				buttonString = new String[]{
 						"Normal Slayer Logs",
 						"Cannon Slayer Logs",
 						"Burst Slayer Logs",
-						"Cannon/Magic Slayer Logs",
 						"Barrage Slayer Logs",
 						"Trident Slayer Logs",
+						"Cannon/Magic Slayer Logs",
 						"Log of the Logs"
 				};
 				buttons = new JButton[buttonString.length];
@@ -394,7 +399,10 @@ public class LogPanel {
 					
 				}
 				
-				
+				// Remove columns I dont want to show
+				tables[tables.length-1].removeColumn(tables[tables.length-1].getColumn("Rune 1 Used"));
+				tables[tables.length-1].removeColumn(tables[tables.length-1].getColumn("Rune 2 Used"));
+				tables[tables.length-1].removeColumn(tables[tables.length-1].getColumn("Rune 3 Used"));
 				/////////////////////////////////////////
 				setButtons();
                 mainFrame.setLocationByPlatform(true);
@@ -440,23 +448,20 @@ public class LogPanel {
 		int count = 1;
 		for(int i = 0; i < hasLog.length; i++) {
 			if(hasLog[i]) {
-				System.out.println(buttonString[i]+" : "+hasLog[i]);
 				count++;
 			}
+			System.out.println(buttonString[i]+" : "+hasLog[i]);
 		}
 
 		int buttonSize = (width-Globals.scale(10))/count;
-		
+		int buttonNum = 0;
 		for(int i = 0; i < hasLog.length; i++) {
 			if(hasLog[i]) {
-				buttons[i].setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+				buttons[i].setBounds(buttonSize*buttonNum+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
+				buttonNum++;
 			}
 		}
 		buttons[buttons.length-1].setBounds(buttonSize*(count-1)+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-//		cannonballLogButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-//		i++;
-//		logButton.setBounds(buttonSize*i+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
-//		i++;
 
 	}
 }

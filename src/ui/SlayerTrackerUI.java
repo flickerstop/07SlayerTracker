@@ -36,11 +36,13 @@ import javax.swing.ImageIcon;
 import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
+import panels.LoadingPopUp;
 import panels.FarmRunPanel;
 import panels.LogPanel;
 import panels.MonsterPanel;
 import panels.SettingsPanel;
 import panels.UpdatesPanel;
+import panels.XPTrackerPanel;
 
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
@@ -72,7 +74,11 @@ public class SlayerTrackerUI {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
+		LoadingPopUp.build("LOADING... PLEASE WAIT");
+
 		if(Globals.isSafeEdit) {
+			Globals.startTimer();
 			Globals.errorFile = "error.log";
 		}
 		try {
@@ -84,15 +90,23 @@ public class SlayerTrackerUI {
 				System.setOut(outFile);
 				System.setErr(logFile);
 			}
+			Globals.outCurrentTime();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		LoadingPopUp.setProgressBar(10);
 		Globals.load();
+		Globals.outCurrentTime();
+		LoadingPopUp.setProgressBar(95);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					LoadingPopUp.setProgressBar(100);
 					window = new SlayerTrackerUI();
+					
+					Globals.outCurrentTime();
 					SlayerTrackerUI.mainFrame.setVisible(true);
+					LoadingPopUp.hide();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -105,6 +119,7 @@ public class SlayerTrackerUI {
 	 * Create the application.
 	 */
 	public SlayerTrackerUI() {
+		
 		initialize();
 	}
 
@@ -296,6 +311,31 @@ public class SlayerTrackerUI {
 		});
 		topBar.add(updateButton);
 		
+		JLabel xptrackerButton = new JLabel();
+		xptrackerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		{
+			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/update_icon.png")); // load the image to a imageIcon
+			Image image = imageIcon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			imageIcon = new ImageIcon(newimg);  // transform it back
+			
+			xptrackerButton.setIcon(imageIcon);
+		}
+		xptrackerButton.setBounds(panelWidth-Globals.scale(225), 0, Globals.scale(25), Globals.scale(25));
+		xptrackerButton.setToolTipText("Farm Run");
+		xptrackerButton.addMouseListener(new MouseAdapter() {
+    		@Override
+    		public void mouseClicked(MouseEvent arg0) {
+    			if(!UpdatesPanel.isInit()) {
+    				XPTrackerPanel.setup();
+    			}else {
+    				XPTrackerPanel.makeVisible();
+    			}
+    		}
+		});
+		topBar.add(xptrackerButton);
+		
+		Globals.outCurrentTime();
 		
 		JLabel titleLabel = new JLabel();
 		titleLabel.setBounds(Globals.scale(5),0,panelWidth/2,Globals.scale(25));
@@ -515,7 +555,6 @@ public class SlayerTrackerUI {
 		});
 		addCannonballsPanel.add(cancelBuyingCannonBalls);
 		
-		
 		////////////////////////////////////////////////////
 		// Rune lables TODO
 		// Ice burst
@@ -568,7 +607,7 @@ public class SlayerTrackerUI {
 		//////////////////////////////////////////////////////
 		// Change Runes Panel
 		
-		
+		Globals.outCurrentTime();
 		ArrayList<JFormattedTextField> inputs = new ArrayList<JFormattedTextField>();
 
 		// Loop for the 3 different rune types
@@ -637,7 +676,7 @@ public class SlayerTrackerUI {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+		Globals.outCurrentTime();
 		////////////
 		// Farming timer
 		final Timer timer = new Timer(500, new ActionListener() {
@@ -666,6 +705,7 @@ public class SlayerTrackerUI {
     		
 		});
 		timer.start();
+		Globals.outCurrentTime();
 	}
 	public void updateCannonballs() {
 		txtpnCannonballs.setText("Cannonballs: "+Globals.cannonballs);

@@ -193,140 +193,36 @@ public class CsvExport {
 	public ArrayList<ArrayList<String[]>> getLogs() {
 		ArrayList<ArrayList<String[]>> toSend = new ArrayList<ArrayList<String[]>>();
 		
-		// Get Normal Log
-		ArrayList<String[]> normalLog = new ArrayList<String[]>();
-		try {
-			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(slayerFile));  
-			line = br.readLine();
-		    while (line != null) {
-		        normalLog.add(line.split(","));
-		        line = br.readLine();
-		    }
-
-		    br.close();
-		}catch(FileNotFoundException e) {
-			normalLog.add(new String[] {"Nothing"});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		toSend.add(normalLog);
+		// TODO add the new log URL here
+		String[] logOrder = {
+				slayerFile,
+				cannonFile,
+				burstFile,
+				barrageFile,
+				tridentFile,
+				cannonBurstFile
+		};
 		
-		// Get Cannon Log
-		ArrayList<String[]> cannonLog = new ArrayList<String[]>();
-		try {
-			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(cannonFile));  
-			line = br.readLine();
-		    while (line != null) {
-		    	cannonLog.add(line.split(","));
-		        line = br.readLine();
-		    }
-
-		    br.close();
-		}catch(FileNotFoundException e) {
-			cannonLog.add(new String[] {"Nothing"});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		toSend.add(cannonLog);
-		
-		// Get Burst Log
-		ArrayList<String[]> burstLog = new ArrayList<String[]>();
-		try {
-			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(burstFile));  
-			line = br.readLine();
-		    while (line != null) {
-		    	burstLog.add(line.split(","));
-		        line = br.readLine();
-		    }
-
-		    br.close();
-		}catch(FileNotFoundException e) {
-			burstLog.add(new String[] {"Nothing"});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		toSend.add(burstLog);
-		
-		// Get CannonBurst
-		ArrayList<String[]> cannonBurstLog = new ArrayList<String[]>();
-		try {
-			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(cannonBurstFile));  
-			line = br.readLine();
-		    while (line != null) {
-		    	cannonBurstLog.add(line.split(","));
-		        line = br.readLine();
-		    }
-
-		    br.close();
-		}catch(FileNotFoundException e) {
-			cannonBurstLog.add(new String[] {"Nothing"});
-		}catch (Exception e){
-			e.printStackTrace();
+		for(int i = 0; i < logOrder.length; i++) {
+			ArrayList<String[]> log = new ArrayList<String[]>();
+			try {
+				String line = "";
+				BufferedReader br = new BufferedReader(new FileReader(logOrder[i]));  
+				line = br.readLine();
+			    while (line != null) {
+			        log.add(line.split(","));
+			        line = br.readLine();
+			    }
+	
+			    br.close();
+			}catch(FileNotFoundException e) {
+				log.add(new String[] {"Nothing"});
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+			toSend.add(log);
 		}
 		
-		toSend.add(cannonBurstLog);
-		
-//		// Get Cannonball
-//		ArrayList<String[]> cannonballLog = new ArrayList<String[]>();
-//		try {
-//			String line = "";
-//			BufferedReader br = new BufferedReader(new FileReader(cannonballFile));  
-//			line = br.readLine();
-//		    while (line != null) {
-//		    	cannonballLog.add(line.split(","));
-//		        line = br.readLine();
-//		    }
-//
-//		    br.close();
-//		}catch(FileNotFoundException e) {
-//			cannonballLog.add(new String[] {"Nothing"});
-//		}catch (Exception e){
-//			e.printStackTrace();
-//		}
-//		
-//		toSend.add(cannonballLog);
-
-		// Get barrage Log
-		ArrayList<String[]> barrageLog = new ArrayList<String[]>();
-		try {
-			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(barrageFile));  
-			line = br.readLine();
-		    while (line != null) {
-		    	barrageLog.add(line.split(","));
-		        line = br.readLine();
-		    }
-
-		    br.close();
-		}catch(FileNotFoundException e) {
-			barrageLog.add(new String[] {"Nothing"});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		toSend.add(barrageLog);
-		
-		// Get trident Log
-		ArrayList<String[]> tridentLog = new ArrayList<String[]>();
-		try {
-			String line = "";
-			BufferedReader br = new BufferedReader(new FileReader(tridentFile));  
-			line = br.readLine();
-		    while (line != null) {
-		    	tridentLog.add(line.split(","));
-		        line = br.readLine();
-		    }
-
-		    br.close();
-		}catch(FileNotFoundException e) {
-			tridentLog.add(new String[] {"Nothing"});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		toSend.add(tridentLog);
 				
 		return toSend;
 	}

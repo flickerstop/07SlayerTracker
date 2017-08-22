@@ -5,33 +5,34 @@ import java.util.ArrayList;
 public class ExpTracker {
 	// 0		1		2
 	//Daily, Weekly, Total
-	public int[] overall;
-	public int[] attack;
-	public int[] defence;
-	public int[] strength;
-	public int[] hitpoints;
-	public int[] range;
-	public int[] prayer;
-	public int[] magic;
-	public int[] cooking;
-	public int[] woodcutting;
-	public int[] fletching;
-	public int[] fishing;
-	public int[] firemaking;
-	public int[] crafting;
-	public int[] smithing;
-	public int[] mining;
-	public int[] herblore;
-	public int[] agility;
-	public int[] thieving;
-	public int[] slayer;
-	public int[] farming;
-	public int[] runecrafting;
-	public int[] hunter;
-	public int[] construction;
+	private int[] overall;
+	private int[] attack;
+	private int[] defence;
+	private int[] strength;
+	private int[] hitpoints;
+	private int[] range;
+	private int[] prayer;
+	private int[] magic;
+	private int[] cooking;
+	private int[] woodcutting;
+	private int[] fletching;
+	private int[] fishing;
+	private int[] firemaking;
+	private int[] crafting;
+	private int[] smithing;
+	private int[] mining;
+	private int[] herblore;
+	private int[] agility;
+	private int[] thieving;
+	private int[] slayer;
+	private int[] farming;
+	private int[] runecrafting;
+	private int[] hunter;
+	private int[] construction;
+	public String accountName;
 	
 	
-	public ExpTracker(ArrayList<Integer> daily, ArrayList<Integer> weekly, ArrayList<Integer> total) {
+	public ExpTracker(ArrayList<Integer> daily, ArrayList<Integer> weekly, ArrayList<Integer> total, String account) {
 		construction = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
 		hunter = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
 		runecrafting = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
@@ -56,14 +57,15 @@ public class ExpTracker {
 		defence = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
 		attack = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
 		overall = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		accountName = account.replaceAll("\\+", " ");
 	}
-	
+
 	/***
 	 * 
 	 * @param dataNum 0 - Daily
 	 * @param dataNum 1 - Weekly
 	 * @param dataNum 2 - Total
-	 * @return String with the data to output with stdout
+	 * @return String with the data to output with 
 	 */
 	
 	public String getPlayerTotals(int dataNum) {
@@ -91,5 +93,92 @@ public class ExpTracker {
 				 "Runecrafting: " + runecrafting[dataNum]+ "\n" + 
 				 "Hunter: " + hunter[dataNum]+ "\n" + 
 				 "Construction: " + construction[dataNum];
+	}
+	
+	public int[] getDailyGains() {
+		return new int[] {
+				overall[0],
+				attack[0],
+				defence[0],
+				strength[0],
+				hitpoints[0],
+				range[0],
+				prayer[0],
+				magic[0],
+				cooking[0],
+				woodcutting[0],
+				fletching[0],
+				fishing[0],
+				firemaking[0],
+				crafting[0],
+				smithing[0],
+				mining[0],
+				herblore[0],
+				agility[0],
+				thieving[0],
+				slayer[0],
+				farming[0],
+				runecrafting[0],
+				hunter[0],
+				construction[0]
+		};
+	}
+	
+	public int[] getWeeklyGains() {
+		return new int[] {
+				overall[1],
+				attack[1],
+				defence[1],
+				strength[1],
+				hitpoints[1],
+				range[1],
+				prayer[1],
+				magic[1],
+				cooking[1],
+				woodcutting[1],
+				fletching[1],
+				fishing[1],
+				firemaking[1],
+				crafting[1],
+				smithing[1],
+				mining[1],
+				herblore[1],
+				agility[1],
+				thieving[1],
+				slayer[1],
+				farming[1],
+				runecrafting[1],
+				hunter[1],
+				construction[1]
+		};
+	}
+	
+	public int[] getTotalExp() {
+		return new int[] {
+				overall[2],
+				attack[2],
+				defence[2],
+				strength[2],
+				hitpoints[2],
+				range[2],
+				prayer[2],
+				magic[2],
+				cooking[2],
+				woodcutting[2],
+				fletching[2],
+				fishing[2],
+				firemaking[2],
+				crafting[2],
+				smithing[2],
+				mining[2],
+				herblore[2],
+				agility[2],
+				thieving[2],
+				slayer[2],
+				farming[2],
+				runecrafting[2],
+				hunter[2],
+				construction[2]
+		};
 	}
 }

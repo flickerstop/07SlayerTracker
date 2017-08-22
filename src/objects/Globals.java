@@ -12,13 +12,17 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.Clip;
 
+import panels.LoadingPopUp;
+
 public class Globals {
 	
 	/////////////////////////////
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
 	public static boolean isSafeEdit = true;
-	public static String versionNumber = "0.7.10";
+	public static String versionNumber = "0.8.0";
+	public static boolean showTimers = false;
+	private static long startTime;
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
@@ -236,14 +240,18 @@ public class Globals {
 	}
 	
 	public static void load() {
+		outCurrentTime();
+		LoadingPopUp.setText("Grabbing Player data");
 		if(isSafeEdit) {
 			csv = new CsvExport();
 			Globals.savePath = "player.sav";
 		}else {
 			csv = new CsvExport(Globals.path);
 		}
-		
+		outCurrentTime();
 		GEPrices.getPrices();
+		outCurrentTime();
+		LoadingPopUp.setText("Setting Herb Prices");
 		if(herbType.equals("Ranarr")) {
 			herbPrice = GEPrices.getItem("Ranarr weed").getSellPrice();
 		}else if(herbType.equals("Irit")) {
@@ -252,7 +260,8 @@ public class Globals {
 			herbPrice = GEPrices.getItem(herbType).getSellPrice();
 		}
 		seedPrice = GEPrices.getItem(herbType+" seed").getBuyPrice();
-
+		outCurrentTime();
+		LoadingPopUp.setText("Setting Rune Prices");
 		resurrectprice = (
 				(GEPrices.getItem("Soul rune").getBuyPrice()*8)+
 				(GEPrices.getItem("nature rune").getBuyPrice()*12)+
@@ -265,7 +274,7 @@ public class Globals {
 		deathPrice = GEPrices.getItem("death rune").getBuyPrice();
 		waterPrice = GEPrices.getItem("water rune").getBuyPrice();
 		chargePrice = deathPrice + chaosPrice + (GEPrices.getItem("fire rune").getBuyPrice() * 5) + 10;
-
+		outCurrentTime();
 		if(isSafeEdit) {
 			savePath = "player.sav";
 			settingsFile = "settings.sav";
@@ -274,9 +283,13 @@ public class Globals {
 			monstersFile = "monsters.csv";
 		}
 		prefMonsters = new Object[(numberOfRows * numberOfCols)][5];
+		outCurrentTime();
+		LoadingPopUp.setText("Loading Prefered Monsters");
 		getPrefMonsters();
+		outCurrentTime();
 		String line = "";
 		try {		
+			LoadingPopUp.setText("Grabbing User Settings");
 			BufferedReader br = new BufferedReader(new FileReader(settingsFile));
 		    line = br.readLine();
 		    br.close();
@@ -286,7 +299,9 @@ public class Globals {
 		}catch (Exception e){
 			return;
 		}
+		outCurrentTime();
 		try {
+			LoadingPopUp.setText("Setting User Settings");
 			String[] temp = line.split("&");
 			scale = Float.parseFloat(temp[0]);
 			buttonBackground = new Color(Integer.parseInt(temp[1]));
@@ -311,9 +326,12 @@ public class Globals {
 			save();
 			load();
 		}
-
+		outCurrentTime();
 		loadPlayer();
+		outCurrentTime();
+		LoadingPopUp.setText("Finishing up...");
 		reInitData();
+		outCurrentTime();
 	}
 	
 	public static void getPrefMonsters() {
@@ -539,6 +557,36 @@ public class Globals {
 				triCharges = runes[i];
 				break;
 			}
+		}
+	}
+	
+	public static void startTimer() {
+		if(showTimers && !isSafeEdit) {
+			showTimers = false;
+		}
+		if(showTimers) {
+			startTime = System.currentTimeMillis();
+		}
+		
+	}
+	
+	public static void outCurrentTime(String output) {
+		if(showTimers) {
+			System.err.println(System.currentTimeMillis()-startTime +" @ " + output);
+			startTime = System.currentTimeMillis();
+		}
+	}
+	public static void outCurrentTime(int output) {
+		if(showTimers) {
+			System.err.println(System.currentTimeMillis()-startTime +" @ " + output);
+			startTime = System.currentTimeMillis();
+		}
+	}
+	public static void outCurrentTime() {
+		StackTraceElement l = new Exception().getStackTrace()[1];
+		if(showTimers) {
+			System.err.println(System.currentTimeMillis()-startTime +"ms @ " + l.getClassName()+"/"+l.getMethodName()+":"+l.getLineNumber());
+			startTime = System.currentTimeMillis();
 		}
 	}
 }

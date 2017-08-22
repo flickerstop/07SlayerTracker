@@ -7,10 +7,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import panels.LoadingPopUp;
+
 
 public class GEPrices {
 	
 	private static ArrayList<Item> items;
+	
+	private static float loadPercentPerItem = 70.0f/3324.0f; // percent for loading / number of items
 	
 	public static Item getItem(String itemName) {
 		for(Item item : items) {
@@ -50,7 +54,7 @@ public class GEPrices {
 	    //Split entire json into item rows
 	    String[] apiSplit = api.split("}, ");
 	    
-	    
+	    LoadingPopUp.setProgressBar(20);
 	    
 	    // LOOP HERE
 	    for(int geCount = 0; geCount < apiSplit.length; geCount++) {
@@ -64,7 +68,7 @@ public class GEPrices {
 		    /*for(int i =0; i<data.length-1;i++) {
 		    	out(data[i]);
 		    }*/
-		    
+		    LoadingPopUp.setText("Grabbing GE prices");
 		    for(int i =0; i<data.length-1;i++) {
 		    	//System.out.println("~~~~~~~~~~~~~~~~~\n");
 		    	//out(data[i]);
@@ -97,11 +101,9 @@ public class GEPrices {
 		    	}
 		    }
 		    
-		   
-		    
+		    LoadingPopUp.addProgressBar(loadPercentPerItem);
 		    GE.add(item);
 	    }
-	    
 	    items = GE;
 	}
 }
