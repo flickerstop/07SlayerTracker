@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.sound.sampled.Clip;
 
@@ -46,6 +47,26 @@ public class Globals {
 
 	
 	////////////////////
+	
+	public static String[] CMLaccounts = {
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null
+	};
 	
 	
 	public static Object[][] prefMonsters;
@@ -203,7 +224,7 @@ public class Globals {
 	public static void save() {
 		savePrefMonsters();
 		savePlayer();
-		Object[] toSave = {scale,
+		ArrayList<Object> toSave = new ArrayList<Object>(Arrays.asList(scale,
 				buttonBackground.getRGB(),
 				panelBackground.getRGB(),
 				buttonForground.getRGB(),
@@ -221,14 +242,17 @@ public class Globals {
 				farmTimerStart,
 				farmTimerStop,
 				magicType
-				};
-		String output = "";
-		for(int i = 0; i <toSave.length;i++) {
-			output += toSave[i];
-			if(i+1 < toSave.length) {
-				output += "&";
-			}
+				));
+		for(String account : CMLaccounts) {
+			toSave.add(account);
 		}
+		
+		String output = "";
+		for(Object item : toSave) {
+			output += item;
+			output += "&";
+		}
+		
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(settingsFile, false)); 
 			out.println(output);
@@ -321,8 +345,15 @@ public class Globals {
 			farmTimerStart = Long.parseLong(temp[15]);
 			farmTimerStop = Long.parseLong(temp[16]);
 			magicType = temp[17];
+			if(temp.length>18) {
+				for(int i = 18; i < 17+CMLaccounts.length;i++) {
+					System.out.println(i-17);
+					CMLaccounts[i-18] = temp[i];
+				}
+			}
 			//System.out.println(farmTimerStart);
 		}catch(ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
 			save();
 			load();
 		}
@@ -588,5 +619,28 @@ public class Globals {
 			System.err.println(System.currentTimeMillis()-startTime +"ms @ " + l.getClassName()+"/"+l.getMethodName()+":"+l.getLineNumber());
 			startTime = System.currentTimeMillis();
 		}
+	}
+	public static int getNumberOfCMLAccounts() {
+		int count = 0;
+		for(String account : CMLaccounts) {
+			if(account == null || account.equals("null") || account.equals("")) {
+				
+			}else {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public static String[] getCMLAccounts() {
+		ArrayList<String> accounts = new ArrayList<String>();
+		for(String account: CMLaccounts) {
+			if(account == null || account.equals("null") || account.equals("")) {
+				
+			}else {
+				accounts.add(account);
+			}
+		}
+		return accounts.toArray(new String[accounts.size()]);
 	}
 }

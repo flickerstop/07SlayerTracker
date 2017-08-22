@@ -311,6 +311,7 @@ public class SlayerTrackerUI {
 		});
 		topBar.add(updateButton);
 		
+		//TODO
 		JLabel xptrackerButton = new JLabel();
 		xptrackerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		{
@@ -326,7 +327,7 @@ public class SlayerTrackerUI {
 		xptrackerButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			if(!UpdatesPanel.isInit()) {
+    			if(!XPTrackerPanel.isInit()) {
     				XPTrackerPanel.setup();
     			}else {
     				XPTrackerPanel.makeVisible();

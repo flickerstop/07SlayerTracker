@@ -27,7 +27,7 @@ import objects.Monsters;
 import ui.SlayerTrackerUI;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
-
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
@@ -50,8 +50,9 @@ public class SettingsPanel {
 	        {
 	        	JComboBox<String> herbTypeComboBox = new JComboBox<String>(Globals.herbTypes);
 	        	ArrayList<JComboBox<String>> monstersList = new ArrayList<JComboBox<String>>();
-	        	int width = Globals.scale(900);
-	        	int panelWidth = width/2;
+	        	ArrayList<JTextField> accountInputs = new ArrayList<JTextField>();
+	        	int width = Globals.scale(450+450+450);
+	        	int panelWidth = width/3;
 	    		int height = Globals.scale(520);
 	    		JSpinner farmPatchCountSpinner = new JSpinner();
 	    		JComboBox<String> magicTypeBox = new JComboBox<String>(Globals.magicTypes);
@@ -83,15 +84,15 @@ public class SettingsPanel {
 	    		settingsLabel.setFont(Globals.massiveFont);
 	    		settingsLabel.setForeground(Globals.white);
 	    		settingsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	    		settingsLabel.setBounds(0,Globals.scale(5),width/2,Globals.scale(30));
+	    		settingsLabel.setBounds(0,Globals.scale(5),panelWidth,Globals.scale(30));
 	    		mainFrame.getContentPane().add(settingsLabel);
 	    		
 	    		JLabel monsterButtonLabel = new JLabel();
-	    		monsterButtonLabel.setText("Monster Buttons");
+	    		monsterButtonLabel.setText("Task Buttons");
 	    		monsterButtonLabel.setFont(Globals.massiveFont);
 	    		monsterButtonLabel.setForeground(Globals.white);
 	    		monsterButtonLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	    		monsterButtonLabel.setBounds(width/2,Globals.scale(5),width/2,Globals.scale(30));
+	    		monsterButtonLabel.setBounds(panelWidth,Globals.scale(5),panelWidth,Globals.scale(30));
 	    		mainFrame.getContentPane().add(monsterButtonLabel);
 	    		
 				///////////////////////////////////////////
@@ -154,11 +155,14 @@ public class SettingsPanel {
         				mainFrame.setVisible(false);
         				Globals.herbType = (String)herbTypeComboBox.getSelectedItem();
         				Globals.magicType = (String)magicTypeBox.getSelectedItem();
-        				System.out.println(Globals.magicType);
         				int i = 0;
         				for(JComboBox<String> box : monstersList) {
         					Globals.prefMonsters[i] = Monsters.getMonster((String)box.getSelectedItem());
-        					//System.out.println(Globals.prefMonsters[i][0]);
+        					i++;
+        				}
+        				i=0;
+        				for(JTextField textField : accountInputs) {
+        					Globals.CMLaccounts[i] = textField.getText();
         					i++;
         				}
         				SlayerTrackerUI.reload();
@@ -446,7 +450,44 @@ public class SettingsPanel {
 					monsterCount++;
 				}
 	    		
+				//////////////////////////////////////////////////////////////////////////////
+				JSeparator separator5 = new JSeparator();
+				separator5.setBounds(panelWidth*2,Globals.scale(30),Globals.scale(10),height-Globals.scale(30));
+				separator5.setBackground(Globals.iconGrey);
+				separator5.setOrientation(SwingConstants.VERTICAL);
+				separator5.setForeground(Globals.iconGrey);
+				mainFrame.getContentPane().add(separator5);
+				//////////////////////////////////////////////////////////////////////////////
 	    		
+				int x = (panelWidth*2)+Globals.scale(25);
+				
+				for(int i = 0; i <17; i++) {
+					JLabel label = new JLabel("Account #"+i+":");
+					label.setFont(Globals.mainFont);
+					label.setForeground(Globals.buttonForground);
+					label.setHorizontalAlignment(SwingConstants.RIGHT);
+					label.setBounds(x,Globals.scale((25*i)+35),Globals.scale(95),Globals.scale(25));
+					
+					String accountName = Globals.CMLaccounts[i];
+					if(accountName == null || accountName.equals("null")) {
+						accountName = "";
+					}
+					JTextField input = new JTextField(accountName);
+					input.setFont(Globals.mainFont);
+					input.setBounds(x+Globals.scale(100),Globals.scale((25*i)+35),Globals.scale(150),Globals.scale(25));
+					
+					accountInputs.add(input);
+					mainFrame.getContentPane().add(label);
+					mainFrame.getContentPane().add(input);
+				}
+				
+				
+				
+				
+				
+				
+				
+				/////////////////////////////////////////////////////////////////////////////////
 	    		mainFrame.setLocationByPlatform(true);
 	            mainFrame.setVisible(true);
 	            mainFrame.setResizable(false);

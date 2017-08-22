@@ -43,26 +43,12 @@ import ui.SlayerTrackerUI.FrameDragListener;
 public class XPTrackerPanel {
 	
 
-	private static String[] accounts = {
-			"Jr2254",
-			"Metalspike0",
-			"fblthp792",
-			"iSharky",
-			"Flowerpower9",
-			"History vR",
-			"Wind Vortex",
-			"Zaidious66",
-			"Nymphia",
-			"fibber903",
-			"Jaf7584",
-			"Nikolaix1293",
-			"QuietBandit",
-			"Zhongy"
-	};
 	static JFrame mainFrame = new JFrame("Test");
+	static JPanel dataPanel;
 	static int width = Globals.scale(1550);
-	static int height = Globals.scale(550);
-	static ExpTracker[] players;
+	static int height = Globals.scale(125)+(Globals.getNumberOfCMLAccounts()+1)*Globals.scale(28);
+	static ExpTracker[] players = null;
+	static ArrayList<JLabel> labels = new ArrayList<JLabel>();
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -160,85 +146,37 @@ public class XPTrackerPanel {
 				
 				dailyGainsInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				weeklyGainsInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				////////////////////////////////
 				
+				JButton updateButton = new JButton("Update Data");
+				updateButton.setBounds(0,Globals.topMenuBarHeight,Globals.scale(150),Globals.scale(25));
+				updateButton.setForeground(Globals.white);
+				updateButton.setBackground(Globals.blue);
+				updateButton.setFont(Globals.mainFont);
+				updateButton.addMouseListener(new MouseAdapter() {
+		    		@Override
+		    		public void mouseClicked(MouseEvent arg0) {
+		    			CMLData.updateMultiple(Globals.getCMLAccounts());
+		    			height = Globals.scale(125)+(Globals.getNumberOfCMLAccounts()+1)*Globals.scale(28);
+		    			mainFrame.getContentPane().remove(dataPanel);
+		    			dataPanel = getData();
+		    			mainFrame.getContentPane().add(dataPanel);
+		    			mainFrame.setBounds(100, 100, width, height);
+		    			mainFrame.repaint();
+		    		}
+				});
+				
+				/////////////////////////////////
+				mainFrame.getContentPane().add(updateButton);
 				mainFrame.getContentPane().add(dailyGainsInfoLabel);
 				mainFrame.getContentPane().add(weeklyGainsInfoLabel);
-        		ImageIcon[] columns = {
-        				getImage("/images/skills/overall.gif"),
-        				getImage("/images/skills/attack.gif"),
-        				getImage("/images/skills/defence.gif"),
-        				getImage("/images/skills/strength.gif"),
-        				getImage("/images/skills/hitpoints.gif"),
-        				getImage("/images/skills/ranged.gif"),
-        				getImage("/images/skills/prayer.gif"),
-        				getImage("/images/skills/magic.gif"),
-        				getImage("/images/skills/cooking.gif"),
-        				getImage("/images/skills/woodcutting.gif"),
-        				getImage("/images/skills/fletching.gif"),
-        				getImage("/images/skills/fishing.gif"),
-        				getImage("/images/skills/firemaking.gif"),
-        				getImage("/images/skills/crafting.gif"),
-        				getImage("/images/skills/smithing.gif"),
-        				getImage("/images/skills/mining.gif"),
-        				getImage("/images/skills/herblore.gif"),
-        				getImage("/images/skills/agility.gif"),
-        				getImage("/images/skills/thieving.gif"),
-        				getImage("/images/skills/slayer.gif"),
-        				getImage("/images/skills/runecrafting.gif"),
-        				getImage("/images/skills/hunter.gif"),
-        				getImage("/images/skills/construction.gif")
-        		};
         		
-        		int nameWidth = Globals.scale(125);
-        		int columnWidth = (width-nameWidth)/23;
-        		int rowHeight = (Globals.mainFont.getSize()*2)+Globals.scale(5);
-        		int subRowHeight = Globals.mainFont.getSize()+Globals.scale(2);
         		
-        		// Draw the icons
-        		for(int i = 0; i < 23; i++) {
-        			JLabel label = new JLabel(columns[i]);
-        			label.setBounds(nameWidth+(i*columnWidth),Globals.scale(100),columnWidth,rowHeight);
-        			label.setHorizontalAlignment(SwingConstants.RIGHT);
-        			mainFrame.getContentPane().add(label);
-        		}
         		
-        		for(int playerNum = 0; playerNum < players.length; playerNum++) {
-        			//CMLData.updateMultiple(players);
-	        		int[] dailyGains = players[playerNum].getDailyGains();
-	        		int[] weeklyGains = players[playerNum].getWeeklyGains();
-	        		for(int i = 0; i < 23; i++) {
-	        			JLabel dailyGainsLabel = new JLabel(NumberFormat.getNumberInstance(Locale.US).format(dailyGains[i]));
-	        			dailyGainsLabel.setBounds(nameWidth+(i*columnWidth),Globals.scale(100)+(rowHeight*(playerNum+1)),columnWidth,subRowHeight);
-	        			dailyGainsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-	        			dailyGainsLabel.setForeground(Globals.buttonForground);
-	        			dailyGainsLabel.setFont(Globals.mainFont);
-	        			
-	        			JLabel weeklyGainsLabel = new JLabel(NumberFormat.getNumberInstance(Locale.US).format(weeklyGains[i]));
-	        			weeklyGainsLabel.setBounds(nameWidth+(i*columnWidth),Globals.scale(100)+(rowHeight*(playerNum+1))+subRowHeight,columnWidth,subRowHeight);
-	        			weeklyGainsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-	        			weeklyGainsLabel.setForeground(Globals.red);
-	        			weeklyGainsLabel.setFont(Globals.mainFont);
-	        			//label.setFont(Globals.smallFont);
-	        			
-	        			
-	        			
-	        			JSeparator line = new JSeparator();
-	        			line.setForeground(Globals.iconGrey);
-	        			line.setBackground(Globals.iconGrey);
-	        			line.setBounds(0,Globals.scale(100)+(rowHeight*(playerNum+1))+rowHeight,width,Globals.scale(2));
-	        			
-	        			
-	        			mainFrame.getContentPane().add(dailyGainsLabel);
-	        			mainFrame.getContentPane().add(weeklyGainsLabel);
-	        			mainFrame.getContentPane().add(line);
-	        		}
-	        		JLabel accountName = new JLabel(players[playerNum].accountName);
-        			accountName.setBounds(0,Globals.scale(100)+(rowHeight*(playerNum+1)),nameWidth,rowHeight);
-        			accountName.setHorizontalAlignment(SwingConstants.CENTER);
-        			accountName.setForeground(Globals.buttonForground);
-        			accountName.setFont(Globals.boldFont);
-        			mainFrame.getContentPane().add(accountName);
-        		}
+        		
+        		dataPanel = getData();
+        		mainFrame.getContentPane().add(dataPanel);
+        		
                 mainFrame.setLocationByPlatform(true);
 				mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				mainFrame.setVisible(true);
@@ -248,7 +186,8 @@ public class XPTrackerPanel {
         });
     }
 	public static void makeVisible() {
-		mainFrame.setVisible(false);
+		mainFrame.setVisible(true);
+
 	}
 	
 	public static ImageIcon getImage(String url) {
@@ -261,14 +200,102 @@ public class XPTrackerPanel {
             public void run() {
             	Globals.startTimer();
             	Globals.outCurrentTime();
-				players = CMLData.getMultipleAccounts(accounts);
+				players = CMLData.getMultipleAccounts(Globals.getCMLAccounts());
 				Globals.outCurrentTime();
 				build();
 				Globals.outCurrentTime();
 				LoadingPopUp.hide();
             }
-		}.start();;
+		}.start();
+	}
+	public static boolean isInit() {
+		return !(players == null);
 	}
 	
+	public static JPanel getData() {
+		players = CMLData.getMultipleAccounts(Globals.getCMLAccounts());
+		ImageIcon[] columns = {
+				getImage("/images/skills/overall.gif"),
+				getImage("/images/skills/attack.gif"),
+				getImage("/images/skills/defence.gif"),
+				getImage("/images/skills/strength.gif"),
+				getImage("/images/skills/hitpoints.gif"),
+				getImage("/images/skills/ranged.gif"),
+				getImage("/images/skills/prayer.gif"),
+				getImage("/images/skills/magic.gif"),
+				getImage("/images/skills/cooking.gif"),
+				getImage("/images/skills/woodcutting.gif"),
+				getImage("/images/skills/fletching.gif"),
+				getImage("/images/skills/fishing.gif"),
+				getImage("/images/skills/firemaking.gif"),
+				getImage("/images/skills/crafting.gif"),
+				getImage("/images/skills/smithing.gif"),
+				getImage("/images/skills/mining.gif"),
+				getImage("/images/skills/herblore.gif"),
+				getImage("/images/skills/agility.gif"),
+				getImage("/images/skills/thieving.gif"),
+				getImage("/images/skills/slayer.gif"),
+				getImage("/images/skills/runecrafting.gif"),
+				getImage("/images/skills/hunter.gif"),
+				getImage("/images/skills/construction.gif")
+		};
+		
+		JPanel outputPanel = new JPanel();
+		outputPanel.setBounds(0,0,width,height);
+		outputPanel.setLayout(null);
+		outputPanel.setBackground(Globals.panelBackground);
+		
+		int nameWidth = Globals.scale(125);
+		int columnWidth = (width-nameWidth)/23;
+		int rowHeight = (Globals.mainFont.getSize()*2)+Globals.scale(5);
+		int subRowHeight = Globals.mainFont.getSize()+Globals.scale(2);
+		
+		// Draw the icons
+		for(int i = 0; i < 23; i++) {
+			JLabel label = new JLabel(columns[i]);
+			label.setBounds(nameWidth+(i*columnWidth),Globals.scale(100),columnWidth,rowHeight);
+			label.setHorizontalAlignment(SwingConstants.RIGHT);
+			outputPanel.add(label);
+		}
+		
+		for(int playerNum = 0; playerNum < players.length; playerNum++) {
+			//CMLData.updateMultiple(players);
+    		int[] dailyGains = players[playerNum].getDailyGains();
+    		int[] weeklyGains = players[playerNum].getWeeklyGains();
+    		for(int i = 0; i < 23; i++) {
+    			JLabel dailyGainsLabel = new JLabel(NumberFormat.getNumberInstance(Locale.US).format(dailyGains[i]));
+    			dailyGainsLabel.setBounds(nameWidth+(i*columnWidth),Globals.scale(100)+(rowHeight*(playerNum+1)),columnWidth,subRowHeight);
+    			dailyGainsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+    			dailyGainsLabel.setForeground(Globals.buttonForground);
+    			dailyGainsLabel.setFont(Globals.mainFont);
+    			
+    			JLabel weeklyGainsLabel = new JLabel(NumberFormat.getNumberInstance(Locale.US).format(weeklyGains[i]));
+    			weeklyGainsLabel.setBounds(nameWidth+(i*columnWidth),Globals.scale(100)+(rowHeight*(playerNum+1))+subRowHeight,columnWidth,subRowHeight);
+    			weeklyGainsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+    			weeklyGainsLabel.setForeground(Globals.red);
+    			weeklyGainsLabel.setFont(Globals.mainFont);
+    			//label.setFont(Globals.smallFont);
+    			
+    			
+    			
+    			JSeparator line = new JSeparator();
+    			line.setForeground(Globals.iconGrey);
+    			line.setBackground(Globals.iconGrey);
+    			line.setBounds(0,Globals.scale(100)+(rowHeight*(playerNum+1))+rowHeight,width,Globals.scale(2));
+    			
+    			
+    			outputPanel.add(dailyGainsLabel);
+    			outputPanel.add(weeklyGainsLabel);
+    			outputPanel.add(line);
+    		}
+    		JLabel accountName = new JLabel(players[playerNum].accountName);
+			accountName.setBounds(0,Globals.scale(100)+(rowHeight*(playerNum+1)),nameWidth,rowHeight);
+			accountName.setHorizontalAlignment(SwingConstants.CENTER);
+			accountName.setForeground(Globals.buttonForground);
+			accountName.setFont(Globals.boldFont);
+			outputPanel.add(accountName);
+		}
+		return outputPanel;
+	}
 	
 }
