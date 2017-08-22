@@ -1,7 +1,6 @@
 package panels;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Image;
@@ -13,29 +12,15 @@ import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
-
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-
 import objects.CMLData;
 import objects.ExpTracker;
 import objects.Globals;
-import objects.Monsters;
+import objects.JrLabel;
 import ui.SlayerTrackerUI;
 import ui.SlayerTrackerUI.FrameDragListener;
 
@@ -48,7 +33,7 @@ public class XPTrackerPanel {
 	static int width = Globals.scale(1550);
 	static int height = Globals.scale(125)+(Globals.getNumberOfCMLAccounts()+1)*Globals.scale(28);
 	static ExpTracker[] players = null;
-	static ArrayList<JLabel> labels = new ArrayList<JLabel>();
+	static ArrayList<JrLabel> labels = new ArrayList<JrLabel>();
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -123,35 +108,30 @@ public class XPTrackerPanel {
 			
 				
 				
-				JLabel titleLabel = new JLabel();
+				JrLabel titleLabel = new JrLabel("Xp Tracker Panel v"+Globals.versionNumber);
 				titleLabel.setBounds(Globals.scale(5),0,width/2,Globals.scale(25));
-				titleLabel.setText("Xp Tracker Panel v"+Globals.versionNumber);
-				titleLabel.setForeground(new Color(214, 214, 214));
-				titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-				titleLabel.setFont(Globals.mainFont);
+				titleLabel.setColor(Globals.titleColor);
+				titleLabel.setLeft();
 				topBar.add(titleLabel);
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////
         		
-				JLabel dailyGainsInfoLabel = new JLabel("This Colour is for xp you earned today");
-				JLabel weeklyGainsInfoLabel = new JLabel("This Colour is for xp you earned this week");
+				JrLabel dailyGainsInfoLabel = new JrLabel("This Colour is for xp you earned today");
+				JrLabel weeklyGainsInfoLabel = new JrLabel("This Colour is for xp you earned this week");
 				
 				dailyGainsInfoLabel.setBounds(0,Globals.scale(30),width,Globals.scale(40));
 				weeklyGainsInfoLabel.setBounds(0,Globals.scale(45),width,Globals.scale(40));
 				
-				dailyGainsInfoLabel.setFont(Globals.boldFont);
-				weeklyGainsInfoLabel.setFont(Globals.boldFont);
+				dailyGainsInfoLabel.setBoldFont();
+				weeklyGainsInfoLabel.setBoldFont();
 				
-				dailyGainsInfoLabel.setForeground(Globals.buttonForground);
-				weeklyGainsInfoLabel.setForeground(Globals.red);
+				weeklyGainsInfoLabel.setColor(Globals.red);
 				
-				dailyGainsInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-				weeklyGainsInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				////////////////////////////////
 				
-				JButton updateButton = new JButton("Update Data");
-				updateButton.setBounds(0,Globals.topMenuBarHeight,Globals.scale(150),Globals.scale(25));
-				updateButton.setForeground(Globals.white);
-				updateButton.setBackground(Globals.blue);
+				JButton updateButton = new JButton("Click Me To Update Data");
+				updateButton.setBounds(0,Globals.topMenuBarHeight,Globals.scale(250),Globals.scale(25));
+				updateButton.setForeground(Globals.buttonForground);
+				updateButton.setBackground(Globals.panelBackground);
 				updateButton.setFont(Globals.mainFont);
 				updateButton.addMouseListener(new MouseAdapter() {
 		    		@Override
@@ -165,7 +145,10 @@ public class XPTrackerPanel {
 		    			mainFrame.repaint();
 		    		}
 				});
+				JrLabel warning = new JrLabel("This may take a while!");
+				warning.setBounds(0,Globals.topMenuBarHeight+Globals.scale(25),Globals.scale(250),Globals.scale(25));
 				
+				mainFrame.getContentPane().add(warning);
 				/////////////////////////////////
 				mainFrame.getContentPane().add(updateButton);
 				mainFrame.getContentPane().add(dailyGainsInfoLabel);
@@ -235,6 +218,7 @@ public class XPTrackerPanel {
 				getImage("/images/skills/agility.gif"),
 				getImage("/images/skills/thieving.gif"),
 				getImage("/images/skills/slayer.gif"),
+				getImage("/images/skills/farming.gif"),
 				getImage("/images/skills/runecrafting.gif"),
 				getImage("/images/skills/hunter.gif"),
 				getImage("/images/skills/construction.gif")
@@ -246,34 +230,31 @@ public class XPTrackerPanel {
 		outputPanel.setBackground(Globals.panelBackground);
 		
 		int nameWidth = Globals.scale(125);
-		int columnWidth = (width-nameWidth)/23;
+		int columnWidth = (width-nameWidth)/24;
 		int rowHeight = (Globals.mainFont.getSize()*2)+Globals.scale(5);
 		int subRowHeight = Globals.mainFont.getSize()+Globals.scale(2);
 		
 		// Draw the icons
-		for(int i = 0; i < 23; i++) {
-			JLabel label = new JLabel(columns[i]);
+		for(int i = 0; i < 24; i++) {
+			JrLabel label = new JrLabel(columns[i]);
 			label.setBounds(nameWidth+(i*columnWidth),Globals.scale(100),columnWidth,rowHeight);
-			label.setHorizontalAlignment(SwingConstants.RIGHT);
+			label.setRight();
 			outputPanel.add(label);
 		}
 		
 		for(int playerNum = 0; playerNum < players.length; playerNum++) {
 			//CMLData.updateMultiple(players);
-    		int[] dailyGains = players[playerNum].getDailyGains();
-    		int[] weeklyGains = players[playerNum].getWeeklyGains();
-    		for(int i = 0; i < 23; i++) {
-    			JLabel dailyGainsLabel = new JLabel(NumberFormat.getNumberInstance(Locale.US).format(dailyGains[i]));
+    		double[] dailyGains = players[playerNum].getDailyGains();
+    		double[] weeklyGains = players[playerNum].getWeeklyGains();
+    		for(int i = 0; i < 24; i++) {
+    			JrLabel dailyGainsLabel = new JrLabel(NumberFormat.getNumberInstance(Locale.US).format(dailyGains[i]));
     			dailyGainsLabel.setBounds(nameWidth+(i*columnWidth),Globals.scale(100)+(rowHeight*(playerNum+1)),columnWidth,subRowHeight);
-    			dailyGainsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    			dailyGainsLabel.setForeground(Globals.buttonForground);
-    			dailyGainsLabel.setFont(Globals.mainFont);
+    			dailyGainsLabel.setRight();
     			
-    			JLabel weeklyGainsLabel = new JLabel(NumberFormat.getNumberInstance(Locale.US).format(weeklyGains[i]));
+    			JrLabel weeklyGainsLabel = new JrLabel(NumberFormat.getNumberInstance(Locale.US).format(weeklyGains[i]));
     			weeklyGainsLabel.setBounds(nameWidth+(i*columnWidth),Globals.scale(100)+(rowHeight*(playerNum+1))+subRowHeight,columnWidth,subRowHeight);
-    			weeklyGainsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    			weeklyGainsLabel.setForeground(Globals.red);
-    			weeklyGainsLabel.setFont(Globals.mainFont);
+    			weeklyGainsLabel.setRight();
+    			weeklyGainsLabel.setColor(Globals.red);
     			//label.setFont(Globals.smallFont);
     			
     			
@@ -288,11 +269,9 @@ public class XPTrackerPanel {
     			outputPanel.add(weeklyGainsLabel);
     			outputPanel.add(line);
     		}
-    		JLabel accountName = new JLabel(players[playerNum].accountName);
+    		JrLabel accountName = new JrLabel(players[playerNum].accountName);
 			accountName.setBounds(0,Globals.scale(100)+(rowHeight*(playerNum+1)),nameWidth,rowHeight);
-			accountName.setHorizontalAlignment(SwingConstants.CENTER);
-			accountName.setForeground(Globals.buttonForground);
-			accountName.setFont(Globals.boldFont);
+			accountName.setBoldFont();
 			outputPanel.add(accountName);
 		}
 		return outputPanel;

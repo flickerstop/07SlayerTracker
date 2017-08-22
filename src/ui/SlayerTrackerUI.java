@@ -36,6 +36,7 @@ import javax.swing.ImageIcon;
 import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
+import objects.JrLabel;
 import panels.LoadingPopUp;
 import panels.FarmRunPanel;
 import panels.LogPanel;
@@ -45,29 +46,24 @@ import panels.UpdatesPanel;
 import panels.XPTrackerPanel;
 
 import javax.swing.JTextPane;
-import javax.swing.JLabel;
 import java.awt.Frame;
 
 import javax.swing.JSpinner;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Toolkit;
 
 public class SlayerTrackerUI {
-	private static JFrame mainFrame;
-	int cannonballs = 0;
+	private JFrame mainFrame;
 	private JFormattedTextField amountOfCannonballsBought;
 	private JFormattedTextField pricePaidForCannonballs;
-	JTextPane runes1TextPane;
-	JTextPane runes2TextPane;
-	JTextPane runes3TextPane;
-	JTextPane bloodRuneTextPane;
-	JTextPane tridentChargeTextPane;
+	private JTextPane runes1TextPane;
+	private JTextPane runes2TextPane;
+	private JTextPane runes3TextPane;
 	private JPanel mainPanel;
 	private JSpinner monsterCountSpinner;
-	static SlayerTrackerUI window;
-	MonsterPanel monsterPanel;
+	private static SlayerTrackerUI window;
+	private MonsterPanel monsterPanel;
 	
 	JTextPane txtpnCannonballs = new JTextPane();
 	/**
@@ -103,16 +99,14 @@ public class SlayerTrackerUI {
 				try {
 					LoadingPopUp.setProgressBar(100);
 					window = new SlayerTrackerUI();
-					
 					Globals.outCurrentTime();
-					SlayerTrackerUI.mainFrame.setVisible(true);
+					window.mainFrame.setVisible(true);
 					LoadingPopUp.hide();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		});
-			
+		});	
 	}
 
 	/**
@@ -221,7 +215,7 @@ public class SlayerTrackerUI {
 		});
 		topBar.add(minimizeButton);
 		
-		JLabel settingsButton = new JLabel();
+		JrLabel settingsButton = new JrLabel();
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/settingsIcon.png")); // load the image to a imageIcon
 			Image image = imageIcon.getImage(); // transform it 
@@ -243,7 +237,7 @@ public class SlayerTrackerUI {
 		topBar.add(settingsButton);
 		
 
-		JLabel logsButton = new JLabel();
+		JrLabel logsButton = new JrLabel();
 		logsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/logs_icon.png")); // load the image to a imageIcon
@@ -263,7 +257,7 @@ public class SlayerTrackerUI {
 		});
 		topBar.add(logsButton);
 		
-		JLabel farmButton = new JLabel();
+		JrLabel farmButton = new JrLabel();
 		farmButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Farming_icon.png")); // load the image to a imageIcon
@@ -287,7 +281,7 @@ public class SlayerTrackerUI {
 		});
 		topBar.add(farmButton);
 		
-		JLabel updateButton = new JLabel();
+		JrLabel updateButton = new JrLabel();
 		updateButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/update_icon.png")); // load the image to a imageIcon
@@ -312,7 +306,7 @@ public class SlayerTrackerUI {
 		topBar.add(updateButton);
 		
 		//TODO
-		JLabel xptrackerButton = new JLabel();
+		JrLabel xptrackerButton = new JrLabel();
 		xptrackerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		{
 			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/update_icon.png")); // load the image to a imageIcon
@@ -338,20 +332,16 @@ public class SlayerTrackerUI {
 		
 		Globals.outCurrentTime();
 		
-		JLabel titleLabel = new JLabel();
+		JrLabel titleLabel = new JrLabel(title);
 		titleLabel.setBounds(Globals.scale(5),0,panelWidth/2,Globals.scale(25));
 		titleLabel.setText(title);
-		titleLabel.setForeground(new Color(214, 214, 214));
-		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		titleLabel.setFont(Globals.mainFont);
+		titleLabel.setColor(Globals.titleColor);
+		titleLabel.setLeft();
 		topBar.add(titleLabel);
 		
-		JLabel farmRunLabel = new JLabel();
+		JrLabel farmRunLabel = new JrLabel("00:00:00");
 		farmRunLabel.setBounds(0,0,panelWidth,Globals.scale(25));
-		farmRunLabel.setText("00:00:00");
-		farmRunLabel.setForeground(Globals.iconGrey);
-		farmRunLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		farmRunLabel.setFont(Globals.mainFont);
+		farmRunLabel.setColor(Globals.iconGrey);
 		topBar.add(farmRunLabel);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Panels
@@ -482,10 +472,8 @@ public class SlayerTrackerUI {
 		mainPanel.add(monsterCountSpinner);
 		
 		
-		JLabel monsterCountLabel = new JLabel("Number of Monsters");
-		monsterCountLabel.setForeground(Globals.buttonForground);
-		monsterCountLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		monsterCountLabel.setFont(Globals.boldFont);
+		JrLabel monsterCountLabel = new JrLabel("Number of Monsters");
+		monsterCountLabel.setBoldFont();
 		monsterCountLabel.setBounds((panelWidth/2)-Globals.scale(150/2), Globals.scale(40), Globals.scale(150), Globals.scale(25));
 		mainPanel.add(monsterCountLabel);
 		
@@ -494,9 +482,7 @@ public class SlayerTrackerUI {
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Cannonball jpane
 		
-		JLabel lblAmountBought = new JLabel("Amount Bought");
-		lblAmountBought.setForeground(Globals.buttonForground);
-		lblAmountBought.setFont(Globals.mainFont);
+		JrLabel lblAmountBought = new JrLabel("Amount Bought");
 		lblAmountBought.setBounds((panelWidth/2)-Globals.scale(115), Globals.scale(100), Globals.scale(100), Globals.scale(25));
 		addCannonballsPanel.add(lblAmountBought);
 		
@@ -507,9 +493,7 @@ public class SlayerTrackerUI {
 		addCannonballsPanel.add(amountOfCannonballsBought);
 		amountOfCannonballsBought.setColumns(10);
 		
-		JLabel lblPricePaid = new JLabel("Price Per Ball");
-		lblPricePaid.setForeground(Globals.buttonForground);
-		lblPricePaid.setFont(Globals.mainFont);
+		JrLabel lblPricePaid = new JrLabel("Price Per Ball");
 		lblPricePaid.setBounds((panelWidth/2)+Globals.scale(15), Globals.scale(100), Globals.scale(100), Globals.scale(25));
 		addCannonballsPanel.add(lblPricePaid);
 		
@@ -613,10 +597,7 @@ public class SlayerTrackerUI {
 
 		// Loop for the 3 different rune types
 		for (int i = 0; i < 3; i++) {
-			JLabel runesLabel = new JLabel("Amount of "+Globals.getRuneTypes()[i]);
-			runesLabel.setForeground(Globals.buttonForground);
-			runesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			runesLabel.setFont(Globals.mainFont);
+			JrLabel runesLabel = new JrLabel("Amount of "+Globals.getRuneTypes()[i]);
 			runesLabel.setBounds((panelWidth/2)-Globals.scale(50), Globals.scale(100+(i*50)), Globals.scale(150), Globals.scale(25));
 			addRunesPanel.add(runesLabel);
 			
@@ -769,10 +750,10 @@ public class SlayerTrackerUI {
     }
 	
 	public static void reload() {
-		SlayerTrackerUI.mainFrame.setVisible(false);
+		window.mainFrame.setVisible(false);
 		Globals.reInitData();
 		window = new SlayerTrackerUI();
-		SlayerTrackerUI.mainFrame.setVisible(true);
+		window.mainFrame.setVisible(true);
 	}
 
 }

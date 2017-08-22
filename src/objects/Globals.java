@@ -100,6 +100,8 @@ public class Globals {
 	public static Color red = new Color(231, 76, 60);
 	public static Color yellow = new Color(241, 196, 15);
 	public static Color purple = new Color(155, 89, 182);
+	public static Color titleColor = new Color(214, 214, 214);
+	public static Color normalThemeWhite =new Color(240, 240, 240);
 	
 	public static Color buttonBackground = new Color(240, 240, 240);
 	public static Color topBarColour = black;
@@ -345,11 +347,10 @@ public class Globals {
 			farmTimerStart = Long.parseLong(temp[15]);
 			farmTimerStop = Long.parseLong(temp[16]);
 			magicType = temp[17];
-			if(temp.length>18) {
-				for(int i = 18; i < 17+CMLaccounts.length;i++) {
-					System.out.println(i-17);
-					CMLaccounts[i-18] = temp[i];
-				}
+			
+			for(int i = 18; i < temp.length;i++) {
+				System.out.println(i-17);
+				CMLaccounts[i-18] = temp[i];
 			}
 			//System.out.println(farmTimerStart);
 		}catch(ArrayIndexOutOfBoundsException e) {

@@ -58,9 +58,9 @@ public class CMLData {
 	}
 	
 	public static ExpTracker getGains(String player) {
-		ArrayList<Integer> daily = new ArrayList<Integer>();
-		ArrayList<Integer> weekly = new ArrayList<Integer>();
-		ArrayList<Integer> total = new ArrayList<Integer>();
+		ArrayList<Double> daily = new ArrayList<Double>();
+		ArrayList<Double> weekly = new ArrayList<Double>();
+		ArrayList<Double> total = new ArrayList<Double>();
 		try {
 			URLConnection connection = new URL("http://crystalmathlabs.com/tracker/api.php?type=track&player="+player+"&time=1d").openConnection();
 			connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
@@ -73,7 +73,7 @@ public class CMLData {
 			int count = 0;
 			while (line != null) {
 				if(count > 0) {
-					daily.add(Integer.parseInt(line.split(",")[0]));
+					daily.add(Double.parseDouble(line.split(",")[0]));
 				}
 				//System.out.println(line);
 				line = br.readLine();
@@ -94,8 +94,8 @@ public class CMLData {
 			int count = 0;
 			while (line != null) {
 				if(count > 0) {
-					weekly.add(Integer.parseInt(line.split(",")[0]));
-					total.add(Integer.parseInt(line.split(",")[2]));
+					weekly.add(Double.parseDouble(line.split(",")[0]));
+					total.add(Double.parseDouble(line.split(",")[2]));
 				}
 				//System.out.println(line);
 				line = br.readLine();
@@ -136,9 +136,9 @@ public class CMLData {
 		Globals.outCurrentTime();
 		url = "http://crystalmathlabs.com/tracker/api.php?multiquery=" + url;
 		System.out.println(url);
-		ArrayList<ArrayList<Integer>> daily = new ArrayList<ArrayList<Integer>>();
-		ArrayList<ArrayList<Integer>> weekly = new ArrayList<ArrayList<Integer>>();
-		ArrayList<ArrayList<Integer>> total = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Double>> daily = new ArrayList<ArrayList<Double>>();
+		ArrayList<ArrayList<Double>> weekly = new ArrayList<ArrayList<Double>>();
+		ArrayList<ArrayList<Double>> total = new ArrayList<ArrayList<Double>>();
 		LoadingPopUp.setProgressBar(20);
 		LoadingPopUp.setText("Connecting to CML for data");
 		try {
@@ -160,8 +160,8 @@ public class CMLData {
 			Globals.outCurrentTime();
 			for(int i=0;i<calls.length-1;i++) {
 				LoadingPopUp.addProgressBar(2);
-				ArrayList<Integer> dataSet = new ArrayList<Integer>();
-				ArrayList<Integer> dataSet2 = new ArrayList<Integer>();
+				ArrayList<Double> dataSet = new ArrayList<Double>();
+				ArrayList<Double> dataSet2 = new ArrayList<Double>();
 				String[] set = calls[i].split("z");
 				for(String row : set) {
 					//System.out.println(row);
@@ -169,12 +169,12 @@ public class CMLData {
 						continue;
 					}
 					if(i < numberOfAccounts) {
-						dataSet.add(Integer.parseInt(row.split(",")[0]));
+						dataSet.add(Double.parseDouble(row.split(",")[0]));
 					}else {
-						dataSet.add(Integer.parseInt(row.split(",")[0]));
-						dataSet2.add(Integer.parseInt(row.split(",")[2]));
+						dataSet.add(Double.parseDouble(row.split(",")[0]));
+						dataSet2.add(Double.parseDouble(row.split(",")[2]));
 					}
-					//System.out.println(Integer.parseInt(row.split(",")[0]));
+					//System.out.println(Double.parseInt(row.split(",")[0]));
 				}
 				//System.out.println("\n\n");
 				if(i < numberOfAccounts) {

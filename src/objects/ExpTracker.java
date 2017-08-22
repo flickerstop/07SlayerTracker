@@ -5,58 +5,58 @@ import java.util.ArrayList;
 public class ExpTracker {
 	// 0		1		2
 	//Daily, Weekly, Total
-	private int[] overall;
-	private int[] attack;
-	private int[] defence;
-	private int[] strength;
-	private int[] hitpoints;
-	private int[] range;
-	private int[] prayer;
-	private int[] magic;
-	private int[] cooking;
-	private int[] woodcutting;
-	private int[] fletching;
-	private int[] fishing;
-	private int[] firemaking;
-	private int[] crafting;
-	private int[] smithing;
-	private int[] mining;
-	private int[] herblore;
-	private int[] agility;
-	private int[] thieving;
-	private int[] slayer;
-	private int[] farming;
-	private int[] runecrafting;
-	private int[] hunter;
-	private int[] construction;
+	private double[] overall;
+	private double[] attack;
+	private double[] defence;
+	private double[] strength;
+	private double[] hitpoints;
+	private double[] range;
+	private double[] prayer;
+	private double[] magic;
+	private double[] cooking;
+	private double[] woodcutting;
+	private double[] fletching;
+	private double[] fishing;
+	private double[] firemaking;
+	private double[] crafting;
+	private double[] smithing;
+	private double[] mining;
+	private double[] herblore;
+	private double[] agility;
+	private double[] thieving;
+	private double[] slayer;
+	private double[] farming;
+	private double[] runecrafting;
+	private double[] hunter;
+	private double[] construction;
 	public String accountName;
 	
 	
-	public ExpTracker(ArrayList<Integer> daily, ArrayList<Integer> weekly, ArrayList<Integer> total, String account) {
-		construction = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		hunter = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		runecrafting = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		farming = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		slayer = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		thieving = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		agility = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		herblore = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		mining = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		smithing = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		crafting = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		firemaking = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		fishing = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		fletching = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		woodcutting = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		cooking = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		magic = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		prayer = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		range = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		hitpoints = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		strength = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		defence = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		attack = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
-		overall = new int[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+	public ExpTracker(ArrayList<Double> daily, ArrayList<Double> weekly, ArrayList<Double> total, String account) {
+		construction = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		hunter = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		runecrafting = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		farming = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		slayer = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		thieving = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		agility = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		herblore = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		mining = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		smithing = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		crafting = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		firemaking = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		fishing = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		fletching = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		woodcutting = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		cooking = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		magic = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		prayer = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		range = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		hitpoints = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		strength = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		defence = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		attack = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
+		overall = new double[]{daily.remove(daily.size()-1), weekly.remove(weekly.size()-1), total.remove(total.size()-1)};
 		accountName = account.replaceAll("\\+", " ");
 	}
 
@@ -95,8 +95,8 @@ public class ExpTracker {
 				 "Construction: " + construction[dataNum];
 	}
 	
-	public int[] getDailyGains() {
-		return new int[] {
+	public double[] getDailyGains() {
+		return new double[] {
 				overall[0],
 				attack[0],
 				defence[0],
@@ -124,8 +124,8 @@ public class ExpTracker {
 		};
 	}
 	
-	public int[] getWeeklyGains() {
-		return new int[] {
+	public double[] getWeeklyGains() {
+		return new double[] {
 				overall[1],
 				attack[1],
 				defence[1],
@@ -153,8 +153,8 @@ public class ExpTracker {
 		};
 	}
 	
-	public int[] getTotalExp() {
-		return new int[] {
+	public double[] getTotalExp() {
+		return new double[] {
 				overall[2],
 				attack[2],
 				defence[2],

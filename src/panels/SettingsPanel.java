@@ -16,13 +16,14 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
+import objects.JrLabel;
 import objects.Monsters;
 import ui.SlayerTrackerUI;
 import javax.swing.JSlider;
@@ -56,7 +57,7 @@ public class SettingsPanel {
 	    		int height = Globals.scale(520);
 	    		JSpinner farmPatchCountSpinner = new JSpinner();
 	    		JComboBox<String> magicTypeBox = new JComboBox<String>(Globals.magicTypes);
-	        	mainFrame.getContentPane().setBackground(Globals.black);
+	        	mainFrame.getContentPane().setBackground(Globals.panelBackground);
 	        	mainFrame.setUndecorated(true);
 	        	mainFrame.setResizable(false);
 	    		mainFrame.setTitle("Basic UI");
@@ -79,19 +80,13 @@ public class SettingsPanel {
 	    		});
 	    		mainFrame.getContentPane().add(closeButton);
 	    		
-	    		JLabel settingsLabel = new JLabel();
-	    		settingsLabel.setText("Settings");
-	    		settingsLabel.setFont(Globals.massiveFont);
-	    		settingsLabel.setForeground(Globals.white);
-	    		settingsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    		JrLabel settingsLabel = new JrLabel("Settings");
+	    		settingsLabel.setMassiveFont();
 	    		settingsLabel.setBounds(0,Globals.scale(5),panelWidth,Globals.scale(30));
 	    		mainFrame.getContentPane().add(settingsLabel);
 	    		
-	    		JLabel monsterButtonLabel = new JLabel();
-	    		monsterButtonLabel.setText("Task Buttons");
-	    		monsterButtonLabel.setFont(Globals.massiveFont);
-	    		monsterButtonLabel.setForeground(Globals.white);
-	    		monsterButtonLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    		JrLabel monsterButtonLabel = new JrLabel("Task Buttons");
+	    		monsterButtonLabel.setMassiveFont();
 	    		monsterButtonLabel.setBounds(panelWidth,Globals.scale(5),panelWidth,Globals.scale(30));
 	    		mainFrame.getContentPane().add(monsterButtonLabel);
 	    		
@@ -107,11 +102,9 @@ public class SettingsPanel {
 				///////////////////////////////////////////
 	    		////////////////////////////////////////////
 	    		// Scales
-	    		JLabel scaleLabel = new JLabel();
-	    		JLabel currentScaleLabel = new JLabel();
-	    		scaleLabel.setText("Scale: ");
-	    		scaleLabel.setFont(Globals.mainFont);
-	    		scaleLabel.setForeground(Globals.white);
+	    		JrLabel scaleLabel = new JrLabel("Scale: ");
+	    		scaleLabel.setLeft();
+	    		JrLabel currentScaleLabel = new JrLabel("Current Scale: " + Globals.getScaleString());
 	    		scaleLabel.setBounds(Globals.scale(15),Globals.scale(50),panelWidth/2,Globals.scale(25));
 	    		mainFrame.getContentPane().add(scaleLabel);
 	    		
@@ -122,7 +115,7 @@ public class SettingsPanel {
 	    		slider.setMinorTickSpacing(25);
 	    		slider.setMajorTickSpacing(50);
 	    		slider.setPaintTicks(true);
-	    		slider.setBackground(Globals.black);
+	    		slider.setBackground(Globals.panelBackground);
 	    		slider.setValue((int)(Globals.scale*100));
 	    		slider.addChangeListener(new ChangeListener() {
 	                @Override
@@ -134,9 +127,6 @@ public class SettingsPanel {
 	            });
 	    		mainFrame.getContentPane().add(slider);
 	    		
-	    		currentScaleLabel.setText("Current Scale: " + Globals.getScaleString());
-	    		currentScaleLabel.setFont(Globals.mainFont);
-	    		currentScaleLabel.setForeground(Globals.white);
 	    		currentScaleLabel.setBounds(Globals.scale(260),Globals.scale(50),panelWidth/2,Globals.scale(25));
 	    		mainFrame.getContentPane().add(currentScaleLabel);
 	    		///////////////////////////////////
@@ -174,14 +164,15 @@ public class SettingsPanel {
 				// Theme buttons
 	    		
 	    		
-	    		JLabel currentTheme = new JLabel();
-				JButton normalThemeButton = new JButton();
+	    		JrLabel currentTheme = new JrLabel();
+				JButton normalThemeButton = new JButton("Normal Theme");
 				JButton darkThemeButton = new JButton();
 				
 				
 				normalThemeButton.setText("Normal Theme");
 				normalThemeButton.setBounds(((panelWidth/2)-Globals.scale(115)),Globals.scale(90),Globals.scale(100),Globals.scale(25));
-				normalThemeButton.setBackground(Globals.white);
+				normalThemeButton.setBackground(Globals.normalThemeWhite);
+				normalThemeButton.setForeground(Globals.black);
 				normalThemeButton.setMargin(new Insets(0, 0, 0, 0));
 				normalThemeButton.setFont(Globals.mainFont);
 				normalThemeButton.addMouseListener(new MouseAdapter() {
@@ -200,7 +191,7 @@ public class SettingsPanel {
 				
 				darkThemeButton.setText("Dark Theme");
 				darkThemeButton.setBounds(((panelWidth/2)+Globals.scale(15)),Globals.scale(90),Globals.scale(100),Globals.scale(25));
-				darkThemeButton.setBackground(Globals.grey);
+				darkThemeButton.setBackground(Globals.darkerBlack);
 				darkThemeButton.setForeground(Globals.white);
 				darkThemeButton.setMargin(new Insets(0, 0, 0, 0));
 				darkThemeButton.setFont(Globals.mainFont);
@@ -219,9 +210,6 @@ public class SettingsPanel {
 				
 				
 				
-				currentTheme.setFont(Globals.mainFont);
-				currentTheme.setHorizontalAlignment(SwingConstants.CENTER);
-				currentTheme.setForeground(Globals.white);
 				currentTheme.setBounds(((panelWidth/2)-((panelWidth/2)/2)),Globals.scale(110),panelWidth/2,Globals.scale(25));
 	    		mainFrame.getContentPane().add(currentTheme);
 	    		
@@ -249,64 +237,53 @@ public class SettingsPanel {
 				
 				
 				
-				JLabel farmLabel = new JLabel();
+				JrLabel farmLabel = new JrLabel(Globals.boldFont);
 				farmLabel.setText("Farm Info");
-				farmLabel.setFont(Globals.boldFont);
-				farmLabel.setForeground(Globals.white);
-				farmLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				farmLabel.setBounds(0,Globals.scale(150),panelWidth,Globals.scale(30));
 	    		mainFrame.getContentPane().add(farmLabel);
 	    		
-	    		JLabel herbTypeLabel = new JLabel("Planting: ");
+	    		JrLabel herbTypeLabel = new JrLabel("Planting: ");
+	    		herbTypeLabel.setRight();
 				herbTypeLabel.setBounds(Globals.scale(10),Globals.scale(180),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
-				herbTypeLabel.setFont(Globals.mainFont);
-				herbTypeLabel.setForeground(Globals.white);
-				herbTypeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 				
 				herbTypeComboBox.setFont(Globals.mainFont);
+				herbTypeComboBox.setBackground(Globals.normalThemeWhite);
 				herbTypeComboBox.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(180),Globals.scale(150),Globals.scale(25));
 				herbTypeComboBox.setSelectedItem(Globals.herbType);
 				mainFrame.getContentPane().add(herbTypeComboBox);
 				mainFrame.getContentPane().add(herbTypeLabel);
 				
 				
-				JLabel numOfPatchesLabel = new JLabel();
+				JrLabel numOfPatchesLabel = new JrLabel("How many patches do you run:");
+				numOfPatchesLabel.setRight();
     			
-    			numOfPatchesLabel.setFont(Globals.mainFont);
-    			numOfPatchesLabel.setForeground(Globals.white);
-    			numOfPatchesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    			numOfPatchesLabel.setText("How many patches do you run:");
     			numOfPatchesLabel.setBounds(Globals.scale(10),Globals.scale(205),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
     			mainFrame.getContentPane().add(numOfPatchesLabel);
     			
     			
-    			farmPatchCountSpinner.setForeground(Globals.white);
-    			farmPatchCountSpinner.setBackground(Globals.buttonBackground);
+    			farmPatchCountSpinner.setForeground(Globals.buttonForground);
+    			farmPatchCountSpinner.setBackground(Globals.normalThemeWhite);
     			farmPatchCountSpinner.setModel(new SpinnerNumberModel(Globals.numberOfPatches, 1, 7, 1));
     			farmPatchCountSpinner.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(205),Globals.scale(150),Globals.scale(25));
     			farmPatchCountSpinner.setFont(Globals.mainFont);
     			mainFrame.getContentPane().add(farmPatchCountSpinner);
     			
-    			JLabel otherInfo = new JLabel();
-    			otherInfo.setText("Other Info");
-    			otherInfo.setFont(Globals.boldFont);
-    			otherInfo.setForeground(Globals.white);
-    			otherInfo.setHorizontalAlignment(SwingConstants.CENTER);
+    			JrLabel otherInfo = new JrLabel("Other Info");
+    			otherInfo.setBoldFont();
     			otherInfo.setBounds(0,Globals.scale(250),panelWidth,Globals.scale(30));
 	    		mainFrame.getContentPane().add(otherInfo);
 	    		
-	    		JLabel magicTypeLabel = new JLabel();
-	    		magicTypeLabel.setFont(Globals.mainFont);
-	    		magicTypeLabel.setForeground(Globals.white);
-	    		magicTypeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-	    		magicTypeLabel.setText("Type of spell:");
+	    		JrLabel magicTypeLabel = new JrLabel("Type of spell:");
+	    		magicTypeLabel.setRight();
 	    		magicTypeLabel.setBounds(Globals.scale(10),Globals.scale(280),(panelWidth/2)-Globals.scale(20),Globals.scale(25));
-    			mainFrame.getContentPane().add(magicTypeLabel);
+    			
+	    		mainFrame.getContentPane().add(magicTypeLabel);
     			
     			// TODO work here
     			
     			magicTypeBox.setBounds(panelWidth/2+Globals.scale(10),Globals.scale(280),Globals.scale(150),Globals.scale(25));
     			magicTypeBox.setFont(Globals.mainFont);
+    			magicTypeBox.setBackground(Globals.normalThemeWhite);
     			magicTypeBox.setSelectedItem(Globals.magicType);
     			mainFrame.getContentPane().add(magicTypeBox);
     			
@@ -328,12 +305,9 @@ public class SettingsPanel {
 				mainFrame.getContentPane().add(separator3);
 				//////////////////////////////////////////////////////////////////////////////
 				
-				JLabel discordLabel = new JLabel();
-				discordLabel.setText("Got a bug or idea? Click me to open the Discord and share it!");
+				JrLabel discordLabel = new JrLabel("Got a bug or idea? Click me to open the Discord and share it!");
 				discordLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				discordLabel.setFont(Globals.mainFont);
-				discordLabel.setForeground(Globals.purple);
-				discordLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				discordLabel.setColor(Globals.purple);
 				discordLabel.setBounds(0,Globals.scale(400),panelWidth,Globals.scale(30));
 				discordLabel.addMouseListener(new MouseAdapter() {
 					@Override
@@ -351,11 +325,9 @@ public class SettingsPanel {
 				});
 	    		mainFrame.getContentPane().add(discordLabel);
     			
-				JLabel openFileLabel = new JLabel();
-				openFileLabel.setText("Click me to open where the files are!");
-				openFileLabel.setFont(Globals.smallFont);
-				openFileLabel.setForeground(Globals.blue);
-				openFileLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				JrLabel openFileLabel = new JrLabel("Click me to open where the files are!");
+				openFileLabel.setSmallFont();
+				openFileLabel.setColor(Globals.blue);
 				openFileLabel.setBounds(0,Globals.scale(430),panelWidth,Globals.scale(30));
 				openFileLabel.addMouseListener(new MouseAdapter() {
 					@Override
@@ -369,11 +341,9 @@ public class SettingsPanel {
 				});
 	    		mainFrame.getContentPane().add(openFileLabel);
 	    		
-	    		JLabel openFileWarningLabel = new JLabel();
-	    		openFileWarningLabel.setText("Warning! Manually editing files MAY/WILL cause problems!");
-	    		openFileWarningLabel.setFont(Globals.smallFont);
-	    		openFileWarningLabel.setForeground(Globals.blue);
-	    		openFileWarningLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    		JrLabel openFileWarningLabel = new JrLabel("Warning! Manually editing files MAY/WILL cause problems!");
+	    		openFileWarningLabel.setSmallFont();
+	    		openFileWarningLabel.setColor(Globals.blue);
 	    		openFileWarningLabel.setBounds(0,Globals.scale(440),panelWidth,Globals.scale(30));
 	    		openFileWarningLabel.addMouseListener(new MouseAdapter() {
 					@Override
@@ -387,18 +357,15 @@ public class SettingsPanel {
 				});
 	    		mainFrame.getContentPane().add(openFileWarningLabel);
 	    		
-	    		JLabel thanksLabel = new JLabel();
-	    		thanksLabel.setText("Special thanks to my Alpha tester Metalspike0!");
-	    		thanksLabel.setFont(Globals.smallFont);
-	    		thanksLabel.setForeground(Globals.grey);
-	    		thanksLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    		JrLabel thanksLabel = new JrLabel("Special thanks to my Alpha tester Metalspike0!");
+	    		thanksLabel.setSmallFont();
+	    		thanksLabel.setColor(Globals.grey);
 	    		thanksLabel.setBounds(0,height-Globals.scale(50),panelWidth,Globals.scale(10));
 	    		mainFrame.getContentPane().add(thanksLabel);
-	    		JLabel thanksLabel2 = new JLabel();
+	    		JrLabel thanksLabel2 = new JrLabel();
 	    		thanksLabel2.setText("The finder of bugs, and the man of many great ideas");
-	    		thanksLabel2.setFont(Globals.smallFont);
-	    		thanksLabel2.setForeground(Globals.grey);
-	    		thanksLabel2.setHorizontalAlignment(SwingConstants.CENTER);
+	    		thanksLabel2.setSmallFont();
+	    		thanksLabel2.setColor(Globals.grey);
 	    		thanksLabel2.setBounds(0,height-Globals.scale(40),panelWidth,Globals.scale(10));
 	    		mainFrame.getContentPane().add(thanksLabel2);
     			
@@ -420,12 +387,12 @@ public class SettingsPanel {
 				int monsterCount = 1;
 				//System.out.println(firstCol+","+secondCol);
 				for(int i = 0; i < firstCol; i++) {
-					JLabel tempLabel = new JLabel("#"+monsterCount+":");
+					JrLabel tempLabel = new JrLabel("#"+monsterCount+":");
+					tempLabel.setLeft();
 					tempLabel.setBounds(panelWidth+Globals.scale(20),Globals.scale((25*i)+35),Globals.scale(150),Globals.scale(25));
-					tempLabel.setFont(Globals.mainFont);
-					tempLabel.setForeground(Globals.white);
 					JComboBox<String> comboBox = new JComboBox<String>(Monsters.getListOfMonsters());
 					comboBox.setFont(Globals.mainFont);
+					comboBox.setBackground(Globals.normalThemeWhite);
 					comboBox.setBounds(panelWidth+Globals.scale(50),Globals.scale((25*i)+35),Globals.scale(150),Globals.scale(25));
 					comboBox.setSelectedItem(Globals.prefMonsters[i][0]);
 
@@ -436,12 +403,12 @@ public class SettingsPanel {
 				}
 				
 				for(int i = 0; i < secondCol; i++) {
-					JLabel tempLabel = new JLabel("#"+monsterCount+":");
+					JrLabel tempLabel = new JrLabel("#"+monsterCount+":");
+					tempLabel.setLeft();
 					tempLabel.setBounds(panelWidth+Globals.scale(225),Globals.scale((25*i)+35),Globals.scale(150),Globals.scale(25));
-					tempLabel.setFont(Globals.mainFont);
-					tempLabel.setForeground(Globals.white);
 					JComboBox<String> comboBox = new JComboBox<String>(Monsters.getListOfMonsters());
 					comboBox.setFont(Globals.mainFont);
+					comboBox.setBackground(Globals.normalThemeWhite);
 					comboBox.setBounds(panelWidth+Globals.scale(260),Globals.scale((25*i)+35),Globals.scale(150),Globals.scale(25));
 					comboBox.setSelectedItem(Globals.prefMonsters[i+firstCol][0]);
 					monstersList.add(comboBox);
@@ -462,10 +429,8 @@ public class SettingsPanel {
 				int x = (panelWidth*2)+Globals.scale(25);
 				
 				for(int i = 0; i <17; i++) {
-					JLabel label = new JLabel("Account #"+i+":");
-					label.setFont(Globals.mainFont);
-					label.setForeground(Globals.buttonForground);
-					label.setHorizontalAlignment(SwingConstants.RIGHT);
+					JrLabel label = new JrLabel("Account #"+i+":");
+					label.setRight();
 					label.setBounds(x,Globals.scale((25*i)+35),Globals.scale(95),Globals.scale(25));
 					
 					String accountName = Globals.CMLaccounts[i];
@@ -473,6 +438,7 @@ public class SettingsPanel {
 						accountName = "";
 					}
 					JTextField input = new JTextField(accountName);
+					input.setBackground(Globals.normalThemeWhite);
 					input.setFont(Globals.mainFont);
 					input.setBounds(x+Globals.scale(100),Globals.scale((25*i)+35),Globals.scale(150),Globals.scale(25));
 					
