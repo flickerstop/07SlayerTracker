@@ -20,7 +20,7 @@ public class Globals {
 	/////////////////////////////
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
-	public static boolean isSafeEdit = true;
+	public static boolean isSafeEdit = false;
 	public static String versionNumber = "0.8.0";
 	public static boolean showTimers = false;
 	private static long startTime;

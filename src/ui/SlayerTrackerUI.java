@@ -328,7 +328,7 @@ public class SlayerTrackerUI {
     			}
     		}
 		});
-		topBar.add(xptrackerButton);
+		//topBar.add(xptrackerButton);
 		
 		Globals.outCurrentTime();
 		

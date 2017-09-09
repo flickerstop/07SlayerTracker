@@ -31,7 +31,23 @@ public class UpdatesPanel {
 	        public void run()
 	        {
 	        	mainFrame = new JFrame("Test");
-	        	String updateText = "Update 0.7.10\n\n- Moved all data from player object to Globals\n- Completely removed the player object\n- Redid the code for different spells so I can add more easily\n- Log buttons dont show if you dont have a log of that type\n- Added the ability to use a trident\n- Added trident to the logs\n- Fixed an issue where you couldn't enter 0 profit on a task\n\nUpdate 0.7.9\n\n- Can now change spell to barrage or burst\n- Barrage log added\n- Simple colour change on settings menu\n- Can now view update notes\n- Removed 3 columns from cannon&magic log\n";
+	        	String updateText = "Update 0.8.0\n\n" 
+	        			+ "- Added the 4 new fossil island wyvern types\n"
+	        			+ "- Working on adding CML tracker\n"
+	        			+ "\nUpdate 0.7.10\n\n"
+	        			+ "- Moved all data from player object to Globals\n"
+	        			+ "- Completely removed the player object\n"
+	        			+ "- Redid the code for different spells so I can add more easily\n"
+	        			+ "- Log buttons dont show if you dont have a log of that type\n"
+	        			+ "- Added the ability to use a trident\n"
+	        			+ "- Added trident to the logs\n"
+	        			+ "- Fixed an issue where you couldn't enter 0 profit on a task\n"
+	        			+ "\nUpdate 0.7.9\n\n"
+	        			+ "- Can now change spell to barrage or burst\n"
+	        			+ "- Barrage log added\n"
+	        			+ "- Simple colour change on settings menu\n"
+	        			+ "- Can now view update notes\n"
+	        			+ "- Removed 3 columns from cannon&magic log\n";
 	        	int width = Globals.scale(400);
 	    		int height = Globals.scale(200);
 	    		
