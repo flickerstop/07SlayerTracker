@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -14,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import objects.Globals;
+import ui.SlayerTrackerUI;
+
 import javax.swing.JProgressBar;
 
 public class LoadingPopUp {
@@ -46,7 +49,7 @@ public class LoadingPopUp {
 	    		mainFrame.setBounds(100, 100, width, height);
 	    		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    		mainFrame.getContentPane().setLayout(null);
-	    		
+	    		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/slayerIcon.png")));
 	    		centerText = new JLabel(text);
         		centerText.setFont(Globals.mainFont);
         		centerText.setForeground(Globals.white);

@@ -54,7 +54,7 @@ import javax.swing.SpinnerNumberModel;
 import java.awt.Toolkit;
 
 public class SlayerTrackerUI {
-	private JFrame mainFrame;
+	private static JFrame mainFrame;
 	private JFormattedTextField amountOfCannonballsBought;
 	private JFormattedTextField pricePaidForCannonballs;
 	private JTextPane runes1TextPane;
@@ -100,7 +100,8 @@ public class SlayerTrackerUI {
 					LoadingPopUp.setProgressBar(100);
 					window = new SlayerTrackerUI();
 					Globals.outCurrentTime();
-					window.mainFrame.setVisible(true);
+					SystemTrayIcon.initTaskBar();
+					mainFrame.setVisible(true);
 					LoadingPopUp.hide();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -187,7 +188,8 @@ public class SlayerTrackerUI {
 		closeButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-				mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+				//mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+    			mainFrame.setVisible(false);
     		}
 		});
 		topBar.add(closeButton);
@@ -195,14 +197,8 @@ public class SlayerTrackerUI {
 		
 		JButton minimizeButton = new JButton();
 		minimizeButton.setFocusPainted(false);
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/minimize.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_DEFAULT); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			minimizeButton.setIcon(imageIcon);
-		}
+
+		minimizeButton.setIcon(scaleImage("/images/minimize.png"));
 		minimizeButton.setBackground(new Color(52, 152, 219));
 		minimizeButton.setBounds(panelWidth-Globals.scale(50), 0, Globals.scale(25), Globals.scale(25));
 		minimizeButton.setMargin(new Insets(0, 0, 0, 0));
@@ -216,22 +212,14 @@ public class SlayerTrackerUI {
 		topBar.add(minimizeButton);
 		
 		JrLabel settingsButton = new JrLabel();
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/settingsIcon.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			settingsButton.setIcon(imageIcon);
-		}
+		settingsButton.setIcon(scaleImage("/images/settingsIcon.png"));
 		settingsButton.setBounds(panelWidth-Globals.scale(80), 0, Globals.scale(25), Globals.scale(25));
 		settingsButton.setToolTipText("Settings");
 		settingsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		settingsButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-				SettingsPanel temp = new SettingsPanel();
-				temp.build();
+				SettingsPanel.showPanel();
     		}
 		});
 		topBar.add(settingsButton);
@@ -239,68 +227,39 @@ public class SlayerTrackerUI {
 
 		JrLabel logsButton = new JrLabel();
 		logsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/logs_icon.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			logsButton.setIcon(imageIcon);
-		}
+		logsButton.setIcon(scaleImage("/images/logs_icon.png"));
 		logsButton.setBounds(panelWidth-Globals.scale(150), 0, Globals.scale(25), Globals.scale(25));
 		logsButton.setToolTipText("Settings");
 		logsButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			LogPanel.build();
+    			LogPanel.showPanel();
     		}
 		});
 		topBar.add(logsButton);
 		
 		JrLabel farmButton = new JrLabel();
 		farmButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/Farming_icon.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			farmButton.setIcon(imageIcon);
-		}
+		farmButton.setIcon(scaleImage("/images/Farming_icon.png"));
 		farmButton.setBounds(panelWidth-Globals.scale(185), 0, Globals.scale(25), Globals.scale(25));
 		farmButton.setToolTipText("Farm Run");
 		farmButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			if(!FarmRunPanel.isInit()) {
-    				FarmRunPanel.build(false);
-    			}else {
-    				FarmRunPanel.makeVisible();
-    			}
+    			FarmRunPanel.showPanel();
     		}
 		});
 		topBar.add(farmButton);
 		
 		JrLabel updateButton = new JrLabel();
 		updateButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/update_icon.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			updateButton.setIcon(imageIcon);
-		}
+		updateButton.setIcon(scaleImage("/images/update_icon.png"));
 		updateButton.setBounds(panelWidth-Globals.scale(115), 0, Globals.scale(25), Globals.scale(25));
-		updateButton.setToolTipText("Farm Run");
+		updateButton.setToolTipText("Recent Updates");
 		updateButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			if(!UpdatesPanel.isInit()) {
-    				UpdatesPanel.build();
-    			}else {
-    				UpdatesPanel.makeVisible();
-    			}
+    			UpdatesPanel.showPanel();
     		}
 		});
 		topBar.add(updateButton);
@@ -308,24 +267,13 @@ public class SlayerTrackerUI {
 		//TODO
 		JrLabel xptrackerButton = new JrLabel();
 		xptrackerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		{
-			ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource("/images/update_icon.png")); // load the image to a imageIcon
-			Image image = imageIcon.getImage(); // transform it 
-			Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			imageIcon = new ImageIcon(newimg);  // transform it back
-			
-			xptrackerButton.setIcon(imageIcon);
-		}
+		xptrackerButton.setIcon(scaleImage("/images/update_icon.png"));
 		xptrackerButton.setBounds(panelWidth-Globals.scale(225), 0, Globals.scale(25), Globals.scale(25));
 		xptrackerButton.setToolTipText("Farm Run");
 		xptrackerButton.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseClicked(MouseEvent arg0) {
-    			if(!XPTrackerPanel.isInit()) {
-    				XPTrackerPanel.setup();
-    			}else {
-    				XPTrackerPanel.makeVisible();
-    			}
+    			XPTrackerPanel.showPanel();
     		}
 		});
 		//topBar.add(xptrackerButton);
@@ -395,7 +343,8 @@ public class SlayerTrackerUI {
 		
 		int buttonWidth = (panelWidth-(spaceBetweenButtons*(Globals.numberOfCols+1)))/Globals.numberOfCols;
 		int buttonHeight = (buttonSpaceHeight-(spaceBetweenButtons*(Globals.numberOfRows+1)))/Globals.numberOfRows;
-		
+		System.out.println(buttonWidth);
+		System.out.println(buttonHeight);
 		int y[] = new int[Globals.numberOfRows];
 		int x[] = new int[Globals.numberOfCols];
 		
@@ -671,6 +620,7 @@ public class SlayerTrackerUI {
     					Globals.clip.loop(Clip.LOOP_CONTINUOUSLY);
     				}
     				farmRunLabel.setText("00:00:00");
+    				SystemTrayIcon.setFarmTime("00:00:00");
     				
     			}else if(Globals.farmTimerStart > 0 && Globals.farmTimerStop != 0) { // if timer started
     				long millis = Globals.farmTimerStop - System.currentTimeMillis();
@@ -750,10 +700,26 @@ public class SlayerTrackerUI {
     }
 	
 	public static void reload() {
-		window.mainFrame.setVisible(false);
+		mainFrame.setVisible(false);
 		Globals.reInitData();
 		window = new SlayerTrackerUI();
-		window.mainFrame.setVisible(true);
+		mainFrame.setVisible(true);
+	}
+	
+	public static void exit() {
+		mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+	}
+	
+	public static void openMainPanel() {
+		mainFrame.setVisible(true);
+	}
+	
+	private static ImageIcon scaleImage(String path) {
+		ImageIcon imageIcon = new ImageIcon(SlayerTrackerUI.class.getResource(path)); // load the image to a imageIcon
+		Image image = imageIcon.getImage(); // transform it 
+		Image newimg = image.getScaledInstance(Globals.scale(25), Globals.scale(25),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+		imageIcon = new ImageIcon(newimg);  // transform it back
+		return imageIcon;
 	}
 
 }

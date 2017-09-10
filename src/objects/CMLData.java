@@ -121,12 +121,12 @@ public class CMLData {
 		}
 		Globals.outCurrentTime();
 		for(int i = 0; i < accounts.length; i++) {
-			String temp = "{\"type\":\"track\",\"player\":\""+accounts[i]+"\",\"time\":\"1d\"}";
+			String temp = "{\"type\":\"track\",\"player\":\""+(accounts[i].replaceAll(" ", "%20"))+"\",\"time\":\"1d\"}";
 			temp += ",";
 			url += temp;
 		}
 		for(int i = 0; i < accounts.length; i++) {
-			String temp = "{\"type\":\"track\",\"player\":\""+accounts[i]+"\",\"time\":\"7d\"}";
+			String temp = "{\"type\":\"track\",\"player\":\""+(accounts[i].replaceAll(" ", "%20"))+"\",\"time\":\"7d\"}";
 			if(i+1 < accounts.length) {
 				temp += ",";
 			}
@@ -223,7 +223,7 @@ public class CMLData {
 		Globals.outCurrentTime();
 		ArrayList<String> errors = new ArrayList<String>();
 		for(int i = 0; i < accounts.length; i++) {
-			String temp = "{\"type\":\"update\",\"player\":\""+accounts[i]+"\"}";
+			String temp = "{\"type\":\"update\",\"player\":\""+(accounts[i].replaceAll(" ", "%20"))+"\"}";
 			if(i+1 < accounts.length) {
 				temp += ",";
 			}

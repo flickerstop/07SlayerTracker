@@ -38,7 +38,7 @@ public class FarmRunPanel {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public static void build(boolean isStandAlone) {
+	private static void build() {
 		EventQueue.invokeLater(new Runnable()
         {
             @Override
@@ -80,7 +80,7 @@ public class FarmRunPanel {
         		logsButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
-	        			FarmRunData.build();
+	        			FarmRunDataPanel.build();
 	        		}
         		});
         		mainFrame.getContentPane().add(logsButton);
@@ -95,11 +95,7 @@ public class FarmRunPanel {
         		closeButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
-	        			if(isStandAlone) {
-	        				mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
-	        			}else {
-	        				mainFrame.setVisible(false);
-	        			}
+        				mainFrame.setVisible(false);
 	        		}
         		});
         		mainFrame.getContentPane().add(closeButton);
@@ -266,7 +262,7 @@ public class FarmRunPanel {
 			}
         });
 	}
-	public static void startTimer() {
+	private static void startTimer() {
 		int timerLength = 4800000; //4800000;
 		Globals.farmTimerStart = System.currentTimeMillis();
 		Globals.farmTimerStop = System.currentTimeMillis() + timerLength;
@@ -281,7 +277,7 @@ public class FarmRunPanel {
 	            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 	    endTimeLabel.setText("Farm run at "+hms);
 	}
-	public static void startTimer(int length) {
+	private static void startTimer(int length) {
 		int timerLength = length; //4800000;
 		Globals.farmTimerStart = System.currentTimeMillis();
 		Globals.farmTimerStop = System.currentTimeMillis() + timerLength;
@@ -296,7 +292,7 @@ public class FarmRunPanel {
 	            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 	    endTimeLabel.setText("Farm run at "+hms);
 	}
-	public static void stopTimer() {
+	private static void stopTimer() {
 		Globals.farmTimerStop = 0;
 		Globals.farmTimerStart = 0;
 		Globals.clip.stop();
@@ -304,7 +300,7 @@ public class FarmRunPanel {
 		endTimeLabel.setText("Start the timer!");
 	}
 	
-	public static class FrameDragListener extends MouseAdapter {
+	private static class FrameDragListener extends MouseAdapter {
 
         private final JFrame frame;
         private Point mouseDownCompCoords = null;
@@ -328,24 +324,27 @@ public class FarmRunPanel {
     }
 	
 	private static void openSaveFarmRun() {
-		SaveFarmRun.build();
+		SaveFarmRunPanel.build();
 	}
 	
-	public static void makeVisible() {
+	public static void showPanel() {
+		if(!isInit()) {
+			build();
+		}else {
+			makeVisible();
+		}
+	}
+	private static void makeVisible() {
 		mainFrame.setVisible(true);
 		mainFrame.setState(Frame.NORMAL);
 	}
-	public static void makeInvisible() {
-		mainFrame.setVisible(false);
-	}
-	public static boolean isVisible() {
-		return mainFrame.isVisible();
-	}
-	public static boolean isInit() {
+
+	private static boolean isInit() {
 		if(mainFrame == null) {
 			return false;
 		}else {
 			return true;
 		}
 	}
+	
 }

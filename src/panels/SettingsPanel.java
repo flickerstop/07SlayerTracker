@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.EventQueue;
+import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -34,13 +36,9 @@ import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 
 public class SettingsPanel {
-	private JFrame mainFrame;
+	private static JFrame mainFrame;
 	
-	
-	public SettingsPanel() {
-		mainFrame = new JFrame("Test");
-	}
-	public void build() {
+	private static void build() {
 		/**
 		 * @wbp.parser.entryPoint
 		 */
@@ -57,7 +55,9 @@ public class SettingsPanel {
 	    		int height = Globals.scale(520);
 	    		JSpinner farmPatchCountSpinner = new JSpinner();
 	    		JComboBox<String> magicTypeBox = new JComboBox<String>(Globals.magicTypes);
+	    		mainFrame = new JFrame("Test");
 	        	mainFrame.getContentPane().setBackground(Globals.panelBackground);
+	    		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/slayerIcon.png")));
 	        	mainFrame.setUndecorated(true);
 	        	mainFrame.setResizable(false);
 	    		mainFrame.setTitle("Basic UI");
@@ -426,7 +426,14 @@ public class SettingsPanel {
 				mainFrame.getContentPane().add(separator5);
 				//////////////////////////////////////////////////////////////////////////////
 	    		
+				
+				
 				int x = (panelWidth*2)+Globals.scale(25);
+				
+				JrLabel accountsLabel = new JrLabel("CML Accounts");
+				accountsLabel.setMassiveFont();
+				accountsLabel.setBounds(x,Globals.scale(5),panelWidth,Globals.scale(30));
+	    		mainFrame.getContentPane().add(accountsLabel);
 				
 				for(int i = 0; i <17; i++) {
 					JrLabel label = new JrLabel("Account #"+i+":");
@@ -465,7 +472,7 @@ public class SettingsPanel {
 			}
 	    });
 	}
-	public static class FrameDragListener extends MouseAdapter {
+	private static class FrameDragListener extends MouseAdapter {
 
         private final JFrame frame;
         private Point mouseDownCompCoords = null;
@@ -487,4 +494,24 @@ public class SettingsPanel {
             frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
         }
     }
+
+	public static void showPanel() {
+		if(!isInit()) {
+			build();
+		}else {
+			makeVisible();
+		}
+	}
+	private static void makeVisible() {
+		mainFrame.setVisible(true);
+		mainFrame.setState(Frame.NORMAL);
+	}
+
+	private static boolean isInit() {
+		if(mainFrame == null) {
+			return false;
+		}else {
+			return true;
+		}
+	}
 }

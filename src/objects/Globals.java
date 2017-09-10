@@ -21,7 +21,7 @@ public class Globals {
 	// SAVE EDIT MODE
 	// Is it safe to edit the files
 	public static boolean isSafeEdit = false;
-	public static String versionNumber = "0.8.0";
+	public static String versionNumber = "0.8.1";
 	public static boolean showTimers = false;
 	private static long startTime;
 	
@@ -49,7 +49,7 @@ public class Globals {
 	////////////////////
 	
 	public static String[] CMLaccounts = {
-			null,
+			"Jr2254",
 			null,
 			null,
 			null,

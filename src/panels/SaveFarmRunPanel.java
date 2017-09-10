@@ -23,7 +23,7 @@ import javax.swing.text.NumberFormatter;
 
 import objects.Globals;
 
-public class SaveFarmRun {
+public class SaveFarmRunPanel {
 	
 	
 	/**
@@ -62,7 +62,7 @@ public class SaveFarmRun {
 	    		
 	    		JButton closeButton = new JButton();
 	    		closeButton.setFocusPainted(false);
-	    		closeButton.setIcon(new ImageIcon(SaveFarmRun.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
+	    		closeButton.setIcon(new ImageIcon(SaveFarmRunPanel.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
 	    		closeButton.setBackground(new Color(255,0,0));
 	    		closeButton.setBounds(width-Globals.scale(15), 0, Globals.scale(15), Globals.scale(15));
 	    		closeButton.setMargin(new Insets(0, 0, 0, 0));

@@ -28,7 +28,7 @@ import ui.SlayerTrackerUI.FrameDragListener;
 public class XPTrackerPanel {
 	
 
-	static JFrame mainFrame = new JFrame("Test");
+	static JFrame mainFrame;
 	static JPanel dataPanel;
 	static int width = Globals.scale(1550);
 	static int height = Globals.scale(125)+(Globals.getNumberOfCMLAccounts()+1)*Globals.scale(28);
@@ -37,17 +37,17 @@ public class XPTrackerPanel {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public static void build() {
+	private static void build() {
 		EventQueue.invokeLater(new Runnable()
         {
             @Override
             public void run()
             {
-            	
+            	mainFrame = new JFrame("Test");
         		
             	
             	mainFrame.getContentPane().setBackground(Globals.panelBackground);
-            	mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
+        		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/slayerIcon.png")));
             	mainFrame.setLocationByPlatform(true);
         		mainFrame.setTitle("Slayer Logs\r\n");
         		mainFrame.setBounds(100, 100, width, height);
@@ -168,15 +168,11 @@ public class XPTrackerPanel {
 			}
         });
     }
-	public static void makeVisible() {
-		mainFrame.setVisible(true);
-
-	}
 	
-	public static ImageIcon getImage(String url) {
+	private static ImageIcon getImage(String url) {
 		return new ImageIcon(XPTrackerPanel.class.getResource(url));
 	}
-	public static void setup() {
+	private static void setup() {
 		LoadingPopUp.rebuild("Loading XP Rates!");
 		new Thread(){
             @Override
@@ -191,11 +187,8 @@ public class XPTrackerPanel {
             }
 		}.start();
 	}
-	public static boolean isInit() {
-		return !(players == null);
-	}
 	
-	public static JPanel getData() {
+	private static JPanel getData() {
 		players = CMLData.getMultipleAccounts(Globals.getCMLAccounts());
 		ImageIcon[] columns = {
 				getImage("/images/skills/overall.gif"),
@@ -275,6 +268,26 @@ public class XPTrackerPanel {
 			outputPanel.add(accountName);
 		}
 		return outputPanel;
+	}
+	
+	public static void showPanel() {
+		if(!isInit()) {
+			setup();
+		}else {
+			makeVisible();
+		}
+	}
+	private static void makeVisible() {
+		mainFrame.setVisible(true);
+		mainFrame.setState(Frame.NORMAL);
+	}
+
+	private static boolean isInit() {
+		if(mainFrame == null) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 	
 }

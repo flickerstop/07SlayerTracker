@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 
 import objects.Globals;
 
-public class FarmRunData {
+public class FarmRunDataPanel {
 	
 	/**
 	 * @wbp.parser.entryPoint
@@ -48,7 +48,7 @@ public class FarmRunData {
 	    		
 	    		JButton closeButton = new JButton();
 	    		closeButton.setFocusPainted(false);
-	    		closeButton.setIcon(new ImageIcon(FarmRunData.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
+	    		closeButton.setIcon(new ImageIcon(FarmRunDataPanel.class.getResource("/javax/swing/plaf/metal/icons/ocean/paletteClose-pressed.gif")));
 	    		closeButton.setBackground(new Color(255,0,0));
 	    		closeButton.setBounds(width-Globals.scale(15), 0, Globals.scale(15), Globals.scale(15));
 	    		closeButton.setMargin(new Insets(0, 0, 0, 0));

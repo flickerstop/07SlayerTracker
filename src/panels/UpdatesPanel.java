@@ -2,8 +2,10 @@ package panels;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -15,23 +17,33 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import objects.Globals;
+import ui.SlayerTrackerUI;
+
 import javax.swing.JScrollPane;
 
 public class UpdatesPanel {
+	
+//	public static void main(String[] args) {
+//		showPanel();
+//	}
 	
 	private static JFrame mainFrame;
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	
-	public static void build() {
+	private static void build() {
 		EventQueue.invokeLater(new Runnable()
 	    {
 	        @Override
 	        public void run()
 	        {
 	        	mainFrame = new JFrame("Test");
-	        	String updateText = "Update 0.8.0\n\n" 
+	        	String updateText = "Update 0.8.1\n\n" 
+	        			+ "- Added CML tracker (beta)\n"
+	        			+ "- Added system tray icon\n"
+	        			+ "- Fixed issue that multiple windows can be opened\n"
+	        			+ "\nUpdate 0.8.0\n\n" 
 	        			+ "- Added the 4 new fossil island wyvern types\n"
 	        			+ "- Working on adding CML tracker\n"
 	        			+ "\nUpdate 0.7.10\n\n"
@@ -57,7 +69,8 @@ public class UpdatesPanel {
 	    		mainFrame.setTitle("Basic UI");
 	    		mainFrame.setBounds(100, 100, width, height);
 	    		mainFrame.getContentPane().setLayout(null);
-	    		
+	    		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/slayerIcon.png")));
+
 	    	
 	    		
 	    		JButton closeButton = new JButton();
@@ -93,8 +106,11 @@ public class UpdatesPanel {
 	    		
 	    		JScrollPane scrollPane = new JScrollPane();
 	    		scrollPane.setBounds(Globals.scale(10),Globals.scale(30),width-Globals.scale(20),height-Globals.scale(40));
-	    		mainFrame.getContentPane().add(scrollPane);
 	    		scrollPane.setViewportView(text);
+	    		
+	    		mainFrame.getContentPane().add(scrollPane);
+	    		
+	    		
 	    		
 	    		mainFrame.setLocationByPlatform(true);
 	            mainFrame.setVisible(true);
@@ -104,13 +120,13 @@ public class UpdatesPanel {
 				FrameDragListener frameDragListener = new FrameDragListener(mainFrame);
 				mainFrame.addMouseListener(frameDragListener);
 				mainFrame.addMouseMotionListener(frameDragListener);
-				scrollPane.getVerticalScrollBar().setValue(0);
 				
+				text.setCaretPosition(0);
 			}
 	    });
 	}
 	
-	public static class FrameDragListener extends MouseAdapter {
+	private static class FrameDragListener extends MouseAdapter {
 
         private final JFrame frame;
         private Point mouseDownCompCoords = null;
@@ -133,11 +149,19 @@ public class UpdatesPanel {
         }
     }
 
-	public static void makeVisible() {
-		mainFrame.setVisible(true);
+	public static void showPanel() {
+		if(!isInit()) {
+			build();
+		}else {
+			makeVisible();
+		}
 	}
-	
-	public static boolean isInit() {
+	private static void makeVisible() {
+		mainFrame.setVisible(true);
+		mainFrame.setState(Frame.NORMAL);
+	}
+
+	private static boolean isInit() {
 		if(mainFrame == null) {
 			return false;
 		}else {

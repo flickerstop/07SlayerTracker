@@ -31,7 +31,7 @@ import ui.SlayerTrackerUI.FrameDragListener;
 
 public class LogPanel {
 	
-
+	static JFrame mainFrame;
 	static JTable[] tables;
 	static JTable logTable;
 	
@@ -48,7 +48,7 @@ public class LogPanel {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public static void build() {
+	private static void build() {
 		EventQueue.invokeLater(new Runnable()
         {
             @Override
@@ -58,9 +58,9 @@ public class LogPanel {
             	
         		int panelHeight = height-Globals.topMenuBarHeight;
         		
-            	JFrame mainFrame = new JFrame("Test");
+        		mainFrame = new JFrame("Test");
             	mainFrame.getContentPane().setBackground(Globals.panelBackground);
-            	mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/download_icon.png")));
+        		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(SlayerTrackerUI.class.getResource("/images/slayerIcon.png")));
             	mainFrame.setLocationByPlatform(true);
         		mainFrame.setTitle("Slayer Logs\r\n");
         		mainFrame.setBounds(100, 100, width, height);
@@ -414,7 +414,7 @@ public class LogPanel {
         });
     }
 	
-	public static DefaultTableCellRenderer colourCells() {
+	private static DefaultTableCellRenderer colourCells() {
 		return new DefaultTableCellRenderer(){
 		    @Override
 		    public Component getTableCellRendererComponent(JTable table,
@@ -444,7 +444,7 @@ public class LogPanel {
 		};
 	}
 	
-	public static void setButtons() {
+	private static void setButtons() {
 		int count = 1;
 		for(int i = 0; i < hasLog.length; i++) {
 			if(hasLog[i]) {
@@ -463,5 +463,25 @@ public class LogPanel {
 		}
 		buttons[buttons.length-1].setBounds(buttonSize*(count-1)+Globals.scale(5),height-Globals.scale(25),buttonSize,Globals.scale(20));
 
+	}
+
+	public static void showPanel() {
+		if(!isInit()) {
+			build();
+		}else {
+			makeVisible();
+		}
+	}
+	private static void makeVisible() {
+		mainFrame.setVisible(true);
+		mainFrame.setState(Frame.NORMAL);
+	}
+
+	private static boolean isInit() {
+		if(mainFrame == null) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 }
