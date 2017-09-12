@@ -17,11 +17,14 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import corpTracker.CorpTrackerMainUI;
+import geTracker.GETrackerMainUI;
 import panels.FarmRunPanel;
 import panels.LogPanel;
 import panels.SettingsPanel;
 import panels.UpdatesPanel;
 import panels.XPTrackerPanel;
+import raidTracker.RaidsTrackerMainUI;
 
 public class SystemTrayIcon {
 
@@ -41,7 +44,6 @@ public class SystemTrayIcon {
         /////////////////////////////////////////////////////////
         // Main Components
         MenuItem aboutItem = new MenuItem("About");
-        MenuItem farmRun = new MenuItem("Farm Run");
         MenuItem exit = new MenuItem("Exit");
         
         /////////////////////////////////////////////////////////
@@ -51,20 +53,47 @@ public class SystemTrayIcon {
         trayIcon.setImageAutoSize(true);
         
         /////////////////////////////////////////////////////////
-        // Panels menu
-        Menu displayMenu = new Menu("Open Window");
+        // Slayer Options
+        Menu slayerMenu = new Menu("Slayer Windows");
         MenuItem mainPanel = new MenuItem("Main Panel");
-        MenuItem settingsPanel = new MenuItem("Settings");
         MenuItem logsPanel = new MenuItem("Logs");
-        MenuItem updatesPanel = new MenuItem("Updates");
-        MenuItem CMLPanel = new MenuItem("CML tracker");
-
         
-        displayMenu.add(mainPanel);
-        displayMenu.add(settingsPanel);
-        displayMenu.add(logsPanel);
-        displayMenu.add(CMLPanel);
-        displayMenu.add(updatesPanel);
+        
+        
+        slayerMenu.add(mainPanel);
+        slayerMenu.add(logsPanel);
+        
+        // Farm Options
+        Menu farmMenu = new Menu("Farm Run");
+        MenuItem farmRun = new MenuItem("Farm Timer");
+        MenuItem startRun = new MenuItem("Start Run");
+        MenuItem stopRun = new MenuItem("Stop Run");
+        
+        farmMenu.add(farmRun);
+        farmMenu.add(startRun);
+        farmMenu.add(stopRun);
+        
+        // Other Options
+        Menu otherMenu = new Menu("Others");
+        MenuItem updatesPanel = new MenuItem("Updates");
+        MenuItem settingsPanel = new MenuItem("Settings");
+        
+        otherMenu.add(updatesPanel);
+        otherMenu.add(settingsPanel);
+        
+        // Beta Options
+        Menu betaMenu = new Menu("Beta Apps");
+        MenuItem CMLPanel = new MenuItem("CML Tracker");
+        MenuItem geTrackerPanel = new MenuItem("GE Tracker");
+        MenuItem corpPanel = new MenuItem("Corp Tracker");
+        MenuItem raidsPanel = new MenuItem("Raids Tracker");
+        
+        betaMenu.add(CMLPanel);
+        betaMenu.add(geTrackerPanel);
+        betaMenu.add(corpPanel);
+        betaMenu.add(raidsPanel);
+        
+        
         /////////////////////////////////////////////////////////
         
         
@@ -73,8 +102,10 @@ public class SystemTrayIcon {
         
         //Add components to pop-up menu
         popup.add(aboutItem);
-        popup.add(farmRun);
-        popup.add(displayMenu);
+        popup.add(farmMenu);
+        popup.add(slayerMenu);
+        popup.add(otherMenu);
+        popup.add(betaMenu);
         popup.addSeparator();
 //        popup.add(soundCheckbox);
 //        popup.add(notificationCheckbox);
@@ -97,6 +128,20 @@ public class SystemTrayIcon {
         farmRun.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	FarmRunPanel.showPanel();
+            }
+        });
+        
+        // Start Farm Run
+        startRun.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	FarmRunPanel.startTimer();
+            }
+        });
+        
+        // Stop Farm Run
+        stopRun.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	FarmRunPanel.stopTimer();
             }
         });
         
@@ -135,12 +180,34 @@ public class SystemTrayIcon {
             }
         });
         
+        // Open geTracker Panel
+        geTrackerPanel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	GETrackerMainUI.showPanel();
+            }
+        });
+        
+        // Open Corp Tracker Panel
+        corpPanel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	CorpTrackerMainUI.showPanel();
+            }
+        });
+        
+        // Open Raids Tracker Panel
+        raidsPanel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	RaidsTrackerMainUI.showPanel();
+            }
+        });
+        
         // Sound Checkbox
         soundCheckbox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	trayIcon.displayMessage("Hello, World", "notification demo", MessageType.INFO);
             }
         });
+        
         
         // Notification Checkbox
         notificationCheckbox.addActionListener(new ActionListener() {

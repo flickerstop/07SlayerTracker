@@ -106,4 +106,12 @@ public class GEPrices {
 	    }
 	    items = GE;
 	}
+	
+	public static int getAmount() {
+		return items.size();
+	}
+	
+	public static ArrayList<Item> getItems(){
+		return items;
+	}
 }

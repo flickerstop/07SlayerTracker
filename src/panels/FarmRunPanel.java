@@ -262,7 +262,7 @@ public class FarmRunPanel {
 			}
         });
 	}
-	private static void startTimer() {
+	public static void startTimer() {
 		int timerLength = 4800000; //4800000;
 		Globals.farmTimerStart = System.currentTimeMillis();
 		Globals.farmTimerStop = System.currentTimeMillis() + timerLength;
@@ -292,7 +292,7 @@ public class FarmRunPanel {
 	            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 	    endTimeLabel.setText("Farm run at "+hms);
 	}
-	private static void stopTimer() {
+	public static void stopTimer() {
 		Globals.farmTimerStop = 0;
 		Globals.farmTimerStart = 0;
 		Globals.clip.stop();

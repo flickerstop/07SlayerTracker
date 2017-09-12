@@ -343,8 +343,6 @@ public class SlayerTrackerUI {
 		
 		int buttonWidth = (panelWidth-(spaceBetweenButtons*(Globals.numberOfCols+1)))/Globals.numberOfCols;
 		int buttonHeight = (buttonSpaceHeight-(spaceBetweenButtons*(Globals.numberOfRows+1)))/Globals.numberOfRows;
-		System.out.println(buttonWidth);
-		System.out.println(buttonHeight);
 		int y[] = new int[Globals.numberOfRows];
 		int x[] = new int[Globals.numberOfCols];
 		

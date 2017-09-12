@@ -27,6 +27,8 @@ public class Globals {
 	
 	public static String path = System.getenv("APPDATA")+"\\SlayerTracker";
 	public static String savePath = System.getenv("APPDATA")+"\\SlayerTracker\\player.sav";
+	public static String corpSavePath = System.getenv("APPDATA")+"\\SlayerTracker\\corp.csv";
+	public static String raidsSavePath = System.getenv("APPDATA")+"\\SlayerTracker\\raids.csv";
 	public static String settingsFile = path+"\\settings.sav";
 	public static String herbRunFile = path+"\\herbRun.csv";
 	public static String errorFile = path+"\\error.log";
@@ -143,6 +145,76 @@ public class Globals {
 	
 	public static boolean isDarkMode = false;
 
+	//////////////////////
+	
+	public static Object[][] corpDrops = {
+			{"Adamant arrow",750,"Adamant_arrow_detail.png",0,0},
+			{"Runite bolts",250,"Runite_bolts_detail.png",0,0},
+			{"Mystic air staff",1,"mystic_staff.png",0,0},
+			{"Mystic robe top",1,"Mystic_robe_top_detail.png",0,0},
+			{"Mystic robe bottom",1,"Mystic_robe_bottom_detail.png",0,0},
+			{"Onyx bolts (e)",175,"Onyx_bolts_(e)_detail.png",0,0},
+			{"Cannonball",2000,"Cannonball_detail.png",0,0},
+			{"Spirit shield",1,"Spirit_shield_detail.png",0,0},
+			{"Pure essence",2500,"Pure_essence_detail.png",0,0},
+			{"Law rune",250,"Law_rune_detail.png",0,0},
+			{"Cosmic rune",500,"Cosmic_rune_detail.png",0,0},
+			{"Death rune",300,"Death_rune_detail.png",0,0},
+			{"Soul rune",250,"Soul_rune_detail.png",0,0},
+			{"Adamantite ore",125,"Adamantite_ore_detail.png",0,0},
+			{"Runite ore",20,"Runite_ore_detail.png",0,0},
+			{"Adamantite bar",35,"Adamantite_bar_detail.png",0,0},
+			{"Teak plank",100,"Teak_plank.png",0,0},
+			{"Mahogany logs",150,"Mahogany_logs_detail.png",0,0},
+			{"Magic logs",75,"Magic_logs_detail.png",0,0},
+			{"Green dragonhide",100,"Green_dragonhide_detail.png",0,0},
+			{"Watermelon seed",24,"Watermelon_seed_detail.png",0,0},
+			{"Raw shark",70,"Raw_shark_detail.png",0,0},
+			{"White berries",120,"White_berries_detail.png",0,0},
+			{"Desert goat horn",120,"Desert_goat_horn.png",0,0},
+			{"Ranarr seed",10,"Herb_seed_detail.png",0,0},
+			{"Holy elixir",1,"Holy_elixir_detail.png",0,0},
+			{"Spectral sigil",1,"Spectral_sigil_detail.png",0,43137040},
+			{"Arcane sigil",1,"Arcane_sigil_detail.png",0,108145600},
+			{"Elysian sigil",1,"Elysian_sigil_detail.png",0,323102385},
+			{"Pet dark core",1,"Dark_energy_core.png",0,0}
+		};
+	
+	public static String[] raidBosses = {
+			"Tekton",
+			"Vespula",
+			"Vanguard",
+			"Ice Demon",
+			"Muttadiles",
+			"Vasa Nistirio",
+			"Mages",
+			"Rope Crossing",
+			"Thieving room",
+			"Crabs",
+			"Shamen",
+			"Guardians"
+	};
+	
+	public static String[] raidDrops = {
+			"None",
+			"Ancestral Hat",
+			"Ancestral Robe Bottom",
+			"Ancestral Robe Top",
+			"Arcane Prayer Scroll",
+			"Dexterous Prayer Scroll",
+			"Dinh's Bulwark",
+			"Dragon Claws",
+			"Dragon Harpoon",
+			"Dragon Hunter Crossbow",
+			"Dragon Sword",
+			"Dragon Thrownaxe",
+			"Elder Maul",
+			"Koadi Insignia",
+			"Twisted Bow",
+			"Twisted Buckler"
+	};
+	
+	
 	//////////////////////
 	// Farm Run
 	public static int herbPrice = 9964;
@@ -349,7 +421,7 @@ public class Globals {
 			magicType = temp[17];
 			
 			for(int i = 18; i < temp.length;i++) {
-				System.out.println(i-17);
+				//System.out.println(i-17);
 				CMLaccounts[i-18] = temp[i];
 			}
 			//System.out.println(farmTimerStart);
