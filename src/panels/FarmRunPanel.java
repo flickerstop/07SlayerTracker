@@ -35,6 +35,9 @@ public class FarmRunPanel {
 	
 	private static JLabel endTimeLabel;
 	private static JFrame mainFrame;
+	static JButton startTimerButton = new JButton("Start Countdown");
+	static JButton stopTimerButton = new JButton("Stop Countdown");
+	static JButton oneStageTimerButton = new JButton("20 mins");
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -122,20 +125,14 @@ public class FarmRunPanel {
         		mainFrame.add(minimizeButton);
         		//////////////
         		// Timer
-        		JButton startTimerButton = new JButton("Start Countdown");
         		startTimerButton.setBackground(Globals.blue);
-        		JButton stopTimerButton = new JButton("Stop Countdown");
         		stopTimerButton.setBackground(Globals.blue);
-        		JButton oneStageTimerButton = new JButton("20 mins");
         		JButton saveRunButton = new JButton("Save Run");
         		startTimerButton.setFont(Globals.mainFont);
         		startTimerButton.addMouseListener(new MouseAdapter() {
 	        		@Override
 	        		public void mouseClicked(MouseEvent arg0) {
 	        			if(startTimerButton.isEnabled()) {
-		        			stopTimerButton.setEnabled(true);
-		        			startTimerButton.setEnabled(false);
-		        			oneStageTimerButton.setEnabled(false);
 		        			startTimer();
 	        			}
 	        		}
@@ -151,9 +148,6 @@ public class FarmRunPanel {
 	        		public void mouseClicked(MouseEvent e) {
 	        			if(stopTimerButton.isEnabled()) {
 		        			stopTimer();
-		        			stopTimerButton.setEnabled(false);
-		        			startTimerButton.setEnabled(true);
-		        			oneStageTimerButton.setEnabled(true);
 	        			}
 	        		}
         		});
@@ -278,6 +272,9 @@ public class FarmRunPanel {
 	    endTimeLabel.setText("Farm run at "+hms);
 	}
 	private static void startTimer(int length) {
+		stopTimerButton.setEnabled(true);
+		startTimerButton.setEnabled(false);
+		oneStageTimerButton.setEnabled(false);
 		int timerLength = length; //4800000;
 		Globals.farmTimerStart = System.currentTimeMillis();
 		Globals.farmTimerStop = System.currentTimeMillis() + timerLength;
@@ -293,6 +290,9 @@ public class FarmRunPanel {
 	    endTimeLabel.setText("Farm run at "+hms);
 	}
 	public static void stopTimer() {
+		stopTimerButton.setEnabled(false);
+		startTimerButton.setEnabled(true);
+		oneStageTimerButton.setEnabled(true);
 		Globals.farmTimerStop = 0;
 		Globals.farmTimerStart = 0;
 		Globals.clip.stop();
@@ -345,6 +345,14 @@ public class FarmRunPanel {
 		}else {
 			return true;
 		}
+	}
+	
+	public static String getTimeLeft() {
+		long millis = Globals.farmTimerStop - System.currentTimeMillis();
+	    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+	            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+	            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+	    return hms;
 	}
 	
 }

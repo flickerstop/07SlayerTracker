@@ -68,10 +68,12 @@ public class SystemTrayIcon {
         MenuItem farmRun = new MenuItem("Farm Timer");
         MenuItem startRun = new MenuItem("Start Run");
         MenuItem stopRun = new MenuItem("Stop Run");
+        MenuItem checkRun = new MenuItem("Time Left");
         
         farmMenu.add(farmRun);
         farmMenu.add(startRun);
         farmMenu.add(stopRun);
+        farmMenu.add(checkRun);
         
         // Other Options
         Menu otherMenu = new Menu("Others");
@@ -142,6 +144,13 @@ public class SystemTrayIcon {
         stopRun.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	FarmRunPanel.stopTimer();
+            }
+        });
+        
+        // Stop Farm Run
+        checkRun.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	notification("Time left: " + FarmRunPanel.getTimeLeft());
             }
         });
         
